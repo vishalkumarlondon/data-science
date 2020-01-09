@@ -1,0 +1,670 @@
+---
+title: "coursework"
+author: "Vishal Kumar"
+date: "29/12/2019"
+output: html_document
+---
+
+# Load Libraries
+
+
+```{r}
+
+#----load all the libraries needed
+library(sf)
+library(tmap)
+library(tmaptools)
+library(plyr)
+
+library(pins)
+library(geojsonio)
+
+library(rgdal)
+library(broom)
+library(mapview)
+library(crosstalk)
+library(sp)
+library(spdep)
+library(car)
+library(raster)
+
+library(tidyverse)
+library(tidyr)
+
+# load in libraries
+library(scales)
+library(lubridate)
+library(ggridges) # for geom_density_line()
+library(plotly)
+
+#tmap_mode("plot")
+
+## Andy MacLachlan and Adam Dennett (2019). CASA0005 Geographic Information Systems and Science. URL https://andrewmaclachlan.github.io/CASA0005repo/index.html.
+
+# (MacLachlan & Dennett, 2019: Section X.X)
+
+```
+
+
+
+#Regression Analysis
+
+
+
+```{r}
+
+
+#/young_p
+#/bame_p
+#/nonUK
+#/education
+#/employees
+#/income
+#/housing
+#/house_mortg
+#/house_price
+#/transport
+#/culture_freq
+#/culture_rating
+
+options(scipen = 999)
+
+#run a final OLS model
+model_price <- lm(log(`airbnb_price`) ~ 
+                    `young_p` + 
+                    `bame_p` +
+                    `nonUK` +
+                    `education` +
+                    `employees` +
+                    `income` +
+                    #`housing` +
+                    `house_mortg` +
+                    `house_price` +
+                    #`transport` +
+                    `culture_freq` +
+                    `culture_rating`+
+                    `InnerOuter`,
+                  data = londonLSOAProfiles, na.action=na.exclude, weight = culture_rating)
+
+summary(model_price)
+
+# 
+# #https://stackoverflow.com/questions/50111113/r-replacement-has-x-rows-data-has-y-residuals-from-a-linear-model-in-new
+# library(dplyr)
+# library(broom)
+# 
+# londonLSOAProfiles %>% 
+#   lm(log(`airbnb_price`) ~ `young_p` + 
+#                     `bame_p` +
+#                     `nonUK` +
+#                     `education` +
+#                     `employees` +
+#                     `housing` +
+#                     `house_mortg` +
+#                     `house_price` +
+#                     `culture_freq` +
+#                     `culture_rating`, data = .) %>% 
+#   augment() %>% 
+#   select(.rownames, .std.resid) %>% 
+#   right_join(mutate(londonLSOAProfiles, row = as.character(row_number())), 
+#              by = c(".rownames" = "row"))
+
+# summary(model_price$)
+
+```
+
+```{r}
+
+#https://stackoverflow.com/questions/6882709/how-do-i-deal-with-nas-in-residuals-in-a-regression-in-r
+
+#how to deal with residuals with NA - make use of the row names associated with the data frame provided as input to lm
+londonLSOAProfiles[names(model_price$model_price_resids),"residual"]<-model_price$residuals
+
+#save the residuals into your dataframe
+#londonLSOAProfiles$model_price_resids <- model_price$residuals
+
+qplot(model_price$residuals) + geom_histogram() 
+```
+
+
+
+
+```{r}
+
+
+#run a final OLS model
+model_count <- lm(log(`airbnb_freq`)~ 
+                    `young_p` + 
+                    `bame_p` +
+                    `nonUK` +
+                    `education` +
+                    #`employees` +
+                    `income` +
+                    `housing` +
+                    `house_mortg` +
+                    `house_price` +
+                    `transport` +
+                    `culture_freq` +
+                    `culture_rating`+
+                    `InnerOuter`, 
+                  data = londonLSOAProfiles, na.action=na.exclude, weight = culture_rating)
+
+summary(model_count)
+```
+
+
+
+
+```{r}
+
+
+#https://stackoverflow.com/questions/6882709/how-do-i-deal-with-nas-in-residuals-in-a-regression-in-r
+
+#how to deal with residuals with NA - make use of the row names associated with the data frame provided as input to lm
+londonLSOAProfiles[names(model_count$residuals),"residual"]<-model_count$residuals
+
+#save the residuals into your dataframe
+#londonLSOAProfiles$model_price_resids <- model_price$residuals
+
+qplot(model_count$residuals) + geom_histogram() 
+```
+
+
+
+
+```{r}
+# 
+# #we need to check the Pearson correlation of the variable to check multi-colinearity
+# 
+# library(corrplot)
+# 
+# #first drop the geometry column from the dataframe as it will cause problems
+# tempdf <- st_set_geometry(londonLSOAProfiles, NULL)
+# 
+# #pull out the columns we want to check for multicolinearity
+# tempdf <- tempdf[,c("Ethnic Group;BAME (%);2011", 
+#                     "culture_freq",
+#                     "culture_rating",
+#                     "Tenure (2011);Private rented (%)", 
+#                     "Qualifications (2011);Highest level of qualification: Level 4 qualifications and above;")]
+# 
+# #log houseprice
+# #tempdf[1] <- log(tempdf[1])
+# 
+# #rename the columns to something shorter
+# names(tempdf) <- c("BAME", 
+#                    "Culture Count",
+#                    "Culture Rating",
+#                    "Tenure - Private",
+#                    "Highest Qualifications")
+# 
+# #compute the correlation matrix for the two variables of interest
+# cormat <- cor(tempdf[,1:5], use="complete.obs", method="pearson")
+# 
+# #visualise the correlation matrix
+# corrplot(cormat)
+
+
+```
+
+
+```{r}
+
+#this is another measure for multi-colinarity
+
+vif(model_price, na.action=na.exclude)
+
+```
+
+
+```{r}
+
+#print some model diagnositcs. 
+plot(model_price, na.action=na.exclude)
+
+```
+
+
+
+```{r}
+
+#run durbin-watson test for auto correlation
+durbinWatsonTest(model_price, zero.policy=TRUE)
+
+```
+
+
+
+```{r}
+
+# 
+# STOOOOOOOP
+# 
+# #now plot the residuals to see spatial auto correlation
+# tmap_mode("view")
+# 
+# #from the coordinate values stored in the x and y columns, which look like they are latitude and longitude values, create a new points dataset
+# #all_culture_sf <- st_as_sf(all_culture, coords = c("longitude","latitude"), crs = 4326)
+# 
+# #qtm(all_culture_sf)
+# #qtm(LonWardProfiles, fill = "model1_resids")
+# 
+# tm_shape(londonLSOAProfiles) + 
+#   tm_polygons("model_price_resids", palette = "RdYlBu", midpoint = NA) 
+# #+ tm_shape(all_culture_sf) + tm_dots(col = "red")
+
+```
+
+
+
+
+```{r}
+
+#use Moran's I to test for spatial auto correlation
+
+londonLSOAProfiles_noNA <- londonLSOAProfiles %>% drop_na(model_price_resids)
+
+#Firstly convert our SF object into an SP object:
+londonLSOAProfilesSP <- as(londonLSOAProfiles_noNA, "Spatial")
+
+
+
+
+
+#https://gis.stackexchange.com/questions/89512/r-dealing-with-missing-data-in-spatialpolygondataframes-for-moran-test
+# # USE meuse AS EXAMPLE
+# require(sp)
+#   data(meuse)
+#   coordinates(meuse) <- ~x+y
+# 
+# # DISPLAY NA ROWS IN meuse  
+# londonLSOAProfilesSP@data[!complete.cases(londonLSOAProfilesSP@data),] 
+# 
+# # FUNCTION TO REMOVE NA's IN sp DataFrame OBJECT
+# #   x           sp spatial DataFrame object
+# #   margin      Remove rows (1) or columns (2) 
+# sp.na.omit <- function(x, margin=1) {
+#   if (!inherits(x, "SpatialPointsDataFrame") & !inherits(x, "SpatialPolygonsDataFrame")) 
+#     stop("MUST BE sp SpatialPointsDataFrame OR SpatialPolygonsDataFrame CLASS OBJECT") 
+#   na.index <- unique(as.data.frame(which(is.na(x@data),arr.ind=TRUE))[,margin])
+#     if(margin == 1) {  
+#       cat("DELETING ROWS: ", na.index, "\n") 
+#         return( x[-na.index,]  ) 
+#     }
+#     if(margin == 2) {  
+#       cat("DELETING COLUMNS: ", na.index, "\n") 
+#         return( x[,-na.index]  ) 
+#     }
+#  }
+# 
+# # DELETE NA's IN meuse AND SHOW CHANGE IN dim
+# meuse2 <- sp.na.omit(londonLSOAProfilesSP)     
+#   dim(londonLSOAProfilesSP)
+#     dim(meuse2) 
+# 
+# # PLOT DELETED POINTS IN RED    
+# plot(meuse, col="red", pch=20)
+#   plot(meuse2, col="black", pch=20, add=TRUE)
+# 
+# 
+# # 
+# # 
+# # # FUNCTION TO REMOVE NA's IN sp DataFrame OBJECT
+# # #   x           sp spatial DataFrame object
+# # #   margin      Remove rows (1) or columns (2) 
+# # sp.na.omit <- function(x, margin=1) {
+# #   if (!inherits(x, "SpatialPointsDataFrame") & !inherits(x, "SpatialPolygonsDataFrame")) 
+# #     stop("MUST BE sp SpatialPointsDataFrame OR SpatialPolygonsDataFrame CLASS OBJECT") 
+# #   na.index <- unique(as.data.frame(which(is.na(x@data),arr.ind=TRUE))[,margin])
+# #     if(margin == 1) {  
+# #       cat("DELETING ROWS: ", na.index, "\n") 
+# #         return( x[-na.index,]  ) 
+# #     }
+# #     if(margin == 2) {  
+# #       cat("DELETING COLUMNS: ", na.index, "\n") 
+# #         return( x[,-na.index]  ) 
+# #     }
+# #  }
+# # 
+# # # DELETE NA's IN meuse AND SHOW CHANGE IN dim
+# # londonLSOAProfilesSP <- sp.na.omit(londonLSOAProfilesSP)     
+# #   dim(londonLSOAProfilesSP)
+# #     dim(londonLSOAProfilesSP) 
+# # 
+# # # PLOT DELETED POINTS IN RED    
+# # plot(londonLSOAProfilesSP, col="red", pch=20)
+# #   plot(londonLSOAProfilesSP, col="black", pch=20, add=TRUE)
+
+```
+
+
+
+```{r}
+
+#and calculate the centroids of all LSOAS in London
+coordsW <- coordinates(londonLSOAProfilesSP)
+
+plot(coordsW)
+
+```
+
+
+```{r}
+
+
+#Now we need to generate a spatial weights matrix (remember from the lecture a couple of weeks ago). We'll start with a simple binary matrix of queen's case neighbours
+
+#or nearest neighbours
+knn_wards <- knearneigh(coordsW, k=4)
+
+LWard_knn <- knn2nb(knn_wards)
+
+plot(LWard_knn, coordinates(coordsW), col="blue")
+
+
+```
+
+
+
+```{r}
+
+#create a spatial weights matrix object from these weights
+Lward.knn_4_weight <- nb2listw(LWard_knn, style="C", zero.policy=TRUE)
+
+#now run a moran's I test on the residuals
+
+#then knn = 4
+
+moran.test(londonLSOAProfilesSP@data$model_price_resids, Lward.knn_4_weight, zero.policy=T)
+
+
+```
+
+
+
+
+```{r}
+
+#Dealing with Spatially Autocorrelated Residuals - Spatial Lag and Spatial Error models
+
+library(spatialreg)
+
+#run a spatially-lagged regression model
+slag_dv_model_price_knn4 <- lagsarlm(log(`airbnb_price`) ~ 
+                    `young_p` + 
+                    `bame_p` +
+                    `nonUK` +
+                    `education` +
+                    `employees` +
+                    `income` +
+                    #`housing` +
+                    `house_mortg` +
+                    `house_price` +
+                    #`transport` +
+                    `culture_freq` +
+                    `culture_rating`+
+                    `InnerOuter`, 
+                    data = londonLSOAProfilesSP, 
+                    na.action=na.exclude,
+                    nb2listw(LWard_knn, style="C"), 
+                    method = "eigen")
+
+#what do the outputs show?
+summary(slag_dv_model_price_knn4)
+
+
+```
+
+```{r}
+
+#write out the residuals
+londonLSOAProfilesSP@data$slag_dv_model_price_knn4_resids <- slag_dv_model_price_knn4$residuals
+
+#now test for spatial autocorrelation
+moran.test(londonLSOAProfilesSP@data$slag_dv_model_price_knn4_resids, Lward.knn_4_weight)
+
+```
+
+
+```{r}
+
+sem_model1 <- errorsarlm(log(`airbnb_price`) ~ 
+                    `young_p` + 
+                    `bame_p` +
+                    `nonUK` +
+                    `education` +
+                    `employees` +
+                    `income` +
+                    #`housing` +
+                    `house_mortg` +
+                    `house_price` +
+                    #`transport` +
+                    `culture_freq` +
+                    `culture_rating`+
+                    `InnerOuter`, 
+                    data = londonLSOAProfilesSP, 
+                    na.action=na.exclude,
+                    nb2listw(LWard_knn, style="C"), 
+                    method = "eigen")
+
+summary(sem_model1)
+
+```
+
+
+```{r}
+
+#write.csv(londonLSOAProfiles, 'londonLSOAProfiles.csv')
+
+#limit LSOAprofiles dataframe
+#londonLSOAProfiles<-londonLSOAProfiles[c(0:1,15:1000)]
+```
+
+
+```{r}
+
+p <- ggplot(londonLSOAProfiles, aes(x=`culture_freq`, 
+                                    y=`airbnb_price`))
+
+p + geom_point(aes(colour = InnerOuter)) 
+
+
+```
+
+
+
+```{r}
+
+library(spgwr)
+
+#calculate kernel bandwidth
+GWRbandwidth <- gwr.sel(log(`airbnb_price`) ~ 
+                    `young_p` + 
+                    `bame_p` +
+                    `nonUK` +
+                    `education` +
+                    `employees` +
+                    `income` +
+                    #`housing` +
+                    `house_mortg` +
+                    `house_price` +
+                    #`transport` +
+                    `culture_freq` +
+                    `culture_rating`+
+                    `InnerOuter`, 
+                    data = londonLSOAProfilesSP, 
+                        coords=coordsW,
+                        adapt=T)
+
+```
+
+
+```{r}
+
+#run the gwr model
+gwr.model = gwr(log(`airbnb_price`) ~ 
+                    `young_p` + 
+                    `bame_p` +
+                    `nonUK` +
+                    `education` +
+                    `employees` +
+                    `income` +
+                    #`housing` +
+                    `house_mortg` +
+                    `house_price` +
+                    #`transport` +
+                    `culture_freq` +
+                    `culture_rating`+
+                    `InnerOuter`, 
+                    data = londonLSOAProfilesSP, 
+                coords=coordsW, 
+                adapt=GWRbandwidth, 
+                hatmatrix=TRUE, 
+                se.fit=TRUE)
+
+#print the results of the model
+gwr.model
+
+```
+
+
+```{r}
+
+results<-as.data.frame(gwr.model$SDF)
+
+names(results)
+
+```
+
+
+```{r}
+
+#attach coefficients to original dataframe
+londonLSOAProfilesSP@data$coefBAME <- results$bame_p_se
+
+londonLSOAProfilesSP@data$coefCulture <- results$culture_freq_se
+
+londonLSOAProfilesSP@data$coefCultureRating <- results$culture_rating_se
+# 
+# londonLSOAProfilesSP@data$coefPrivateRent <- results$X.Tenure..2011..Private.rented.....
+# 
+# londonLSOAProfilesSP@data$coefCrime <- results$X.Crime..numbers..Violence.Against.The.Person.2012.13.
+# 
+# londonLSOAProfilesSP@data$coefLev4Qual <- results$X.Qualifications..2011..Highest.level.of.qualification..Level.4.qualifications.and.above..
+
+```
+
+
+<!-- ```{r} -->
+
+<!-- tm_shape(londonLSOAProfilesSP) + -->
+<!--   tm_polygons(col = "coefBAME", palette = "RdBu") -->
+
+<!-- ``` -->
+
+
+
+<!-- ```{r} -->
+
+<!-- tm_shape(londonLSOAProfilesSP) + -->
+<!--   tm_polygons(col = "coefCulture", palette = "RdBu") -->
+
+<!-- ``` -->
+
+<!-- ```{r} -->
+
+<!-- tm_shape(londonLSOAProfilesSP) + -->
+<!--   tm_polygons(col = "coefCultureRating", palette = "RdBu") -->
+
+<!-- ``` -->
+
+
+
+
+<!-- ```{r} -->
+
+<!-- tm_shape(londonLSOAProfilesSP) + -->
+<!--   tm_polygons(col = "coefPrivateRent", palette = "PuOr") -->
+<!-- ``` -->
+
+
+
+
+<!-- ```{r} -->
+
+
+<!-- tm_shape(londonLSOAProfilesSP) + -->
+<!--   tm_polygons(col = "coefCrime", palette = "PRGn") -->
+
+<!-- ``` -->
+
+
+
+<!-- ```{r} -->
+
+<!-- tm_shape(londonLSOAProfilesSP) + -->
+<!--   tm_polygons(col = "coefLev4Qual", palette = "PRGn") -->
+
+<!-- ``` -->
+
+
+
+
+```{r}
+
+#Ethnic Group;BAME (%);2011` + 
+#`culture_freq` + 
+#`Tenure (2011);Private rented (%)` +
+#``+
+#`Qualifications (2011);Highest level of qualification: Level 4 qualifications and above;` +
+#`InnerOuter`, 
+
+#**NOTE** when you run the code below, it's likely that column headers with `column_names` labelled with lots of quotations - as happens when using read_csv, errors will be caused when trying to reference these in gwr.model. To get over these errors, rename your columns as something simple and run the regression again. 
+
+#run the significance test
+sigTest = abs(gwr.model$SDF$"culture_freq") -2 * gwr.model$SDF$"culture_freq_se"
+
+#store significance results
+londonLSOAProfilesSP$GWRUnauthSig <- sigTest
+
+```
+
+
+
+```{r}
+
+tm_shape(londonLSOAProfilesSP) +
+  tm_polygons(col = "GWRUnauthSig", palette = "RdYlBu")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Which type of culture - theatre, music, galleries, museums, dance - impacts Airbnb more?
+
+
+
+
+
+
+
+
+
+
+
+
+#Analyse

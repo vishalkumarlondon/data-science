@@ -1,0 +1,762 @@
+---
+title: "Eda"
+author: "Vishal Kumar"
+date: "07/01/2020"
+output: html_document
+---
+
+
+
+```{r}
+
+
+#----load all the libraries needed
+library(sf)
+library(tmap)
+library(tmaptools)
+library(plyr)
+
+library(pins)
+library(geojsonio)
+
+library(rgdal)
+library(broom)
+library(mapview)
+library(crosstalk)
+library(sp)
+library(spdep)
+library(car)
+library(raster)
+
+library(tidyverse)
+library(tidyr)
+
+# load in libraries
+library(scales)
+library(lubridate)
+library(ggridges) # for geom_density_line()
+library(plotly)
+
+#tmap_mode("plot")
+
+## Andy MacLachlan and Adam Dennett (2019). CASA0005 Geographic Information Systems and Science. URL https://andrewmaclachlan.github.io/CASA0005repo/index.html.
+
+# (MacLachlan & Dennett, 2019: Section X.X)
+
+#data visualization packages - https://serialmentor.com/dataviz/geospatial-data.html
+
+#install.packages("remotes")
+#install.packages("devtools")
+library(remotes)
+
+#install.packages("cowplot")
+#devtools::install_github("wilkelab/cowplot")
+library(cowplot)
+
+#install.packages("colorspace")
+library(colorspace)
+
+#devtools::install_github("clauswilke/colorblindr")
+#https://rdrr.io/github/clauswilke/dviz.supp/
+#devtools::install_github("clauswilke/dviz.supp")
+library(dviz.supp)
+
+options(scipen = 999)
+
+```
+
+
+
+# Clean Airbnb data
+
+```{r}
+
+
+airbnb$month <- sapply(airbnb$month, as.numeric)
+
+
+# ggplot(airbnb, aes(x = month)) +
+#   geom_density_line(fill = "#56B4E9", color = "#000000", bw = 2, kernel = "gaussian") +
+#   scale_y_continuous(limits = c(0, 0.15), expand = c(0, 0), name = "density") +
+#   scale_x_continuous(name = "month", limits = c(0, 12), expand = c(0, 0)) +
+#   coord_cartesian(clip = "off") +
+#   theme_dviz_hgrid() +
+#   theme(
+#     axis.line.x = element_blank(),
+#     plot.margin = margin(3, 7, 3, 1.5)
+#   )
+
+
+
+```
+
+```{r}
+
+
+#let's check the distribution of these variables first
+#ggplot(airbnb, aes(x=`price_average`)) + geom_histogram(aes(y = ..density..),binwidth = 5) + geom_density(colour="red", size=1, adjust=1)
+
+
+```
+
+
+
+
+# Exploratory Data Analysis Before Regression
+
+To conduct the following analysis, the Airbnb, cultural infrastructure and LSOA profile datasets have been joined. 
+
+The joined dataframe (combine_train) now has 4,333 rows for each LSOA and 71 columns.
+
+
+```{r}
+
+# A great Kaggle Kernel by X for data visualisation of exploratory data analysis of variables https://www.kaggle.com/jaseziv83/a-deep-dive-eda-into-all-variables/report
+
+# set plotting theme baseline
+theme_set(theme_minimal() +
+            theme(axis.title.x = element_text(size = 15, hjust = 1),
+                  axis.title.y = element_text(size = 15),
+                  axis.text.x = element_text(size = 12),
+                  axis.text.y = element_text(size = 12),
+                  panel.grid.major = element_line(linetype = 2),
+                  panel.grid.minor = element_line(linetype = 2),
+                  plot.title = element_text(size = 18, colour = "grey25", face = "bold"), plot.subtitle = element_text(size = 16, colour = "grey44")))
+
+col_pal <- c("#5EB296", "#4E9EBA", "#F29239", "#C2CE46", "#FF7A7F", "#4D4D4D")
+
+
+```
+
+
+
+
+```{r}
+
+londonLSOAProfiles %>% 
+  ggplot(aes(x=airbnb_freq)) +
+  geom_histogram(alpha = 0.5, fill = "#5EB296", colour = "#4D4D4D") +
+  scale_x_continuous(labels = comma) +
+  scale_y_continuous(labels = comma) +
+  ggtitle("AIRBNB FREQUENCY VARIABLE IS HEAVILY SKEWED BY SOME OUTLIERS", subtitle = "We will remove those and visualise") +
+  labs(x= "Airbnb freq per LSOA", y= "Count")
+```
+
+
+```{r}
+
+summary(londonLSOAProfiles$airbnb_freq)
+```
+
+
+```{r}
+
+outlier <- round(1.5 * IQR(londonLSOAProfiles$airbnb_freq),0)
+
+londonLSOAProfiles %>% 
+  mutate(outlier = ifelse(airbnb_freq > outlier, "Outlier", "Not Outlier")) %>% 
+  ggplot(aes(x=airbnb_freq)) +
+  geom_histogram(alpha = 0.5, fill = "#5EB296", colour = "#4D4D4D") +
+  scale_x_continuous(labels = comma) +
+  scale_y_continuous(labels = comma) +
+  ggtitle("AIRBNB FREQUENCY VARIABLE IS HEAVILY SKEWED", subtitle = "Airbnb freqency still skewed even for non-outliers") +
+  labs(x= "Airbnb freq per LSOA", y= "Count") +
+  facet_wrap(~ outlier, scales = "free")
+```
+
+
+```{r}
+
+londonLSOAProfiles %>% 
+  ggplot(aes(x= log(airbnb_freq))) +
+  geom_histogram(alpha = 0.5, fill = "#5EB296", colour = "#4D4D4D") +
+  scale_y_continuous(labels = comma) +
+  ggtitle("LOG TRANSFORMING METER READING VARIABLE IS NECESSARY", subtitle = "The variable looks a lot more workable now") +
+  labs(x= "log(Airbnb Freq)", y= "Count")
+```
+
+
+```{r}
+
+londonLSOAProfiles %>% 
+  ggplot(aes(x= log(airbnb_freq), fill = as.character(InnerOuter))) +
+  geom_density(alpha = 0.5, adjust = 2) +
+  scale_fill_manual(values = col_pal) +
+  ggtitle("THERE ARE MORE LISTINGS IN INNER LONDON", subtitle = "X") +
+  labs(x= "log(Airbnb Freq)") +
+  theme(axis.title.y = element_blank(), legend.position = "top")
+```
+
+
+
+
+
+```{r}
+
+londonLSOAProfiles %>% 
+  ggplot(aes(x=airbnb_price)) +
+  geom_histogram(alpha = 0.5, fill = "#5EB296", colour = "#4D4D4D") +
+  scale_x_continuous(labels = comma) +
+  scale_y_continuous(labels = comma) +
+  ggtitle("AIRBNB PRICE VARIABLE IS HEAVILY SKEWED BY SOME OUTLIERS", subtitle = "We will remove those and visualise") +
+  labs(x= "Airbnb price per LSOA", y= "Count")
+```
+
+
+```{r}
+
+summary(londonLSOAProfiles$airbnb_price)
+```
+
+
+```{r}
+
+outlier <- round(1.5 * IQR(londonLSOAProfiles$airbnb_price),0)
+
+londonLSOAProfiles %>% 
+  mutate(outlier = ifelse(airbnb_price > outlier, "Outlier", "Not Outlier")) %>% 
+  ggplot(aes(x=airbnb_price)) +
+  geom_histogram(alpha = 0.5, fill = "#5EB296", colour = "#4D4D4D") +
+  scale_x_continuous(labels = comma) +
+  scale_y_continuous(labels = comma) +
+  ggtitle("AIRBNB Price VARIABLE IS HEAVILY SKEWED", subtitle = "Airbnb freqency still skewed even for non-outliers") +
+  labs(x= "Airbnb price per LSOA", y= "Count") +
+  facet_wrap(~ outlier, scales = "free")
+```
+
+
+```{r}
+
+londonLSOAProfiles %>% 
+  ggplot(aes(x= log(airbnb_price))) +
+  geom_histogram(alpha = 0.5, fill = "#5EB296", colour = "#4D4D4D") +
+  scale_y_continuous(labels = comma) +
+  ggtitle("LOG Airbnb price VARIABLE IS NECESSARY", subtitle = "The variable looks a lot more workable now") +
+  labs(x= "log(Airbnb Price)", y= "Count")
+```
+
+
+```{r}
+
+londonLSOAProfiles %>% 
+  ggplot(aes(x= log(airbnb_price), fill = as.character(InnerOuter))) +
+  geom_density(alpha = 0.5, adjust = 2) +
+  scale_fill_manual(values = col_pal) +
+  ggtitle("LISTINGS are more expensive IN INNER LONDON", subtitle = "X") +
+  labs(x= "log(Airbnb Freq)") +
+  theme(axis.title.y = element_blank(), legend.position = "top")
+```
+
+
+#Look at Culture
+
+
+```{r}
+
+londonLSOAProfiles %>% 
+  ggplot(aes(x=culture_freq)) +
+  geom_histogram(alpha = 0.5, fill = "#5EB296", colour = "#4D4D4D") +
+  scale_x_continuous(labels = comma) +
+  scale_y_continuous(labels = comma) +
+  ggtitle("Culture Freq IS HEAVILY SKEWED BY SOME OUTLIERS", subtitle = "We will remove those and visualise") +
+  labs(x= "Culture Freq per LSOA", y= "Count")
+```
+
+
+```{r}
+
+summary(londonLSOAProfiles$culture_freq)
+```
+
+
+```{r}
+
+# outlier <- round(1.5 * IQR(londonLSOAProfiles$culture_freq), 0)
+# 
+# londonLSOAProfiles %>%
+#   mutate(outlier = ifelse(culture_freq > outlier, "Outlier", "Not Outlier")) %>%
+#   ggplot(aes(x=culture_freq)) +
+#   geom_histogram(alpha = 0.5, fill = "#5EB296", colour = "#4D4D4D") +
+#   scale_x_continuous(labels = comma) +
+#   scale_y_continuous(labels = comma) +
+#   ggtitle("ACulture Freq VARIABLE IS HEAVILY SKEWED", subtitle = "Airbnb freqency still skewed even for non-outliers") +
+#   labs(x= "Airbnb price per LSOA", y= "Count") +
+#   facet_wrap(~ outlier, scales = "free")
+```
+
+
+```{r}
+
+londonLSOAProfiles %>% 
+  ggplot(aes(x= log(culture_freq-3))) +
+  geom_histogram(alpha = 0.5, fill = "#5EB296", colour = "#4D4D4D") +
+  scale_y_continuous(labels = comma) +
+  ggtitle("LOG Culture Freq VARIABLE IS NECESSARY", subtitle = "The variable looks a lot more workable now") +
+  labs(x= "log(Airbnb Price)", y= "Count")
+```
+
+
+```{r}
+
+londonLSOAProfiles %>% 
+  ggplot(aes(x= log(culture_freq), fill = as.character(InnerOuter))) +
+  geom_density(alpha = 0.5, adjust = 2) +
+  scale_fill_manual(values = col_pal) +
+  ggtitle("Culture Freq are more IN INNER LONDON", subtitle = "X") +
+  labs(x= "log(Airbnb Freq)") +
+  theme(axis.title.y = element_blank(), legend.position = "top")
+```
+
+
+
+```{r}
+
+#https://www.kaggle.com/jaseziv83/comprehensive-cleaning-and-eda-of-all-variables
+
+p1 <- londonLSOAProfiles %>%
+  ggplot(aes(x= airbnb_freq, y= airbnb_price)) +
+  geom_jitter(alpha = 0.5, colour = "steelblue") +
+  labs(x= "Speed (Yds/Sec)") +
+  ggtitle("A WEAK CORRELATION BETWEEN THE SPEED OF THE RUSHER AND YARDS", subtitle = "Pearson correlation of 0.084") +
+  annotate("text", x=7.5, y=85, label = paste0("Pearson Correlation: ", round(cor(londonLSOAProfiles$airbnb_freq, londonLSOAProfiles$airbnb_price), 4))) + facet_wrap(~ airbnb_price, scales = "free")
+
+
+p2 <- londonLSOAProfiles %>%
+  ggplot(aes(x= airbnb_no_reviews, y= airbnb_price)) +
+  geom_jitter(alpha = 0.5, colour = "steelblue") +
+  labs(x= "Accelaration (Yds/Sec^2)") +
+  ggtitle("WHILE ACCELERATION AND YARDS HAS A HIGHER CORRELATION", subtitle = "Pearson correlation of 0.16") +
+  annotate("text", x=7.5, y=85, label = paste0("Pearson Correlation: ", round(cor(londonLSOAProfiles$airbnb_no_reviews, londonLSOAProfiles$airbnb_price), 4))) + facet_wrap(~ airbnb_price, scales = "free")
+
+p3 <- londonLSOAProfiles %>%
+  ggplot(aes(x= airbnb_av_reviews, y= airbnb_price)) +
+  geom_jitter(alpha = 0.5, colour = "steelblue") +
+  labs(x= "Speed (Yds/Sec)") +
+  ggtitle("A WEAK CORRELATION BETWEEN THE SPEED OF THE RUSHER AND YARDS", subtitle = "Pearson correlation of 0.084") +
+  annotate("text", x=7.5, y=85, label = paste0("Pearson Correlation: ", round(cor(londonLSOAProfiles$airbnb_av_reviews, londonLSOAProfiles$airbnb_price), 4))) + facet_wrap(~ airbnb_price, scales = "free")
+
+#
+# p2 <- londonLSOAProfiles %>%
+#   ggplot(aes(x= A, y= airbnb_price)) +
+#   geom_jitter(alpha = 0.5, colour = "steelblue") +
+#   labs(x= "Accelaration (Yds/Sec^2)") +
+#   ggtitle("WHILE ACCELERATION AND YARDS HAS A HIGHER CORRELATION", subtitle = "Pearson correlation of 0.16") +
+#   annotate("text", x=7.5, y=85, label = paste0("Pearson Correlation: ", round(cor(londonLSOAProfiles$A, londonLSOAProfiles$airbnb_price), 4)))
+
+gridExtra::grid.arrange(p1, p2, p3)
+
+plot_grid(p1, p2, p3, labels=c("A", "B"), ncol = 2, nrow = 2)
+
+
+```
+
+
+
+
+
+```{r}
+
+#library(ggplot2)
+
+#let's map our dependent variable to see if the join has worked:
+#tmap_mode("view")
+
+#relationship between price of Airbnb and the number of reviews it has
+
+#q <- qplot(x = `number_of_reviews`, y = `price_average`, data=airbnb)
+
+#plot with a regression line - note, I've added some jitter here as the x-scale is rounded
+#q + stat_smooth(method="lm", se=FALSE, size=1)
+
+#ggplot(airbnb, aes(x = number_of_reviews, y = price_average)) +
+#  geom_jitter(size = 3) +
+#  geom_smooth(method = lm,  se = F, linetype = "dotted", family = "symmetric")
+
+
+```
+
+
+
+
+
+
+```{r}
+
+#calculate the mean, min and max and std of the Airbnb counts for each LSOA inLondon
+
+summary(londonLSOAextradata$airbnb_freq)
+
+airbnb_freq_mean <- mean(londonLSOAextradata$airbnb_freq)
+airbnb_freq_std <- sd(londonLSOAextradata$airbnb_freq)
+airbnb_freq_mad <- mad(londonLSOAextradata$airbnb_freq)
+
+#remove LSOAs where the count of Airbnb is only 1
+londonLSOAextradata <- subset(londonLSOAextradata, airbnb_freq > 1)
+
+#londonLSOAextradata[londonLSOAextradata$LSOA11CD == 'E01000913',]
+#londonLSOA[londonLSOA$LSOA11CD == 'E01000913',]
+
+```
+
+
+
+
+
+```{r}
+
+#variables from LSOA profiles
+
+#areaLSOA -     Population Density;Area (Hectares);
+#pop_density -  Population Density;Persons per hectare;2013	
+#bame_p -       Ethnic Group;BAME (%);2011	
+#nonUK -        Country of Birth;% Not United Kingdom;2011	
+#house_own -    Tenure;Owned outright (%);2011
+#house_mortg -  Tenure;Owned with a mortgage or loan (%);2011	
+#house_price -  House Prices;Median Price (£);2014	
+#employees -    Economic Activity;Employment Rate;2011	
+#education -    Qualifications;% Highest level of qualification: Level 4 qualifications and above;2011	
+#income -       Household Income, 2011/12;Median Annual Household Income estimate (£)	
+#transport -    Public Transport Accessibility Levels (2014);% 4-6 (good access)	
+
+#---density---# 
+#young_p -      2013 Census Population;Age Structure;16-29	+ 2014 Census Population;Age Structure;30-44
+#housing -      Dwelling type;All Households;2011
+
+
+
+```
+
+
+
+```{r}
+
+#let's map our dependent variable to see if the join has worked:
+tmap_mode("view")
+
+qtm(londonLSOAProfiles, fill = "airbnb_price", borders = NULL)
+#qtm(londonLSOAProfiles, fill = "airbnb_freq", borders = NULL)
+#qtm(londonLSOAProfiles, fill = "culture_freq", borders = NULL)
+#qtm(londonLSOAProfiles, fill = "culture_rating", borders = NULL)
+
+```
+
+
+```{r}
+
+#let's check the distribution of these variables first
+#ggplot(londonLSOAProfiles, aes(x=`airbnb_price`)) + geom_histogram(aes(y = ..density..),binwidth = 5) + geom_density(colour="red", size=1, adjust=1)
+
+#let's check the distribution of these variables first
+#ggplot(londonLSOAProfiles, aes(x=`airbnb_freq`)) + geom_histogram(aes(y = ..density..),binwidth = 5) + geom_density(colour="red", size=1, adjust=1)
+
+```
+
+
+
+```{r}
+
+
+#6.8.5 Mapping outputs
+#No we can plot a map of the local Moran’s I outputs…
+
+#We’ll set the breaks manually based on the rule that data points >2.58 or <-2.58 standard deviations away from the mean are significant at the 99% level (<1% chance that autocorrelation not present); >1.96 - <2.58 or <-1.96 to >-2.58 standard deviations are significant at the 95% level (<5% change that autocorrelation not present). >1.65 = 90% etc.
+
+
+#calculate the mean, min and max and std of the Airbnb prices for the whole of London
+
+summary(londonLSOAProfiles$airbnb_freq)
+
+airbnb_freq_mean <- mean(londonLSOAProfiles$airbnb_freq)
+airbnb_freq_std <- sd(londonLSOAProfiles$airbnb_freq)
+airbnb_freq_mad <- mad(londonLSOAProfiles$airbnb_freq)
+
+#then remove Airbnb where the price is two standard deviations away from the mean - i.e. outliers
+#airbnb <- subset(airbnb, price_average < (airbnb_price_mean+(2*airbnb_price_std)))
+londonLSOAProfiles <- subset(londonLSOAProfiles, airbnb_freq < (airbnb_freq_mean+(4*airbnb_freq_std)))
+
+```
+
+
+
+
+
+
+```{r}
+
+q <- qplot(x = `culture_freq`, y = `airbnb_price`, data=londonLSOAProfiles)
+
+#plot with a regression line - note, I've added some jitter here as the x-scale is rounded
+q + stat_smooth(method="lm", se=FALSE, size=1) + geom_jitter()
+
+
+```
+
+
+```{r}
+
+q <- qplot(x = `culture_rating`, y = `airbnb_price`, data=londonLSOAProfiles)
+
+#plot with a regression line - note, I've added some jitter here as the x-scale is rounded
+q + stat_smooth(method="lm", se=FALSE, size=1) + geom_jitter()
+
+
+```
+
+
+```{r}
+
+q <- qplot(x = `culture_freq`, y = `airbnb_freq`, data=londonLSOAProfiles)
+
+#plot with a regression line - note, I've added some jitter here as the x-scale is rounded
+q + stat_smooth(method="lm", se=FALSE, size=1) + geom_jitter()
+
+
+```
+
+
+```{r}
+
+q <- qplot(x = `culture_rating`, y = `airbnb_freq`, data=londonLSOAProfiles)
+
+#plot with a regression line - note, I've added some jitter here as the x-scale is rounded
+q + stat_smooth(method="lm", se=FALSE, size=1) + geom_jitter()
+
+
+```
+
+
+
+```{r}
+
+#let's check the distribution of these variables first
+ggplot(londonLSOAProfiles, aes(x=`airbnb_price`)) + geom_histogram(aes(y = ..density..),binwidth = 5) + geom_density(colour="red", size=1, adjust=1)
+
+
+```
+
+
+```{r}
+
+#let's check the distribution of these variables first
+ggplot(londonLSOAProfiles, aes(x=`airbnb_freq`)) + geom_histogram(aes(y = ..density..),binwidth = 5) + geom_density(colour="red", size=1, adjust=1)
+
+
+```
+
+```{r}
+
+p1_log <- ggplot(londonLSOAextradata, aes(x=log10(airbnb_freq))) +
+  geom_density(fill = "#56B4E9", color = "transparent") +
+  scale_x_continuous(
+    expand = c(0.01, 0),
+    name = expression(paste("log"["10"], "(number of inhabitants)"))
+  ) +
+  scale_y_continuous(expand = c(0, 0), name = "density") +
+  coord_cartesian(clip = "off") +
+  theme_dviz_grid(12) +
+  theme(plot.margin = margin(3, 1.5, 12, 1.5))
+
+p2_log <- ggplot(londonLSOAextradata, aes(x=log10(airbnb_freq))) +
+  stat_ecdf(geom = "step", color = "#0072B2", pad = FALSE) +
+  scale_x_continuous(
+    expand = c(0.01, 0),
+    name = expression(paste("log"["10"], "(number of inhabitants)"))
+  ) +
+  scale_y_continuous(expand = c(0.01, 0), name = "cumulative frequency") +
+  coord_cartesian(clip = "off") +
+  theme_dviz_grid(12) +
+  theme(plot.margin = margin(3, 1.5, 12, 1.5))
+
+plot_grid(p1_log, p2_log, ncol = 1, align = 'v', labels = 'auto')
+```
+
+
+
+
+
+
+```{r}
+ggplot(londonLSOAProfiles, aes(x=log(`culture_rating`))) + geom_histogram(aes(y = ..density..),binwidth = 0.1) + geom_density(colour="red", size=1, adjust=1)
+```
+
+
+```{r}
+
+p1_log <- ggplot(londonLSOAProfiles, aes(x=log(culture_freq))) +
+  geom_density(fill = "#56B4E9", color = "transparent") +
+  scale_x_continuous(
+    expand = c(0.01, 0),
+    name = expression(paste("log"["10"], "(number of inhabitants)"))
+  ) +
+  scale_y_continuous(expand = c(0, 0), name = "density") +
+  coord_cartesian(clip = "off") +
+  theme_dviz_grid(12) +
+  theme(plot.margin = margin(3, 1.5, 12, 1.5))
+
+p2_log <- ggplot(londonLSOAProfiles, aes(x=log10(culture_freq))) +
+  stat_ecdf(geom = "step", color = "#0072B2", pad = FALSE) +
+  scale_x_continuous(
+    expand = c(0.01, 0),
+    name = expression(paste("log"["10"], "(number of inhabitants)"))
+  ) +
+  scale_y_continuous(expand = c(0.01, 0), name = "cumulative frequency") +
+  coord_cartesian(clip = "off") +
+  theme_dviz_grid(12) +
+  theme(plot.margin = margin(3, 1.5, 12, 1.5))
+
+plot_grid(p1_log, p2_log, ncol = 1, align = 'v', labels = 'auto')
+
+
+```
+
+
+
+We need to transform some of these variables
+
+
+```{r}
+
+#plot the log of average Airbnb price per LSOA
+ggplot(londonLSOAProfiles, aes(x=airbnb_price)) + geom_histogram()
+
+```
+
+
+```{r}
+
+#plot the log of count of cultural infrastructure per LSOA
+ggplot(londonLSOAProfiles, aes(x=log(`culture_freq`))) + geom_histogram(bins = 50)
+
+```
+
+
+```{r}
+
+symbox(~`culture_freq`, londonLSOAProfiles, na.rm=T, powers=seq(-3,3,by=.5))
+
+```
+
+
+
+```{r}
+
+ggplot(londonLSOAProfiles, aes(x=(`culture_freq`)^-1)) + geom_histogram(bins = 50)
+
+```
+
+
+
+```{r}
+
+
+qplot(x =(`culture_freq`)^-1, y = airbnb_price, data=londonLSOAProfiles)
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+
+#londonLSOAProfiles <- londonLSOAProfiles[!is.na(as.numeric(as.character(londonLSOAProfiles$'Qualifications (2011);Highest level of qualification: Level 4 qualifications and above;'))),]
+#londonLSOAProfiles <- londonLSOAProfiles[!is.na(as.numeric(as.character(londonLSOAProfiles$'culture_freq'))),]
+#londonLSOAProfiles <- londonLSOAProfiles[!is.na(as.numeric(as.character(londonLSOAProfiles$'culture_rating'))),]
+
+#londonLSOAProfiles <- londonLSOAProfiles[londonLSOAProfiles$'culture_freq'!=0,]
+#londonLSOAProfiles <- londonLSOAProfiles[londonLSOAProfiles$'culture_rating'!=0,]
+
+#new.df[new.df$values!=0,]
+
+
+#independent variables
+
+#areaLSOA -     Population Density;Area (Hectares);
+#pop_density -  Population Density;Persons per hectare;2013	
+#bame_p -       Ethnic Group;BAME (%);2011	
+#nonUK -        Country of Birth;% Not United Kingdom;2011	
+#house_own -    Tenure;Owned outright (%);2011
+#house_mortg -  Tenure;Owned with a mortgage or loan (%);2011	
+#house_price -  House Prices;Median Price (£);2014	
+#employees -    Economic Activity;Employment Rate;2011	
+#education -    Qualifications;% Highest level of qualification: Level 4 qualifications and above;2011	
+#income -       Household Income, 2011/12;Median Annual Household Income estimate (£)	
+#transport -    Public Transport Accessibility Levels (2014);% 4-6 (good access)	
+
+#---density---# 
+#young_p -      2013 Census Population;Age Structure;16-29	+ 2014 Census Population;Age Structure;30-44
+#housing -      Dwelling type;All Households;2011
+
+#airbnb_freq
+#airbnb_price
+
+#select some variables from the data file
+myvars <- c("airbnb_price",
+            "airbnb_freq",
+            'young_p',
+            'pop_density',
+            'bame_p',
+            'nonUK',
+            'education',
+            'employees',
+            'income',
+            'housing',
+            'house_own',
+            'house_mortg',
+            'house_price',
+            'transport',
+            "culture_freq",
+            "culture_rating")
+
+#Extracting data.frame from simple features object in R - https://gis.stackexchange.com/questions/224915/extracting-data-frame-from-simple-features-object-in-r
+x <- londonLSOAProfiles[myvars]
+st_geometry(x) <- NULL
+class(x)
+
+#check their correlations are OK
+#install.packages("Hmisc")
+#http://www.sthda.com/english/wiki/correlation-matrix-a-quick-start-guide-to-analyze-format-and-visualize-a-correlation-matrix-using-r-software
+library("Hmisc")
+cormat <- rcorr(as.matrix(x))
+
+library(corrplot)
+# Insignificant correlations are leaved blank
+corrplot(cormat$r, type="upper", order="hclust", 
+         p.mat = cormat$P, sig.level = 0.01, insig = "blank")
+
+
+```
+
+
+```{r}
+#corrplot(cormat$r)
+```
+
+
+
+```{r}
+
+#corrplot(cormat$P)
+```
+
+
+
+

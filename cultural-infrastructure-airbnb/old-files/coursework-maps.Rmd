@@ -1,0 +1,193 @@
+---
+title: "coursework-maps"
+author: "Vishal Kumar"
+date: "07/01/2020"
+output: html_document
+---
+
+```{r}
+
+
+#----load all the libraries needed
+library(sf)
+library(tmap)
+library(tmaptools)
+library(plyr)
+
+library(pins)
+library(geojsonio)
+
+library(rgdal)
+library(broom)
+library(mapview)
+library(crosstalk)
+library(sp)
+library(spdep)
+library(car)
+library(raster)
+
+library(tidyverse)
+library(tidyr)
+
+# load in libraries
+library(scales)
+library(lubridate)
+library(ggridges) # for geom_density_line()
+library(plotly)
+
+#tmap_mode("plot")
+
+## Andy MacLachlan and Adam Dennett (2019). CASA0005 Geographic Information Systems and Science. URL https://andrewmaclachlan.github.io/CASA0005repo/index.html.
+
+# (MacLachlan & Dennett, 2019: Section X.X)
+
+```
+
+
+
+
+```{r}
+
+londonLSOAProfiles_inner <- londonLSOAProfiles[londonLSOAProfiles$InnerOuter == 'Inner London',]
+
+
+```
+
+
+
+```{r}
+
+p_pubs <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Pubs', fill = londonLSOAProfiles_inner$'Pubs'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Pubs count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+p_music <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Music venues (all)', fill = londonLSOAProfiles_inner$'Music venues (all)'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Music Venues (all) count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+p_community <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Community centres', fill = londonLSOAProfiles_inner$'Community centres'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Community centres count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+p_archives <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Archives', fill = londonLSOAProfiles_inner$'Archives'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Archives count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+p_libraries <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Libraries', fill = londonLSOAProfiles_inner$'Libraries'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Libraries count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+p_theatres <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Theatres', fill = londonLSOAProfiles_inner$'Theatres'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Theatres count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+p_dance_studios <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Dance rehearsal studios', fill = londonLSOAProfiles_inner$'Dance rehearsal studios'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Dance rehearsal studios count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+p_galleries <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Commercial galleries', fill = londonLSOAProfiles_inner$'Commercial galleries'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Commercial galleries count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+p_dance_venues <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Dance performance venues', fill = londonLSOAProfiles_inner$'Dance performance venues'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Dance performance venues count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+p_museums <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Museums and public galleries', fill = londonLSOAProfiles_inner$'Museums and public galleries'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Museums and public galleries count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+
+ggdraw(align_legend(p_music))
+
+```
+
+
+```{r}
+
+ggsave("maps/density/1map_pub.png", plot = p_pubs, width = 10, height = 7)
+ggsave("maps/density/2map_music.png", plot = p_music, width = 10, height = 7)
+ggsave("maps/density/3map_community.png", plot = p_community, width = 10, height = 7)
+ggsave("maps/density/4map_archives.png", plot = p_archives, width = 10, height = 7)
+ggsave("maps/density/5map_libraries.png", plot = p_libraries, width = 10, height = 7)
+ggsave("maps/density/6map_theatres.png", plot = p_theatres, width = 10, height = 7)
+ggsave("maps/density/7map_dance_studios.png", plot = p_dance_studios, width = 10, height = 7)
+ggsave("maps/density/8map_galleries.png", plot = p_galleries, width = 10, height = 7)
+ggsave("maps/density/9map_dance_venues.png", plot = p_dance_venues, width = 10, height = 7)
+ggsave("maps/density/10map_museusm.png", plot = p_museums, width = 10, height = 7)
+```
+
+
+
+```{r}
+
+# p1 <- ggplot(londonLSOAProfiles_inner) +
+#   geom_sf(aes(color = Pubs, fill = Pubs), size = 0.3/.pt) +
+#   geom_sf(data = londonLSOAProfiles_inner, fill = NA, color = "grey30", size = 0.2) +
+#   scale_fill_gradient(low = "#56B1F74D", high = "#132b43") +
+#   scale_fill_continuous_sequential(
+#     aesthetics = c("color", "fill"),
+#     palette = "YlGnBu", rev = TRUE, cmax = 20, c2 = 20, p2 = 1.75,
+#     name = "Cultural Infrastructure count\nLSOA",
+#     limits = c(1, 150),
+#     breaks = c(1, 20, 40, 80, 160, 200),
+#     labels = c("1", "20", "40", "80", "160", "200"),
+#     guide = guide_colorbar(
+#       frame.colour = "black",
+#       ticks.colour = "white",
+#       barwidth = grid::unit(15, "pt"),
+#       barheight = grid::unit(90, "pt")
+#     )
+#   ) +
+#   theme_dviz_map(12, rel_small = 1) +
+#   theme(
+#     #plot.background = element_rect(fill = "cornsilk"),
+#     legend.position = c(1, 1),
+#     legend.justification = c(1, 1),
+#     legend.spacing.x = grid::unit(3, "pt"),
+#     legend.title = element_text(hjust = 0.5),
+#     plot.margin = margin(3, 3, 3, 1.5)
+#   )
+
+
+# p2 <- ggplot(londonLSOAProfiles_inner) +
+#   geom_sf(aes(color = londonLSOAProfiles_inner$'Music venues (all)', fill = londonLSOAProfiles_inner$'Music venues (all)'), size = 0.3/.pt) + 
+#   geom_sf(data = londonLSOAProfiles_inner, fill = NA, color = "grey30", size = 0.2) +
+#   scale_fill_gradient(low = "#56B1F74D", high = "#132b43") +
+#   scale_fill_continuous_sequential(
+#     aesthetics = c("color", "fill"),
+#     palette = "YlGnBu", rev = TRUE, cmax = 20, c2 = 20, p2 = 1.75,
+#     name = "Cultural Infrastructure count\nLSOA",
+#     limits = c(1, 200),
+#     breaks = c(1, 20, 40, 80, 160, 200),
+#     labels = c("1", "20", "40", "80", "160", "200"),
+#     guide = guide_colorbar(
+#       frame.colour = "black",
+#       ticks.colour = "white",
+#       barwidth = grid::unit(15, "pt"),
+#       barheight = grid::unit(90, "pt")
+#     )
+#   ) +
+#   theme_dviz_map(12, rel_small = 1) +
+#   theme(
+#     #plot.background = element_rect(fill = "cornsilk"),
+#     legend.position = c(1, 1),
+#     legend.justification = c(1, 1),
+#     legend.spacing.x = grid::unit(3, "pt"),
+#     legend.title = element_text(hjust = 0.5),
+#     plot.margin = margin(3, 3, 3, 1.5)
+#   )
+
+```
+
+

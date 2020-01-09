@@ -1,0 +1,473 @@
+# Load Data
+
+## Load packages
+
+```{r, cache = TRUE, message=FALSE}
+
+#----load all the libraries needed
+library(sf)
+library(plyr)
+library(pins)
+library(tidyverse)
+library(tidyr)
+library(sp)
+#library(spdep)
+
+options(scipen = 999)
+
+```
+
+## Download Airbnb data
+
+I collected every Airbnb "listings.csv" file for London from the website Inside Airbnb (http://insideairbnb.com/get-the-data.html) for the years 2017 and 2018, concatinated them all together and put it here (github link) on this project's GitHub repo. In total, there are 242,490 unqiue listings with 14 columns of attributes. None of that raw data has had any post processing.
+
+```{r, cache = TRUE, message=FALSE }
+
+#----read in Airbnb London listings data from the project GitHub repo as a dataframe
+airbnb <- read_csv("https://raw.githubusercontent.com/vishalkumarlondon/CASA0005_coursework/master/data/airbnb-london-2017-2018.csv")
+print(dim(airbnb))
+
+```
+
+This study does not look at the temporal change in price - i.e. the price difference between 2017 to 2018 - as the dependent variable. Rather, it averages out the price for each unique listing (by id) between 2017 and 2018. By doing this, adjustments for natural fluctations - for instance, seasonality - are averaged out. Future research may study dive deeper into the differences in price across time and season.
+
+```{r, cache = TRUE, message=FALSE }
+
+#----create a new dataframe by grouping the listings id and creating an average price column
+price_average <- airbnb %>% group_by(id) %>% summarise(price = mean(price))
+colnames(price_average) <- c("id", "price_average")
+
+#----join the new dataframe to the original Airbnb data to add a column for the average price per listing between 2017 and 2018
+airbnb <- inner_join(airbnb, price_average, by = c('id'))
+
+#----keep the original Airbnb data my making a `airbnb_old` dataframe
+airbnb_old <- airbnb
+
+#----remove unnecessary columns and remove duplicate listing ids to leave unique listings with average price between 2017 and 2018
+#airbnb <- airbnb[, ! colnames(airbnb) %in% c("price", "last_review", "year", "month", "day")]
+airbnb <- airbnb[, ! colnames(airbnb) %in% c("price")]
+airbnb <- airbnb[!duplicated(airbnb[c("id")]),]
+
+#----turn Airbnb datafram into an sf
+airbnb <- st_as_sf(airbnb, coords = c("longitude", "latitude"), crs = 4326)
+airbnb <- st_transform(airbnb, 27700)
+
+```
+
+At this stage, outliers in price are removed, this is because the average price for some listings went as high as £10,000. All listings that had an average price 2.58 times the mean were removed. Moreover, prices recorded as zero were also removed.
+
+```{r, cache = TRUE, message=FALSE }
+
+#----calculate the mean, min and max and std of the Airbnb prices for the whole of London
+print(summary(airbnb$price_average))
+
+airbnb_price_mean <- mean(airbnb$price_average)
+airbnb_price_std <- sd(airbnb$price_average)
+airbnb_price_mad <- mad(airbnb$price_average)
+
+#----then remove Airbnb where the price is two standard deviations away from the mean - i.e. outliers
+airbnb <- subset(airbnb, price_average < (airbnb_price_mean+(2.58*airbnb_price_std)) & price_average > (airbnb_price_mean-(2.58*airbnb_price_std)))
+#----then remove Airbnb where the price is zero
+airbnb <- airbnb[airbnb$price_average != 0,]
+
+print(summary(airbnb$price_average))
+
+```
+
+
+```{r}
+
+#----calculate the mean, min and max and std of the Airbnb prices for the whole of London
+print(summary(airbnb$price_average))
+
+airbnb_price_mean <- mean(airbnb$price_average)
+airbnb_price_std <- sd(airbnb$price_average)
+airbnb_price_mad <- mad(airbnb$price_average)
+
+#----then remove Airbnb where the price is two standard deviations away from the mean - i.e. outliers
+airbnb <- subset(airbnb, price_average < (airbnb_price_mean+(2.58*airbnb_price_std)) & price_average > (airbnb_price_mean-(2.58*airbnb_price_std)))
+#----then remove Airbnb where the price is zero
+airbnb <- airbnb[airbnb$price_average != 0,]
+
+print(summary(airbnb$price_average))
+```
+
+
+
+
+
+## Download Cultural Infrastructure data
+
+I collected data for every cultural venue in London by borough from data.london.gov (https://data.london.gov.uk/dataset/cultural-infrastructure-map). Specifically, the "Cultural venues by London borough" zip file was downloaded and then all the files were concatinated. In total there were 10,003 cultural venues in London.
+
+This entire dataset was then passed to the Google Places API to calculate the average user rating and total number of reviews for each venue. The total run time to recieve a ratings and reviews took 90 minutes, which is why it was much more efficient to calculated these metrics outside of this R script. For more information on the Google Place API, please visit this link (X)
+
+1,958 venues out of the 10,003 total did not possess any, or had zero, user ratings and reviews on Google Places and were therefore dropped leaving 8,045 venues remaining for the analysis.
+
+```{r, cache = TRUE, message=FALSE }
+
+#----read in the Cultural Infrastructure data from porject GitHubb
+culture <- read.csv("https://raw.githubusercontent.com/vishalkumarlondon/CASA0005_coursework/master/data/all-cultural-infra-map-google-places.csv")
+
+print(dim(culture))
+
+print(colSums(is.na(culture)))
+
+print(dim(culture[culture$rating == 0, ]))
+
+#----only keep rows from Cultural Infrastructure if the longitude cell is filled in (i.e. not Null)
+culture <- culture[complete.cases(culture$longitude), ]
+
+#----only keep rows from Cultural Infrastructure  if the rating cell is filled in (i.e. not Null)
+culture <- culture[!is.na(as.numeric(as.character(culture$rating))),]
+
+#----only keep rows from Cultural Infrastructure  if the rating cell is not 0
+culture <- culture[culture$rating != 0, ]
+
+#----turn the Cultural Infrastructure dataframe into an sf object
+culture <- st_as_sf(culture, coords = c("longitude", "latitude"),  crs = 4326)
+culture <- st_transform(culture, 27700)
+
+#culture_withPubs <- culture
+#culture <- culture[!culture$Cultural.Venue.Type == 'Pubs',]
+
+```
+
+## Download London shapefile data
+
+The GIS shapefile boundaries for London were downloaded from data.london (https://data.london.gov.uk/dataset/statistical-gis-boundary-files-london). This research is interested in studying the Lower Super Output Area (LSOA) 2011 boundary area, however, Ward and Borough level shape files were also stored in a list if necessary. In total there are 4,835 LSOA areas.
+
+```{r, cache = TRUE, message=FALSE }
+
+#----the following code has been adapted from (MacLachlan & Dennett, 2019: Section 10.4.1)
+
+#----use the pin function from the pins package to store the GIS London boundary .zip files from data.london
+pin_london_GIS <- pin("https://data.london.gov.uk/download/statistical-gis-boundary-files-london/9ba8c833-6370-4b11-abdc-314aa020d5e0/statistical-gis-boundaries-london.zip")
+
+#----grab the shape files for Borough, Ward and LSOA based on their string values and cache
+s <- grepl("Borough|Ward_|LSOA_2011", pin_london_GIS) & grepl(".shp$", pin_london_GIS)
+
+#----create a list for Borough, Ward and LSOA shape files
+BoroughsWardsLSOA <- pin_london_GIS[s]
+
+#----turn each element in the list into a SF file using the st_read function
+BoroughsWardsLSOAsf <- lapply(BoroughsWardsLSOA, st_read)
+
+BoroughsWardsLSOAsf <- lapply(BoroughsWardsLSOAsf, crs=27700, st_transform)
+
+#----create a variable for LSOAs in London by selecting the third element in the list
+londonLSOA <- BoroughsWardsLSOAsf[[3]]
+
+
+```
+
+## Join Airbnb data with LSOA shapefile
+
+The functions below join the Airbnb data to the LSOA areas in London and a) count the number of Airbnb listings per LSOA, b) calculating the average price of Airbnb lisitngs per LSOA, c) counting the number of Airbnb user reviews per LSOA, and d) calculating the average number of Airbnb user reviews per LSOA.
+
+```{r, cache = TRUE, message=FALSE }
+
+JoinAirbnb_count <- function(data1, data2) {
+  #----join dataframes
+  joined <- st_join(data1, data2, join = st_within)
+  #----count the number of points per LSOA
+  count <- as.data.frame(plyr::count(joined$LSOA11CD))
+  names(count) <- c("LSOA11CD", "airbnb_freq")
+  return(count)
+}
+
+JoinAirbnb_price <- function(data1, data2) {
+  #----join dataframes
+  joined <- st_join(data1, data2, join = st_within)
+  #----calculate the average price of Airbnb per LSOA
+  price <- aggregate(price_average~LSOA11CD, joined, mean)
+  names(price) <- c("LSOA11CD", "airbnb_price")
+  return(price)
+}
+
+JoinAirbnb_NOreviews <- function(data1, data2) {
+    #----join dataframes
+  joined <- st_join(data1, data2, join = st_within)
+  #----calculate the average price of Airbnb per LSOA
+  reviews <- aggregate(number_of_reviews~LSOA11CD, joined, sum)
+  names(reviews) <- c("LSOA11CD", "airbnb_no_reviews")
+  return(reviews)
+}
+
+JoinAirbnb_AVreviews <- function(data1, data2) {
+    #----join dataframes
+  joined <- st_join(data1, data2, join = st_within)
+  #----calculate the average price of Airbnb per LSOA
+  reviews <- aggregate(number_of_reviews~LSOA11CD, joined, mean)
+  names(reviews) <- c("LSOA11CD", "airbnb_av_reviews")
+  return(reviews)
+}
+
+
+#----////////////////////////////////////////////////////////////////////////
+
+
+#----AIRBNB COUNT----#
+#----use the first function to count the number of Airbnbs in each LSOA
+airbnbLSOA_count <- JoinAirbnb_count(airbnb, londonLSOA)
+
+#----AIRBNB PRICE----#
+#----use the second function to calculate the average price of Airbnb listings in each LSOA
+airbnbLSOA_price <- JoinAirbnb_price(airbnb, londonLSOA)
+
+#----AIRBNB NUMBER OF REVIEWS----#
+#----use the third function to count the number of Airbnb reviews in each LSOA
+airbnbLSOA_review_count <- JoinAirbnb_NOreviews(airbnb, londonLSOA)
+
+#----AIRBNB AVERAGE NUMBER OF REVIEWS----#
+#----use the fourth function to calculate the average number of Airbnb reviews in each LSOA
+airbnbLSOA_review_average <- JoinAirbnb_AVreviews(airbnb, londonLSOA)
+
+
+```
+
+## Join Culture data with LSOA shapefile
+
+The functions below join the Cultural Infrastructure data to the LSOA areas in London and a) count the number of Cultural Infrastructure by cultural venue type per LSOA, b) calculating the average Google Places user rating by cultural venue type per LSOA, c) calculating the average number of Google Places user reviews by cultural venue type per LSOA, and d) counting the total number of Google Places user reviews by cultural venue type per LSOA.
+
+```{r, cache = TRUE, message=FALSE }
+
+JoinCulture_count <- function(data1, data2) {
+  #----join dataframes
+  joined <- st_join(data1, data2, join = st_within)
+  #----count the number cultural venue types per LSOA
+  #source----https://stackoverflow.com/questions/10879551/frequency-count-of-two-column-in-r
+  count <- ddply(joined, .(joined$LSOA11CD, joined$Cultural.Venue.Type), nrow)
+  names(count) <- c("LSOA11CD", "cultural_venue_type", "culture_freq")
+  #----then use the spread function from the tidyr lib to turn long data into wide data - i.e. a column for each cultural venue type
+  #source----https://uc-r.github.io/tidyr
+  count <- count %>% spread(cultural_venue_type, culture_freq)
+  #----then use the rowSums function to sum up the counts from all cultural venue type, skip NA values and create new column
+  count$culture_freq <- rowSums(count[,sapply(count, is.numeric)], na.rm=TRUE)
+  return(count)
+}
+
+JoinCulture_rating <- function(data1, data2) {
+  #----join dataframes
+  joined <- st_join(data1, data2, join = st_within)
+  #----calculate the average rating of cultural venue types per LSOA
+  #https://stackoverflow.com/questions/11562656/calculate-the-mean-by-group
+  average <- ddply(joined, .(joined$LSOA11CD, joined$Cultural.Venue.Type), function(x) mean(x$rating))
+  names(average) <- c("LSOA11CD", "cultural_venue_type", "culture_rating")
+  #----then use the spread function from the tidyr lib to turn long data into wide data - i.e. a column for each cultural venue type
+  #source----https://uc-r.github.io/tidyr
+  average <- average %>% spread(cultural_venue_type, culture_rating)
+  #----then use the rowSums function to average the ratings from all cultural venue type, skip NA values and create new column
+  average$culture_rating <- rowMeans(average[,sapply(average, is.numeric)], na.rm=TRUE)
+  return(average)
+}
+
+JoinCulture_NOreviews <- function(data1, data2) {
+  #----join dataframes
+  joined <- st_join(data1, data2, join = st_within)
+  #----calculate the sum of reviews of cultural venue types per LSOA
+  #https://stackoverflow.com/questions/11562656/calculate-the-mean-by-group
+  count <- ddply(joined, .(joined$LSOA11CD, joined$Cultural.Venue.Type), function(x) sum(x$user_ratings_total))
+  names(count) <- c("LSOA11CD", "cultural_venue_type", "culture_no_reviews")
+  #----then use the spread function from the tidyr lib to turn long data into wide data - i.e. a column for each cultural venue type
+  #source----https://uc-r.github.io/tidyr
+  count <- count %>% spread(cultural_venue_type, culture_no_reviews)
+  #----then use the rowSums function to sum up the reviews from all cultural venue type, skip NA values and create new column
+  count$culture_no_reviews <- rowSums(count[,sapply(count, is.numeric)], na.rm=TRUE)
+  return(count)
+}
+
+JoinCulture_AVreviews <- function(data1, data2) {
+  #----join dataframes
+  joined <- st_join(data1, data2, join = st_within)
+  #----calculate the average rating of cultural venue types per LSOA
+  #https://stackoverflow.com/questions/11562656/calculate-the-mean-by-group
+  average <- ddply(joined, .(joined$LSOA11CD, joined$Cultural.Venue.Type), function(x) mean(x$user_ratings_total))
+  names(average) <- c("LSOA11CD", "cultural_venue_type", "culture_av_reviews")
+  #----then use the spread function from the tidyr lib to turn long data into wide data - i.e. a column for each cultural venue type
+  #source----https://uc-r.github.io/tidyr
+  average <- average %>% spread(cultural_venue_type, culture_av_reviews)
+  #----then use the rowSums function to average the reviews from all cultural venue type, skip NA values and create new column
+  average$culture_av_reviews <- rowMeans(average[,sapply(average, is.numeric)], na.rm=TRUE)
+  return(average)
+}
+
+
+#----////////////////////////////////////////////////////////////////////////
+
+
+#----CULTURE COUNT----#
+#----use the first function to count the number for each cultural venue category in each LSOA
+cultureLSOA_count <- JoinCulture_count(culture, londonLSOA)
+
+#----CULTURE RATING----#
+#----use the second function to calculate the average rating of Google Places reviews for each cultural venue category in each LSOA
+cultureLSOA_rating <- JoinCulture_rating(culture, londonLSOA)
+
+#----CULTURE NUMBER OF REVIEWS----#
+#----use the third function to count the number of Google Places reviews for each cultural venue category in each LSOA
+cultureLSOA_review_count <- JoinCulture_NOreviews(culture, londonLSOA)
+
+#----CULTURE AVERAGE NUMBER OF REVIEWS----#
+#----use the third function to count the number of Google Places reviews for each cultural venue category in each LSOA
+cultureLSOA_review_average <- JoinCulture_AVreviews(culture, londonLSOA)
+
+
+```
+
+## Join Airbnb, Culture and LSOA shapefile data
+
+Having done the previous calculations for Airbnb and Cultural Infrastructure per LSOA, all the data is joined together.
+
+```{r, cache = TRUE, message=FALSE }
+
+#----merge all dataframes into one
+#https://stackoverflow.com/questions/8091303/simultaneously-merge-multiple-data-frames-in-a-list
+#install safejoin package from GitHub
+devtools::install_github("moodymudskipper/safejoin")
+library(safejoin)
+
+#----use eat function from safejoin to merge a list of all the dataframes
+londonLSOAextradata <- eat(airbnbLSOA_count, list(airbnbLSOA_price, airbnbLSOA_review_count, airbnbLSOA_review_average, cultureLSOA_count, cultureLSOA_rating, cultureLSOA_review_count, cultureLSOA_review_average), .by = "LSOA11CD", .conflict = ~.x)
+
+
+```
+
+## Download the LSOA profile data
+
+The LSOA atlas (https://data.london.gov.uk/dataset/lsoa-atlas) provides a summary of demographic and related data for each Lower Super Output Area in Greater London. Some of this attribbute data for each LSOA will be useful as independent variable later in the analysis. This data is downloaded from data.london and subset by 15 columns which are most relevant as per Dudas et al's (2017) paper.
+
+```{r, cache = TRUE, message=FALSE }
+
+#----run the code below if you want to read in LSOA attribute data using the current 2011 boundaries
+#----NOTE: There is comparatively less data for the new boundaries compared with the old boundaries
+
+londonLSOAProfiles <- read_csv("https://data.london.gov.uk/download/lsoa-atlas/0193f884-2ccd-49c2-968e-28aa3b1c480d/lsoa-data.csv", na = c("", "NA", "n/a"), locale = locale(encoding = 'Latin1'), col_names = TRUE)
+
+select.me <- c('Lower Super Output Area',
+               'Population Density;Area (Hectares);',
+               'Population Density;Persons per hectare;2013',
+               'Ethnic Group;BAME (%);2011',
+               'Country of Birth;% Not United Kingdom;2011',
+               'Tenure;Owned outright (%);2011',
+               'Tenure;Owned with a mortgage or loan (%);2011',
+               'House Prices;Median Price (£);2014',
+               'Economic Activity;Employment Rate;2011',
+               'Qualifications;% Highest level of qualification: Level 4 qualifications and above;2011',
+               'Household Income, 2011/12;Median Annual Household Income estimate (£)',
+               'Public Transport Accessibility Levels (2014);% 4-6 (good access)',
+               '2013 Census Population;Age Structure;16-29',
+               '2014 Census Population;Age Structure;30-44',
+               'Dwelling type;All Households;2011')
+
+londonLSOAProfiles <- londonLSOAProfiles[,select.me]
+
+```
+
+## Join LSOA profile data to the rest
+
+Now that we have all of our data, we join them all together to create the londonLSOAProfiles sf object. Moreover, we caclulate the frequency density of cultural venue type per km^2 in every LSAO as per  
+
+```{r, cache = TRUE, message=FALSE }
+
+#----merge the LSOA boundaries shapefile with the and LSOA attribute dataframe
+londonLSOAProfiles <- inner_join(londonLSOA, londonLSOAProfiles, by = c("LSOA11CD" = "Lower Super Output Area"))
+#londonLSOAProfiles <- na.omit(londonLSOAProfiles)
+
+#----join the extra data - Airbnb price & counts and culture counts - to the LSAO profile data
+londonLSOAProfiles <- inner_join(londonLSOAProfiles, londonLSOAextradata, by = c('LSOA11CD'))
+
+```
+
+## Download Inner/Outer London boundaries
+
+It will be useful to compare Airbnb lisitings and cultural infrastructure in Inner London vs Outer London as it is likely that the freqncy, price and average ratings of the former will all be higher than the later.
+
+Download the Inner/Outer London boundaries from data.london and join with our dataset.
+
+```{r, cache = TRUE, message=FALSE }
+
+#----use the pin function from the pins package to store the Inner and Outer London boundary .zip files from data.london
+pin_inner_outer <- pin("https://data.london.gov.uk/download/inner-and-outer-london-boundaries-london-plan-consultation-2009/684e59f2-9208-4da1-bf67-d8dfeb72c047/lp-consultation-oct-2009-inner-outer-london-shp.zip")
+
+#----pull out the Inner and Outer London shapefile
+i_o <- grepl("lp-consultation-oct-2009-inner-outer", pin_inner_outer) & grepl(".shp$", pin_inner_outer)
+
+#----create a list for the shape file
+inner_outer <- pin_inner_outer[i_o]
+
+#----turn the shapefile into a SF file using the st_read function
+inner_outerSF <- st_read(inner_outer)
+st_transform(inner_outerSF, 27700)
+
+#----join the shapefile to the LSOA SF obbject on geometry
+inner_outer_df <- st_join(londonLSOA, inner_outerSF, by = c("geometry" = "geometry"))
+inner_outer_df <- as.data.frame(inner_outer_df)
+names(inner_outer_df)[names(inner_outer_df) == 'Boundary'] <- 'InnerOuter'
+select.me <- c('LSOA11CD','InnerOuter')
+inner_outer_df <- inner_outer_df[,select.me]
+
+#----join the Inner and Outer London extra data to the LSAO profile data
+londonLSOAProfiles <- inner_join(londonLSOAProfiles, inner_outer_df, by = c("LSOA11CD" = "LSOA11CD"))
+
+#----drop duplicate rows for LSOA11CD, culture_freq, airbnb_price, airbnb_freq columns
+londonLSOAProfiles <- londonLSOAProfiles[!duplicated(londonLSOAProfiles[c("LSOA11CD", "culture_freq", "airbnb_price", "airbnb_freq")]),]
+
+#londonLSOAProfiles <- londonLSOAProfiles[londonLSOAProfiles$InnerOuter == 'Inner London',]
+
+```
+
+## Clean variables before analysis
+
+Some variable names are changed before the analysis for ease of use and also to align with Dudas et al (2017). 
+
+```{r, cache = TRUE, message=FALSE }
+
+#----change the column names of some of the independent variables
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Population Density;Area (Hectares);")] <- "areaLSOA"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Population Density;Persons per hectare;2013")] <- "pop_density"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Ethnic Group;BAME (%);2011")] <- "bame_p"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Country of Birth;% Not United Kingdom;2011")] <- "nonUK"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Tenure;Owned outright (%);2011")] <- "house_own"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Tenure;Owned with a mortgage or loan (%);2011")] <- "house_mortg"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "House Prices;Median Price (£);2014")] <- "house_price"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Economic Activity;Employment Rate;2011")] <- "employees"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Qualifications;% Highest level of qualification: Level 4 qualifications and above;2011")] <- "education"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Household Income, 2011/12;Median Annual Household Income estimate (£)")] <- "income"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Public Transport Accessibility Levels (2014);% 4-6 (good access)")] <- "transport"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "2013 Census Population;Age Structure;16-29")] <- "age16_29"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "2014 Census Population;Age Structure;30-44")] <- "age30_44"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Dwelling type;All Households;2011")] <- "housing"
+
+#----change the some of the independent variables to density values by dividing by the area of the LSOA in hectares - areaLSOA
+londonLSOAProfiles$young_p <- ((londonLSOAProfiles$age16_29 + londonLSOAProfiles$age30_44)/londonLSOAProfiles$areaLSOA)*100
+londonLSOAProfiles$housing <- (londonLSOAProfiles$housing/londonLSOAProfiles$areaLSOA)*100
+
+#----calculate the km^2 frequency density of Airbnb per LSAO (as per Dudas et al, 2017)
+londonLSOAProfiles$airbnb_freq <- (londonLSOAProfiles$airbnb_freq/londonLSOAProfiles$areaLSOA)*100
+londonLSOAProfiles$airbnb_no_reviews <- (londonLSOAProfiles$airbnb_no_reviews/londonLSOAProfiles$areaLSOA)*100
+
+#----find the column numbers for first and last cultural venue type
+which( colnames(londonLSOAProfiles)=="Archives" )
+which( colnames(londonLSOAProfiles)=="culture_freq" )
+
+#----function to change variable from freqency to freqency density per km2 by dividing by the LSOA hectare size and muliplying by 100
+A <- function(x) (x / londonLSOAProfiles$`areaLSOA`)*100
+#----calculate the km^2 frequency density of cultural venue type per LSAO (as per Dudas et al, 2017) 
+londonLSOAProfiles[33:66] <- lapply(londonLSOAProfiles[33:66], A)
+
+```
+
+
+
+
+
+```{r}
+# 
+# #devtools::install_github('rstudio/bookdown')
+# library(bookdown)
+# preview_chapter("02-load-data.Rmd")
+```
+
+
+

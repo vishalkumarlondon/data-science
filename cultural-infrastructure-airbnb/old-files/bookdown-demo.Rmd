@@ -1,0 +1,2926 @@
+--- 
+title: "A Minimal Book Example"
+author: "Yihui Xie"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: rstudio/bookdown-demo
+description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
+---
+
+# Prerequisites
+
+This is a _sample_ book written in **Markdown**. You can use anything that Pandoc's Markdown supports, e.g., a math equation $a^2 + b^2 = c^2$.
+
+The **bookdown** package can be installed from CRAN or Github:
+
+```{r eval=FALSE}
+install.packages("bookdown")
+# or the development version
+# devtools::install_github("rstudio/bookdown")
+```
+
+Remember each Rmd file contains one and only one chapter, and a chapter is defined by the first-level heading `#`.
+
+To compile this example to PDF, you need XeLaTeX. You are recommended to install TinyTeX (which includes XeLaTeX): <https://yihui.name/tinytex/>.
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
+
+<!--chapter:end:index.Rmd-->
+
+# Introduction {#intro}
+
+You can label chapter and section titles using `{#label}` after them, e.g., we can reference Chapter \@ref(intro). If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \@ref(methods).
+
+Figures and tables with captions will be placed in `figure` and `table` environments, respectively.
+
+```{r nice-fig, fig.cap='Here is a nice figure!', out.width='80%', fig.asp=.75, fig.align='center'}
+par(mar = c(4, 4, .1, .1))
+plot(pressure, type = 'b', pch = 19)
+```
+
+Reference a figure by its code chunk label with the `fig:` prefix, e.g., see Figure \@ref(fig:nice-fig). Similarly, you can reference tables generated from `knitr::kable()`, e.g., see Table \@ref(tab:nice-tab).
+
+```{r nice-tab, tidy=FALSE}
+knitr::kable(
+  head(iris, 20), caption = 'Here is a nice table!',
+  booktabs = TRUE
+)
+```
+
+You can write citations, too. For example, we are using the **bookdown** package [@R-bookdown] in this sample book, which was built on top of R Markdown and **knitr** [@xie2015].
+
+<!--chapter:end:01-intro-copy.Rmd-->
+
+# Introduction {#intro}
+
+You can label chapter and section titles using `{#label}` after them, e.g., we can reference Chapter \@ref(intro). If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \@ref(methods).
+
+Figures and tables with captions will be placed in `figure` and `table` environments, respectively.
+
+```{r nice-fig, fig.cap='Here is a nice figure!', out.width='80%', fig.asp=.75, fig.align='center'}
+par(mar = c(4, 4, .1, .1))
+plot(pressure, type = 'b', pch = 19)
+```
+
+Reference a figure by its code chunk label with the `fig:` prefix, e.g., see Figure \@ref(fig:nice-fig). Similarly, you can reference tables generated from `knitr::kable()`, e.g., see Table \@ref(tab:nice-tab).
+
+```{r nice-tab, tidy=FALSE}
+knitr::kable(
+  head(iris, 20), caption = 'Here is a nice table!',
+  booktabs = TRUE
+)
+```
+
+You can write citations, too. For example, we are using the **bookdown** package [@R-bookdown] in this sample book, which was built on top of R Markdown and **knitr** [@xie2015].
+
+<!--chapter:end:01-intro.Rmd-->
+
+# Load Data
+
+## Load packages
+
+```{r}
+
+#----load all the libraries needed
+library(sf)
+library(plyr)
+library(pins)
+library(tidyverse)
+library(tidyr)
+
+```
+
+
+## Download Airbnb data
+
+Here is a review of existing methods.
+
+
+```{r}
+
+#----read in Airbnb London listings data as a dataframe
+airbnb <- read_csv("https://raw.githubusercontent.com/vishalkumarlondon/CASA0005_coursework/master/data/airbnb-london-2017-2018.csv")
+print(dim(airbnb))
+
+#----create a new dataframe by grouping the listings id and creating an average price column
+price_average <- airbnb %>% group_by(id) %>% summarise(price = mean(price))
+colnames(price_average) <- c("id", "price_average")
+
+#----join the new dataframe to the original Airbnb data to add a column for the average price per listing between 2017 and 2018
+airbnb = inner_join(airbnb, price_average, by = c('id'))
+
+#----keep the original Airbnb data my making a `airbnb_old` dataframe
+airbnb_old <- airbnb
+
+#----remove unnecessary columns and remove duplicate listing ids to leave unique listings with average price between 2017 and 2018
+#airbnb <- airbnb[, ! colnames(airbnb) %in% c("price", "last_review", "year", "month", "day")]
+airbnb <- airbnb[, ! colnames(airbnb) %in% c("price")]
+airbnb = airbnb[!duplicated(airbnb[c("id")]),]
+
+#----turn Airbnb datafram into a spatial object
+airbnb <- st_as_sf(airbnb, coords = c("longitude", "latitude"), crs = 4326)
+airbnb <- st_transform(airbnb, 27700)
+
+```
+
+<!--chapter:end:02-load-data.Rmd-->
+
+# Literature
+
+Here is a review of existing methods.
+
+<!--chapter:end:02b-literature.Rmd-->
+
+# Methods
+
+We describe our methods in this chapter.
+
+<!--chapter:end:03-method.Rmd-->
+
+# Applications
+
+Some _significant_ applications are demonstrated in this chapter.
+
+## Example one
+
+## Example two
+
+<!--chapter:end:04-application.Rmd-->
+
+# Final Words
+
+We have finished a nice book.
+
+<!--chapter:end:05-summary.Rmd-->
+
+`r if (knitr:::is_html_output()) '
+# References {-}
+'`
+
+<!--chapter:end:06-references.Rmd-->
+
+---
+title: "Eda"
+author: "Vishal Kumar"
+date: "07/01/2020"
+output: html_document
+---
+
+
+
+```{r}
+
+
+#----load all the libraries needed
+library(sf)
+library(tmap)
+library(tmaptools)
+library(plyr)
+
+library(pins)
+library(geojsonio)
+
+library(rgdal)
+library(broom)
+library(mapview)
+library(crosstalk)
+library(sp)
+library(spdep)
+library(car)
+library(raster)
+
+library(tidyverse)
+library(tidyr)
+
+# load in libraries
+library(scales)
+library(lubridate)
+library(ggridges) # for geom_density_line()
+library(plotly)
+
+#tmap_mode("plot")
+
+## Andy MacLachlan and Adam Dennett (2019). CASA0005 Geographic Information Systems and Science. URL https://andrewmaclachlan.github.io/CASA0005repo/index.html.
+
+# (MacLachlan & Dennett, 2019: Section X.X)
+
+#data visualization packages - https://serialmentor.com/dataviz/geospatial-data.html
+
+#install.packages("remotes")
+#install.packages("devtools")
+library(remotes)
+
+#install.packages("cowplot")
+#devtools::install_github("wilkelab/cowplot")
+library(cowplot)
+
+#install.packages("colorspace")
+library(colorspace)
+
+#devtools::install_github("clauswilke/colorblindr")
+#https://rdrr.io/github/clauswilke/dviz.supp/
+#devtools::install_github("clauswilke/dviz.supp")
+library(dviz.supp)
+
+```
+
+
+
+# Clean Airbnb data
+
+```{r}
+
+
+airbnb$month <- sapply(airbnb$month, as.numeric)
+
+
+# ggplot(airbnb, aes(x = month)) +
+#   geom_density_line(fill = "#56B4E9", color = "#000000", bw = 2, kernel = "gaussian") +
+#   scale_y_continuous(limits = c(0, 0.15), expand = c(0, 0), name = "density") +
+#   scale_x_continuous(name = "month", limits = c(0, 12), expand = c(0, 0)) +
+#   coord_cartesian(clip = "off") +
+#   theme_dviz_hgrid() +
+#   theme(
+#     axis.line.x = element_blank(),
+#     plot.margin = margin(3, 7, 3, 1.5)
+#   )
+
+
+
+```
+
+```{r}
+
+
+#let's check the distribution of these variables first
+#ggplot(airbnb, aes(x=`price_average`)) + geom_histogram(aes(y = ..density..),binwidth = 5) + geom_density(colour="red", size=1, adjust=1)
+
+
+```
+
+
+
+
+# Exploratory Data Analysis Before Regression
+
+To conduct the following analysis, the Airbnb, cultural infrastructure and LSOA profile datasets have been joined. 
+
+The joined dataframe (combine_train) now has 4,333 rows for each LSOA and 71 columns.
+
+
+```{r}
+
+# A great Kaggle Kernel by X for data visualisation of exploratory data analysis of variables https://www.kaggle.com/jaseziv83/a-deep-dive-eda-into-all-variables/report
+
+# set plotting theme baseline
+theme_set(theme_minimal() +
+            theme(axis.title.x = element_text(size = 15, hjust = 1),
+                  axis.title.y = element_text(size = 15),
+                  axis.text.x = element_text(size = 12),
+                  axis.text.y = element_text(size = 12),
+                  panel.grid.major = element_line(linetype = 2),
+                  panel.grid.minor = element_line(linetype = 2),
+                  plot.title = element_text(size = 18, colour = "grey25", face = "bold"), plot.subtitle = element_text(size = 16, colour = "grey44")))
+
+col_pal <- c("#5EB296", "#4E9EBA", "#F29239", "#C2CE46", "#FF7A7F", "#4D4D4D")
+
+
+```
+
+
+
+
+```{r}
+
+londonLSOAProfiles %>% 
+  ggplot(aes(x=airbnb_freq)) +
+  geom_histogram(alpha = 0.5, fill = "#5EB296", colour = "#4D4D4D") +
+  scale_x_continuous(labels = comma) +
+  scale_y_continuous(labels = comma) +
+  ggtitle("AIRBNB FREQUENCY VARIABLE IS HEAVILY SKEWED BY SOME OUTLIERS", subtitle = "We will remove those and visualise") +
+  labs(x= "Airbnb freq per LSOA", y= "Count")
+```
+
+
+```{r}
+
+summary(londonLSOAProfiles$airbnb_freq)
+```
+
+
+```{r}
+
+outlier <- round(1.5 * IQR(londonLSOAProfiles$airbnb_freq),0)
+
+londonLSOAProfiles %>% 
+  mutate(outlier = ifelse(airbnb_freq > outlier, "Outlier", "Not Outlier")) %>% 
+  ggplot(aes(x=airbnb_freq)) +
+  geom_histogram(alpha = 0.5, fill = "#5EB296", colour = "#4D4D4D") +
+  scale_x_continuous(labels = comma) +
+  scale_y_continuous(labels = comma) +
+  ggtitle("AIRBNB FREQUENCY VARIABLE IS HEAVILY SKEWED", subtitle = "Airbnb freqency still skewed even for non-outliers") +
+  labs(x= "Airbnb freq per LSOA", y= "Count") +
+  facet_wrap(~ outlier, scales = "free")
+```
+
+
+```{r}
+
+londonLSOAProfiles %>% 
+  ggplot(aes(x= log(airbnb_freq))) +
+  geom_histogram(alpha = 0.5, fill = "#5EB296", colour = "#4D4D4D") +
+  scale_y_continuous(labels = comma) +
+  ggtitle("LOG TRANSFORMING METER READING VARIABLE IS NECESSARY", subtitle = "The variable looks a lot more workable now") +
+  labs(x= "log(Airbnb Freq)", y= "Count")
+```
+
+
+```{r}
+
+londonLSOAProfiles %>% 
+  ggplot(aes(x= log(airbnb_freq), fill = as.character(InnerOuter))) +
+  geom_density(alpha = 0.5, adjust = 2) +
+  scale_fill_manual(values = col_pal) +
+  ggtitle("THERE ARE MORE LISTINGS IN INNER LONDON", subtitle = "X") +
+  labs(x= "log(Airbnb Freq)") +
+  theme(axis.title.y = element_blank(), legend.position = "top")
+```
+
+
+
+
+
+```{r}
+
+londonLSOAProfiles %>% 
+  ggplot(aes(x=airbnb_price)) +
+  geom_histogram(alpha = 0.5, fill = "#5EB296", colour = "#4D4D4D") +
+  scale_x_continuous(labels = comma) +
+  scale_y_continuous(labels = comma) +
+  ggtitle("AIRBNB PRICE VARIABLE IS HEAVILY SKEWED BY SOME OUTLIERS", subtitle = "We will remove those and visualise") +
+  labs(x= "Airbnb price per LSOA", y= "Count")
+```
+
+
+```{r}
+
+summary(londonLSOAProfiles$airbnb_price)
+```
+
+
+```{r}
+
+outlier <- round(1.5 * IQR(londonLSOAProfiles$airbnb_price),0)
+
+londonLSOAProfiles %>% 
+  mutate(outlier = ifelse(airbnb_price > outlier, "Outlier", "Not Outlier")) %>% 
+  ggplot(aes(x=airbnb_price)) +
+  geom_histogram(alpha = 0.5, fill = "#5EB296", colour = "#4D4D4D") +
+  scale_x_continuous(labels = comma) +
+  scale_y_continuous(labels = comma) +
+  ggtitle("AIRBNB Price VARIABLE IS HEAVILY SKEWED", subtitle = "Airbnb freqency still skewed even for non-outliers") +
+  labs(x= "Airbnb price per LSOA", y= "Count") +
+  facet_wrap(~ outlier, scales = "free")
+```
+
+
+```{r}
+
+londonLSOAProfiles %>% 
+  ggplot(aes(x= log(airbnb_price))) +
+  geom_histogram(alpha = 0.5, fill = "#5EB296", colour = "#4D4D4D") +
+  scale_y_continuous(labels = comma) +
+  ggtitle("LOG Airbnb price VARIABLE IS NECESSARY", subtitle = "The variable looks a lot more workable now") +
+  labs(x= "log(Airbnb Price)", y= "Count")
+```
+
+
+```{r}
+
+londonLSOAProfiles %>% 
+  ggplot(aes(x= log(airbnb_price), fill = as.character(InnerOuter))) +
+  geom_density(alpha = 0.5, adjust = 2) +
+  scale_fill_manual(values = col_pal) +
+  ggtitle("LISTINGS are more expensive IN INNER LONDON", subtitle = "X") +
+  labs(x= "log(Airbnb Freq)") +
+  theme(axis.title.y = element_blank(), legend.position = "top")
+```
+
+
+#Look at Culture
+
+
+```{r}
+
+londonLSOAProfiles %>% 
+  ggplot(aes(x=culture_freq)) +
+  geom_histogram(alpha = 0.5, fill = "#5EB296", colour = "#4D4D4D") +
+  scale_x_continuous(labels = comma) +
+  scale_y_continuous(labels = comma) +
+  ggtitle("Culture Freq IS HEAVILY SKEWED BY SOME OUTLIERS", subtitle = "We will remove those and visualise") +
+  labs(x= "Culture Freq per LSOA", y= "Count")
+```
+
+
+```{r}
+
+summary(londonLSOAProfiles$culture_freq)
+```
+
+
+```{r}
+
+# outlier <- round(1.5 * IQR(londonLSOAProfiles$culture_freq), 0)
+# 
+# londonLSOAProfiles %>%
+#   mutate(outlier = ifelse(culture_freq > outlier, "Outlier", "Not Outlier")) %>%
+#   ggplot(aes(x=culture_freq)) +
+#   geom_histogram(alpha = 0.5, fill = "#5EB296", colour = "#4D4D4D") +
+#   scale_x_continuous(labels = comma) +
+#   scale_y_continuous(labels = comma) +
+#   ggtitle("ACulture Freq VARIABLE IS HEAVILY SKEWED", subtitle = "Airbnb freqency still skewed even for non-outliers") +
+#   labs(x= "Airbnb price per LSOA", y= "Count") +
+#   facet_wrap(~ outlier, scales = "free")
+```
+
+
+```{r}
+
+londonLSOAProfiles %>% 
+  ggplot(aes(x= log(culture_freq-3))) +
+  geom_histogram(alpha = 0.5, fill = "#5EB296", colour = "#4D4D4D") +
+  scale_y_continuous(labels = comma) +
+  ggtitle("LOG Culture Freq VARIABLE IS NECESSARY", subtitle = "The variable looks a lot more workable now") +
+  labs(x= "log(Airbnb Price)", y= "Count")
+```
+
+
+```{r}
+
+londonLSOAProfiles %>% 
+  ggplot(aes(x= log(culture_freq), fill = as.character(InnerOuter))) +
+  geom_density(alpha = 0.5, adjust = 2) +
+  scale_fill_manual(values = col_pal) +
+  ggtitle("Culture Freq are more IN INNER LONDON", subtitle = "X") +
+  labs(x= "log(Airbnb Freq)") +
+  theme(axis.title.y = element_blank(), legend.position = "top")
+```
+
+
+
+```{r}
+
+#https://www.kaggle.com/jaseziv83/comprehensive-cleaning-and-eda-of-all-variables
+
+p1 <- londonLSOAProfiles %>%
+  ggplot(aes(x= airbnb_freq, y= airbnb_price)) +
+  geom_jitter(alpha = 0.5, colour = "steelblue") +
+  labs(x= "Speed (Yds/Sec)") +
+  ggtitle("A WEAK CORRELATION BETWEEN THE SPEED OF THE RUSHER AND YARDS", subtitle = "Pearson correlation of 0.084") +
+  annotate("text", x=7.5, y=85, label = paste0("Pearson Correlation: ", round(cor(londonLSOAProfiles$airbnb_freq, londonLSOAProfiles$airbnb_price), 4))) + facet_wrap(~ airbnb_price, scales = "free")
+
+
+p2 <- londonLSOAProfiles %>%
+  ggplot(aes(x= airbnb_no_reviews, y= airbnb_price)) +
+  geom_jitter(alpha = 0.5, colour = "steelblue") +
+  labs(x= "Accelaration (Yds/Sec^2)") +
+  ggtitle("WHILE ACCELERATION AND YARDS HAS A HIGHER CORRELATION", subtitle = "Pearson correlation of 0.16") +
+  annotate("text", x=7.5, y=85, label = paste0("Pearson Correlation: ", round(cor(londonLSOAProfiles$airbnb_no_reviews, londonLSOAProfiles$airbnb_price), 4))) + facet_wrap(~ airbnb_price, scales = "free")
+
+p3 <- londonLSOAProfiles %>%
+  ggplot(aes(x= airbnb_av_reviews, y= airbnb_price)) +
+  geom_jitter(alpha = 0.5, colour = "steelblue") +
+  labs(x= "Speed (Yds/Sec)") +
+  ggtitle("A WEAK CORRELATION BETWEEN THE SPEED OF THE RUSHER AND YARDS", subtitle = "Pearson correlation of 0.084") +
+  annotate("text", x=7.5, y=85, label = paste0("Pearson Correlation: ", round(cor(londonLSOAProfiles$airbnb_av_reviews, londonLSOAProfiles$airbnb_price), 4))) + facet_wrap(~ airbnb_price, scales = "free")
+
+#
+# p2 <- londonLSOAProfiles %>%
+#   ggplot(aes(x= A, y= airbnb_price)) +
+#   geom_jitter(alpha = 0.5, colour = "steelblue") +
+#   labs(x= "Accelaration (Yds/Sec^2)") +
+#   ggtitle("WHILE ACCELERATION AND YARDS HAS A HIGHER CORRELATION", subtitle = "Pearson correlation of 0.16") +
+#   annotate("text", x=7.5, y=85, label = paste0("Pearson Correlation: ", round(cor(londonLSOAProfiles$A, londonLSOAProfiles$airbnb_price), 4)))
+
+gridExtra::grid.arrange(p1, p2, p3)
+
+plot_grid(p1, p2, p3, labels=c("A", "B"), ncol = 2, nrow = 2)
+
+
+```
+
+
+
+
+
+```{r}
+
+#library(ggplot2)
+
+#let's map our dependent variable to see if the join has worked:
+#tmap_mode("view")
+
+#relationship between price of Airbnb and the number of reviews it has
+
+#q <- qplot(x = `number_of_reviews`, y = `price_average`, data=airbnb)
+
+#plot with a regression line - note, I've added some jitter here as the x-scale is rounded
+#q + stat_smooth(method="lm", se=FALSE, size=1)
+
+#ggplot(airbnb, aes(x = number_of_reviews, y = price_average)) +
+#  geom_jitter(size = 3) +
+#  geom_smooth(method = lm,  se = F, linetype = "dotted", family = "symmetric")
+
+
+```
+
+
+
+
+
+
+```{r}
+
+#calculate the mean, min and max and std of the Airbnb counts for each LSOA inLondon
+
+summary(londonLSOAextradata$airbnb_freq)
+
+airbnb_freq_mean <- mean(londonLSOAextradata$airbnb_freq)
+airbnb_freq_std <- sd(londonLSOAextradata$airbnb_freq)
+airbnb_freq_mad <- mad(londonLSOAextradata$airbnb_freq)
+
+#remove LSOAs where the count of Airbnb is only 1
+londonLSOAextradata <- subset(londonLSOAextradata, airbnb_freq > 1)
+
+#londonLSOAextradata[londonLSOAextradata$LSOA11CD == 'E01000913',]
+#londonLSOA[londonLSOA$LSOA11CD == 'E01000913',]
+
+```
+
+
+
+
+
+```{r}
+
+#variables from LSOA profiles
+
+#areaLSOA -     Population Density;Area (Hectares);
+#pop_density -  Population Density;Persons per hectare;2013	
+#bame_p -       Ethnic Group;BAME (%);2011	
+#nonUK -        Country of Birth;% Not United Kingdom;2011	
+#house_own -    Tenure;Owned outright (%);2011
+#house_mortg -  Tenure;Owned with a mortgage or loan (%);2011	
+#house_price -  House Prices;Median Price (£);2014	
+#employees -    Economic Activity;Employment Rate;2011	
+#education -    Qualifications;% Highest level of qualification: Level 4 qualifications and above;2011	
+#income -       Household Income, 2011/12;Median Annual Household Income estimate (£)	
+#transport -    Public Transport Accessibility Levels (2014);% 4-6 (good access)	
+
+#---density---# 
+#young_p -      2013 Census Population;Age Structure;16-29	+ 2014 Census Population;Age Structure;30-44
+#housing -      Dwelling type;All Households;2011
+
+
+
+```
+
+
+
+```{r}
+
+#let's map our dependent variable to see if the join has worked:
+tmap_mode("view")
+
+qtm(londonLSOAProfiles, fill = "airbnb_price", borders = NULL)
+#qtm(londonLSOAProfiles, fill = "airbnb_freq", borders = NULL)
+#qtm(londonLSOAProfiles, fill = "culture_freq", borders = NULL)
+#qtm(londonLSOAProfiles, fill = "culture_rating", borders = NULL)
+
+```
+
+
+```{r}
+
+#let's check the distribution of these variables first
+#ggplot(londonLSOAProfiles, aes(x=`airbnb_price`)) + geom_histogram(aes(y = ..density..),binwidth = 5) + geom_density(colour="red", size=1, adjust=1)
+
+#let's check the distribution of these variables first
+#ggplot(londonLSOAProfiles, aes(x=`airbnb_freq`)) + geom_histogram(aes(y = ..density..),binwidth = 5) + geom_density(colour="red", size=1, adjust=1)
+
+```
+
+
+
+```{r}
+
+
+#6.8.5 Mapping outputs
+#No we can plot a map of the local Moran’s I outputs…
+
+#We’ll set the breaks manually based on the rule that data points >2.58 or <-2.58 standard deviations away from the mean are significant at the 99% level (<1% chance that autocorrelation not present); >1.96 - <2.58 or <-1.96 to >-2.58 standard deviations are significant at the 95% level (<5% change that autocorrelation not present). >1.65 = 90% etc.
+
+
+#calculate the mean, min and max and std of the Airbnb prices for the whole of London
+
+summary(londonLSOAProfiles$airbnb_freq)
+
+airbnb_freq_mean <- mean(londonLSOAProfiles$airbnb_freq)
+airbnb_freq_std <- sd(londonLSOAProfiles$airbnb_freq)
+airbnb_freq_mad <- mad(londonLSOAProfiles$airbnb_freq)
+
+#then remove Airbnb where the price is two standard deviations away from the mean - i.e. outliers
+#airbnb <- subset(airbnb, price_average < (airbnb_price_mean+(2*airbnb_price_std)))
+londonLSOAProfiles <- subset(londonLSOAProfiles, airbnb_freq < (airbnb_freq_mean+(4*airbnb_freq_std)))
+
+```
+
+
+
+
+
+
+```{r}
+
+q <- qplot(x = `culture_freq`, y = `airbnb_price`, data=londonLSOAProfiles)
+
+#plot with a regression line - note, I've added some jitter here as the x-scale is rounded
+q + stat_smooth(method="lm", se=FALSE, size=1) + geom_jitter()
+
+
+```
+
+
+```{r}
+
+q <- qplot(x = `culture_rating`, y = `airbnb_price`, data=londonLSOAProfiles)
+
+#plot with a regression line - note, I've added some jitter here as the x-scale is rounded
+q + stat_smooth(method="lm", se=FALSE, size=1) + geom_jitter()
+
+
+```
+
+
+```{r}
+
+q <- qplot(x = `culture_freq`, y = `airbnb_freq`, data=londonLSOAProfiles)
+
+#plot with a regression line - note, I've added some jitter here as the x-scale is rounded
+q + stat_smooth(method="lm", se=FALSE, size=1) + geom_jitter()
+
+
+```
+
+
+```{r}
+
+q <- qplot(x = `culture_rating`, y = `airbnb_freq`, data=londonLSOAProfiles)
+
+#plot with a regression line - note, I've added some jitter here as the x-scale is rounded
+q + stat_smooth(method="lm", se=FALSE, size=1) + geom_jitter()
+
+
+```
+
+
+
+```{r}
+
+#let's check the distribution of these variables first
+ggplot(londonLSOAProfiles, aes(x=`airbnb_price`)) + geom_histogram(aes(y = ..density..),binwidth = 5) + geom_density(colour="red", size=1, adjust=1)
+
+
+```
+
+
+```{r}
+
+#let's check the distribution of these variables first
+ggplot(londonLSOAProfiles, aes(x=`airbnb_freq`)) + geom_histogram(aes(y = ..density..),binwidth = 5) + geom_density(colour="red", size=1, adjust=1)
+
+
+```
+
+```{r}
+
+p1_log <- ggplot(londonLSOAextradata, aes(x=log10(airbnb_freq))) +
+  geom_density(fill = "#56B4E9", color = "transparent") +
+  scale_x_continuous(
+    expand = c(0.01, 0),
+    name = expression(paste("log"["10"], "(number of inhabitants)"))
+  ) +
+  scale_y_continuous(expand = c(0, 0), name = "density") +
+  coord_cartesian(clip = "off") +
+  theme_dviz_grid(12) +
+  theme(plot.margin = margin(3, 1.5, 12, 1.5))
+
+p2_log <- ggplot(londonLSOAextradata, aes(x=log10(airbnb_freq))) +
+  stat_ecdf(geom = "step", color = "#0072B2", pad = FALSE) +
+  scale_x_continuous(
+    expand = c(0.01, 0),
+    name = expression(paste("log"["10"], "(number of inhabitants)"))
+  ) +
+  scale_y_continuous(expand = c(0.01, 0), name = "cumulative frequency") +
+  coord_cartesian(clip = "off") +
+  theme_dviz_grid(12) +
+  theme(plot.margin = margin(3, 1.5, 12, 1.5))
+
+plot_grid(p1_log, p2_log, ncol = 1, align = 'v', labels = 'auto')
+```
+
+
+
+
+
+
+```{r}
+ggplot(londonLSOAProfiles, aes(x=log(`culture_rating`))) + geom_histogram(aes(y = ..density..),binwidth = 0.1) + geom_density(colour="red", size=1, adjust=1)
+```
+
+
+```{r}
+
+p1_log <- ggplot(londonLSOAProfiles, aes(x=log(culture_freq))) +
+  geom_density(fill = "#56B4E9", color = "transparent") +
+  scale_x_continuous(
+    expand = c(0.01, 0),
+    name = expression(paste("log"["10"], "(number of inhabitants)"))
+  ) +
+  scale_y_continuous(expand = c(0, 0), name = "density") +
+  coord_cartesian(clip = "off") +
+  theme_dviz_grid(12) +
+  theme(plot.margin = margin(3, 1.5, 12, 1.5))
+
+p2_log <- ggplot(londonLSOAProfiles, aes(x=log10(culture_freq))) +
+  stat_ecdf(geom = "step", color = "#0072B2", pad = FALSE) +
+  scale_x_continuous(
+    expand = c(0.01, 0),
+    name = expression(paste("log"["10"], "(number of inhabitants)"))
+  ) +
+  scale_y_continuous(expand = c(0.01, 0), name = "cumulative frequency") +
+  coord_cartesian(clip = "off") +
+  theme_dviz_grid(12) +
+  theme(plot.margin = margin(3, 1.5, 12, 1.5))
+
+plot_grid(p1_log, p2_log, ncol = 1, align = 'v', labels = 'auto')
+
+
+```
+
+
+
+We need to transform some of these variables
+
+
+```{r}
+
+#plot the log of average Airbnb price per LSOA
+ggplot(londonLSOAProfiles, aes(x=airbnb_price)) + geom_histogram()
+
+```
+
+
+```{r}
+
+#plot the log of count of cultural infrastructure per LSOA
+ggplot(londonLSOAProfiles, aes(x=log(`culture_freq`))) + geom_histogram(bins = 50)
+
+```
+
+
+```{r}
+
+symbox(~`culture_freq`, londonLSOAProfiles, na.rm=T, powers=seq(-3,3,by=.5))
+
+```
+
+
+
+```{r}
+
+ggplot(londonLSOAProfiles, aes(x=(`culture_freq`)^-1)) + geom_histogram(bins = 50)
+
+```
+
+
+
+```{r}
+
+
+qplot(x =(`culture_freq`)^-1, y = airbnb_price, data=londonLSOAProfiles)
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+
+#londonLSOAProfiles <- londonLSOAProfiles[!is.na(as.numeric(as.character(londonLSOAProfiles$'Qualifications (2011);Highest level of qualification: Level 4 qualifications and above;'))),]
+#londonLSOAProfiles <- londonLSOAProfiles[!is.na(as.numeric(as.character(londonLSOAProfiles$'culture_freq'))),]
+#londonLSOAProfiles <- londonLSOAProfiles[!is.na(as.numeric(as.character(londonLSOAProfiles$'culture_rating'))),]
+
+#londonLSOAProfiles <- londonLSOAProfiles[londonLSOAProfiles$'culture_freq'!=0,]
+#londonLSOAProfiles <- londonLSOAProfiles[londonLSOAProfiles$'culture_rating'!=0,]
+
+#new.df[new.df$values!=0,]
+
+
+#independent variables
+
+#areaLSOA -     Population Density;Area (Hectares);
+#pop_density -  Population Density;Persons per hectare;2013	
+#bame_p -       Ethnic Group;BAME (%);2011	
+#nonUK -        Country of Birth;% Not United Kingdom;2011	
+#house_own -    Tenure;Owned outright (%);2011
+#house_mortg -  Tenure;Owned with a mortgage or loan (%);2011	
+#house_price -  House Prices;Median Price (£);2014	
+#employees -    Economic Activity;Employment Rate;2011	
+#education -    Qualifications;% Highest level of qualification: Level 4 qualifications and above;2011	
+#income -       Household Income, 2011/12;Median Annual Household Income estimate (£)	
+#transport -    Public Transport Accessibility Levels (2014);% 4-6 (good access)	
+
+#---density---# 
+#young_p -      2013 Census Population;Age Structure;16-29	+ 2014 Census Population;Age Structure;30-44
+#housing -      Dwelling type;All Households;2011
+
+#airbnb_freq
+#airbnb_price
+
+#select some variables from the data file
+myvars <- c("airbnb_price",
+            "airbnb_freq",
+            'young_p',
+            'pop_density',
+            'bame_p',
+            'nonUK',
+            'education',
+            'employees',
+            'income',
+            'housing',
+            'house_own',
+            'house_mortg',
+            'house_price',
+            'transport',
+            "culture_freq",
+            "culture_rating")
+
+#Extracting data.frame from simple features object in R - https://gis.stackexchange.com/questions/224915/extracting-data-frame-from-simple-features-object-in-r
+x <- londonLSOAProfiles[myvars]
+st_geometry(x) <- NULL
+class(x)
+
+#check their correlations are OK
+#install.packages("Hmisc")
+#http://www.sthda.com/english/wiki/correlation-matrix-a-quick-start-guide-to-analyze-format-and-visualize-a-correlation-matrix-using-r-software
+library("Hmisc")
+cormat <- rcorr(as.matrix(x))
+
+library(corrplot)
+# Insignificant correlations are leaved blank
+corrplot(cormat$r, type="upper", order="hclust", 
+         p.mat = cormat$P, sig.level = 0.01, insig = "blank")
+
+
+```
+
+
+```{r}
+#corrplot(cormat$r)
+```
+
+
+
+```{r}
+
+#corrplot(cormat$P)
+```
+
+
+
+
+
+<!--chapter:end:coursework-eda.Rmd-->
+
+---
+author: "Vishal Kumar"
+date: "07/01/2020"
+output: html_document
+---
+
+```{r}
+
+
+#----load all the libraries needed
+library(sf)
+library(tmap)
+library(tmaptools)
+library(plyr)
+
+library(pins)
+library(geojsonio)
+
+library(rgdal)
+library(broom)
+library(mapview)
+library(crosstalk)
+library(sp)
+library(spdep)
+library(car)
+library(raster)
+
+library(tidyverse)
+library(tidyr)
+# 
+# # load in libraries
+# library(scales)
+# library(lubridate)
+# library(ggridges) # for geom_density_line()
+# library(plotly)
+
+#tmap_mode("plot")
+
+## Andy MacLachlan and Adam Dennett (2019). CASA0005 Geographic Information Systems and Science. URL https://andrewmaclachlan.github.io/CASA0005repo/index.html.
+
+# (MacLachlan & Dennett, 2019: Section X.X)
+
+```
+
+
+
+#Download Airbnb data
+
+
+```{r}
+
+#----read in Airbnb London listings data as a dataframe
+airbnb <- read_csv("https://raw.githubusercontent.com/vishalkumarlondon/CASA0005_coursework/master/data/airbnb-london-2017-2018.csv")
+print(dim(airbnb))
+
+#----create a new dataframe by grouping the listings id and creating an average price column
+price_average <- airbnb %>% group_by(id) %>% summarise(price = mean(price))
+colnames(price_average) <- c("id", "price_average")
+
+#----join the new dataframe to the original Airbnb data to add a column for the average price per listing between 2017 and 2018
+airbnb = inner_join(airbnb, price_average, by = c('id'))
+
+#----keep the original Airbnb data my making a `airbnb_old` dataframe
+airbnb_old <- airbnb
+
+#----remove unnecessary columns and remove duplicate listing ids to leave unique listings with average price between 2017 and 2018
+#airbnb <- airbnb[, ! colnames(airbnb) %in% c("price", "last_review", "year", "month", "day")]
+airbnb <- airbnb[, ! colnames(airbnb) %in% c("price")]
+airbnb = airbnb[!duplicated(airbnb[c("id")]),]
+
+#----turn Airbnb datafram into a spatial object
+airbnb <- st_as_sf(airbnb, coords = c("longitude", "latitude"), crs = 4326)
+airbnb <- st_transform(airbnb, 27700)
+
+```
+
+
+
+```{r}
+
+#calculate the mean, min and max and std of the Airbnb prices for the whole of London
+
+summary(airbnb$price_average)
+
+airbnb_price_mean <- mean(airbnb$price_average)
+airbnb_price_std <- sd(airbnb$price_average)
+airbnb_price_mad <- mad(airbnb$price_average)
+
+#then remove Airbnb where the price is two standard deviations away from the mean - i.e. outliers
+airbnb <- subset(airbnb, price_average < (airbnb_price_mean+(2.58*airbnb_price_std)))
+
+
+```
+
+
+#Download Cultural Infrastructure data
+
+```{r}
+
+#----read in the five Cultural Infrastructure classifications from data.london as a dataframe
+culture <- read.csv("https://raw.githubusercontent.com/vishalkumarlondon/CASA0005_coursework/master/data/all-cultural-infra-map-google-places.csv")
+
+print(colSums(is.na(culture)))
+
+#----only keep rows from the five Cultural Infrastructure classifications if the longitude cell is filled in (i.e. not Null)
+culture <- culture[complete.cases(culture$longitude), ]
+
+#----only keep rows from the five Cultural Infrastructure classifications if the rating cell is filled in (i.e. not Null)
+culture <- culture[!is.na(as.numeric(as.character(culture$rating))),]
+
+#----only keep rows from the five Cultural Infrastructure classifications if the rating cell is not 0
+culture <- culture[culture$rating != 0, ]
+
+#----turn each of the  five Cultural Infrastructure dataframes into spatial objects
+culture <- st_as_sf(culture, coords = c("longitude", "latitude"),  crs = 4326)
+culture <- st_transform(culture, 27700)
+
+culture_withPubs <- culture
+
+#culture <- culture[!culture$Cultural.Venue.Type == 'Pubs',]
+
+
+```
+
+
+
+```{r}
+
+print(colSums(is.na(culture)))
+```
+
+
+# Download London shapefile data
+
+
+```{r}
+
+#----the following code has been adapted from (MacLachlan & Dennett, 2019: Section 10.4.1)
+
+#----use the pin function from the pins package to store the GIS London boundary .zip files from data.london
+pin_london_GIS <- pin("https://data.london.gov.uk/download/statistical-gis-boundary-files-london/9ba8c833-6370-4b11-abdc-314aa020d5e0/statistical-gis-boundaries-london.zip")
+
+#----grab the shape files for Borough, Ward and LSOA based on their string values and cache
+s <- grepl("Borough|Ward_|LSOA_2011", pin_london_GIS) & grepl(".shp$", pin_london_GIS)
+
+#----create a list for Borough, Ward and LSOA shape files
+BoroughsWardsLSOA <- pin_london_GIS[s]
+
+#----turn each element in the list into a SF file using the st_read function
+BoroughsWardsLSOAsf <- lapply(BoroughsWardsLSOA, st_read)
+
+BoroughsWardsLSOAsf <- lapply(BoroughsWardsLSOAsf, crs=27700, st_transform)
+
+#----create a variable for LSOAs in London by selecting the third element in the list
+londonLSOA <- BoroughsWardsLSOAsf[[3]]
+
+
+```
+
+
+# Functions to join the Airbnb data with LSOA shapefile
+
+
+```{r}
+
+JoinAirbnb_count <- function(data1, data2) {
+  #----join dataframes
+  joined <- st_join(data1, data2, join = st_within)
+  #----count the number of points per LSOA
+  count <- as.data.frame(plyr::count(joined$LSOA11CD))
+  names(count) <- c("LSOA11CD", "airbnb_freq")
+  return(count)
+}
+
+JoinAirbnb_price <- function(data1, data2) {
+  #----join dataframes
+  joined <- st_join(data1, data2, join = st_within)
+  #----calculate the average price of Airbnb per LSOA
+  price <- aggregate(price_average~LSOA11CD, joined, mean)
+  names(price) <- c("LSOA11CD", "airbnb_price")
+  return(price)
+}
+
+JoinAirbnb_NOreviews <- function(data1, data2) {
+    #----join dataframes
+  joined <- st_join(data1, data2, join = st_within)
+  #----calculate the average price of Airbnb per LSOA
+  reviews <- aggregate(number_of_reviews~LSOA11CD, joined, sum)
+  names(reviews) <- c("LSOA11CD", "airbnb_no_reviews")
+  return(reviews)
+}
+
+JoinAirbnb_AVreviews <- function(data1, data2) {
+    #----join dataframes
+  joined <- st_join(data1, data2, join = st_within)
+  #----calculate the average price of Airbnb per LSOA
+  reviews <- aggregate(number_of_reviews~LSOA11CD, joined, mean)
+  names(reviews) <- c("LSOA11CD", "airbnb_av_reviews")
+  return(reviews)
+}
+
+
+#----////////////////////////////////////////////////////////////////////////
+
+
+#----AIRBNB COUNT----#
+#----use the first function to count the number of Airbnbs in each LSOA
+airbnbLSOA_count <- JoinAirbnb_count(airbnb, londonLSOA)
+
+#----AIRBNB PRICE----#
+#----use the second function to calculate the average price of Airbnb listings in each LSOA
+airbnbLSOA_price <- JoinAirbnb_price(airbnb, londonLSOA)
+
+#----AIRBNB NUMBER OF REVIEWS----#
+#----use the third function to count the number of Airbnb reviews in each LSOA
+airbnbLSOA_review_count <- JoinAirbnb_NOreviews(airbnb, londonLSOA)
+
+#----AIRBNB AVERAGE NUMBER OF REVIEWS----#
+#----use the fourth function to calculate the average number of Airbnb reviews in each LSOA
+airbnbLSOA_review_average <- JoinAirbnb_AVreviews(airbnb, londonLSOA)
+
+
+```
+
+
+# Functions to join the Culture data with LSOA shapefile
+
+
+```{r}
+
+
+JoinCulture_count <- function(data1, data2) {
+  #----join dataframes
+  joined <- st_join(data1, data2, join = st_within)
+  #----count the number cultural venue types per LSOA
+  #source----https://stackoverflow.com/questions/10879551/frequency-count-of-two-column-in-r
+  count <- ddply(joined, .(joined$LSOA11CD, joined$Cultural.Venue.Type), nrow)
+  names(count) <- c("LSOA11CD", "cultural_venue_type", "culture_freq")
+  #----then use the spread function from the tidyr lib to turn long data into wide data - i.e. a column for each cultural venue type
+  #source----https://uc-r.github.io/tidyr
+  count <- count %>% spread(cultural_venue_type, culture_freq)
+  #----then use the rowSums function to sum up the counts from all cultural venue type, skip NA values and create new column
+  count$culture_freq <- rowSums(count[,sapply(count, is.numeric)], na.rm=TRUE)
+  return(count)
+}
+
+JoinCulture_rating <- function(data1, data2) {
+  #----join dataframes
+  joined <- st_join(data1, data2, join = st_within)
+  #----calculate the average rating of cultural venue types per LSOA
+  #https://stackoverflow.com/questions/11562656/calculate-the-mean-by-group
+  average <- ddply(joined, .(joined$LSOA11CD, joined$Cultural.Venue.Type), function(x) mean(x$rating))
+  names(average) <- c("LSOA11CD", "cultural_venue_type", "culture_rating")
+  #----then use the spread function from the tidyr lib to turn long data into wide data - i.e. a column for each cultural venue type
+  #source----https://uc-r.github.io/tidyr
+  average <- average %>% spread(cultural_venue_type, culture_rating)
+  #----then use the rowSums function to average the ratings from all cultural venue type, skip NA values and create new column
+  average$culture_rating <- rowMeans(average[,sapply(average, is.numeric)], na.rm=TRUE)
+  return(average)
+}
+
+JoinCulture_NOreviews <- function(data1, data2) {
+  #----join dataframes
+  joined <- st_join(data1, data2, join = st_within)
+  #----calculate the sum of reviews of cultural venue types per LSOA
+  #https://stackoverflow.com/questions/11562656/calculate-the-mean-by-group
+  count <- ddply(joined, .(joined$LSOA11CD, joined$Cultural.Venue.Type), function(x) sum(x$user_ratings_total))
+  names(count) <- c("LSOA11CD", "cultural_venue_type", "culture_no_reviews")
+  #----then use the spread function from the tidyr lib to turn long data into wide data - i.e. a column for each cultural venue type
+  #source----https://uc-r.github.io/tidyr
+  count <- count %>% spread(cultural_venue_type, culture_no_reviews)
+  #----then use the rowSums function to sum up the reviews from all cultural venue type, skip NA values and create new column
+  count$culture_no_reviews <- rowSums(count[,sapply(count, is.numeric)], na.rm=TRUE)
+  return(count)
+}
+
+JoinCulture_AVreviews <- function(data1, data2) {
+  #----join dataframes
+  joined <- st_join(data1, data2, join = st_within)
+  #----calculate the average rating of cultural venue types per LSOA
+  #https://stackoverflow.com/questions/11562656/calculate-the-mean-by-group
+  average <- ddply(joined, .(joined$LSOA11CD, joined$Cultural.Venue.Type), function(x) mean(x$user_ratings_total))
+  names(average) <- c("LSOA11CD", "cultural_venue_type", "culture_av_reviews")
+  #----then use the spread function from the tidyr lib to turn long data into wide data - i.e. a column for each cultural venue type
+  #source----https://uc-r.github.io/tidyr
+  average <- average %>% spread(cultural_venue_type, culture_av_reviews)
+  #----then use the rowSums function to average the reviews from all cultural venue type, skip NA values and create new column
+  average$culture_av_reviews <- rowMeans(average[,sapply(average, is.numeric)], na.rm=TRUE)
+  return(average)
+}
+
+
+#----////////////////////////////////////////////////////////////////////////
+
+
+#----CULTURE COUNT----#
+#----use the first function to count the number for each cultural venue category in each LSOA
+cultureLSOA_count <- JoinCulture_count(culture, londonLSOA)
+
+#----CULTURE RATING----#
+#----use the second function to calculate the average rating of Google Places reviews for each cultural venue category in each LSOA
+cultureLSOA_rating <- JoinCulture_rating(culture, londonLSOA)
+
+#----CULTURE NUMBER OF REVIEWS----#
+#----use the third function to count the number of Google Places reviews for each cultural venue category in each LSOA
+cultureLSOA_review_count <- JoinCulture_NOreviews(culture, londonLSOA)
+
+#----CULTURE AVERAGE NUMBER OF REVIEWS----#
+#----use the third function to count the number of Google Places reviews for each cultural venue category in each LSOA
+cultureLSOA_review_average <- JoinCulture_AVreviews(culture, londonLSOA)
+
+
+#regression of categorical variables https://stats.idre.ucla.edu/r/modules/coding-for-categorical-variables-in-regression-models/
+
+
+```
+
+Use the fortify function to turn the 
+
+```{r}
+
+# library(ggplot2)
+# 
+# #----use the fortify function to turn the Airbnb spatial objects back to dataframes
+# airbnbLSOA_count = fortify(airbnbLSOA_count)
+# airbnbLSOA_price = fortify(airbnbLSOA_price)
+# 
+# #----use the fortify function to turn the Cultural Infrastructure spatial objects back to dataframes
+# cultureLSOA_count = fortify(cultureLSOA_count)
+# 
+# #----use the fortify function to turn the Cultural Infrastructure spatial objects back to dataframes
+# cultureLSOA_rating = fortify(cultureLSOA_rating)
+
+```
+
+# Functions to merge the Airbnb, Culture and LSOA shapefile data
+
+```{r}
+
+#----merge all dataframes into one
+#https://stackoverflow.com/questions/8091303/simultaneously-merge-multiple-data-frames-in-a-list
+#install safejoin package from GitHub
+devtools::install_github("moodymudskipper/safejoin")
+library(safejoin)
+
+#use eat function from safejoin to merge a list of all the dataframes
+londonLSOAextradata <- eat(airbnbLSOA_count, list(airbnbLSOA_price, airbnbLSOA_review_count, airbnbLSOA_review_average, cultureLSOA_count, cultureLSOA_rating, cultureLSOA_review_count, cultureLSOA_review_average), .by = "LSOA11CD", .conflict = ~.x)
+
+
+```
+
+
+# Download the LSOA profile data
+
+
+```{r}
+
+#----run the code below if you want to read in LSOA attribute data using the current 2011 boundaries
+#----NOTE: There is comparatively less data for the new boundaries compared with the old boundaries
+
+londonLSOAProfiles <- read_csv("https://data.london.gov.uk/download/lsoa-atlas/0193f884-2ccd-49c2-968e-28aa3b1c480d/lsoa-data.csv", na = c("", "NA", "n/a"), locale = locale(encoding = 'Latin1'), col_names = TRUE)
+#as.numeric(as.character('londonLSOAProfiles$House Prices;Median Price (£);2014'))
+#londonLSOAProfiles <- londonLSOAProfiles[!is.na(as.numeric(as.character(londonLSOAProfiles$'House Prices;Median Price (£);2014'))),]
+
+select.me <- c('Lower Super Output Area',
+               'Population Density;Area (Hectares);',
+               'Population Density;Persons per hectare;2013',
+               'Ethnic Group;BAME (%);2011',
+               'Country of Birth;% Not United Kingdom;2011',
+               'Tenure;Owned outright (%);2011',
+               'Tenure;Owned with a mortgage or loan (%);2011',
+               'House Prices;Median Price (£);2014',
+               'Economic Activity;Employment Rate;2011',
+               'Qualifications;% Highest level of qualification: Level 4 qualifications and above;2011',
+               'Household Income, 2011/12;Median Annual Household Income estimate (£)',
+               'Public Transport Accessibility Levels (2014);% 4-6 (good access)',
+               '2013 Census Population;Age Structure;16-29',
+               '2014 Census Population;Age Structure;30-44',
+               'Dwelling type;All Households;2011')
+
+londonLSOAProfiles <- londonLSOAProfiles[,select.me]
+
+
+```
+
+
+# Join LSOA profile data to the LSOA shapefile (which includes the Airbnb and Culture data)
+
+
+```{r}
+
+#----merge the LSOA boundaries shapefile with the and LSOA attribute dataframe
+londonLSOAProfiles <- inner_join(londonLSOA, londonLSOAProfiles, by = c("LSOA11CD" = "Lower Super Output Area"))
+#londonLSOAProfiles <- na.omit(londonLSOAProfiles)
+
+#----join the extra data - Airbnb price & counts and culture counts - to the LSAO profile data
+londonLSOAProfiles <- inner_join(londonLSOAProfiles, londonLSOAextradata, by = c('LSOA11CD'))
+
+#----turn all NAs in the merged Cultural Infrastructure dataframe to 0
+#cultureLSOA_count[is.na(cultureLSOA_count)] = 0
+
+which( colnames(londonLSOAProfiles)=="Archives" )
+which( colnames(londonLSOAProfiles)=="Theatres" )
+
+
+#calculate density on those columns
+A <- function(x) (x / londonLSOAProfiles$`Population Density;Area (Hectares);`)*100
+londonLSOAProfiles[33:66] <- lapply(londonLSOAProfiles[33:66], A)
+
+
+```
+
+
+#Download the boundaries for Inner/Outer London and create variable
+
+
+```{r}
+
+#----use the pin function from the pins package to store the Inner and Outer London boundary .zip files from data.london
+pin_inner_outer <- pin("https://data.london.gov.uk/download/inner-and-outer-london-boundaries-london-plan-consultation-2009/684e59f2-9208-4da1-bf67-d8dfeb72c047/lp-consultation-oct-2009-inner-outer-london-shp.zip")
+
+i_o <- grepl("lp-consultation-oct-2009-inner-outer", pin_inner_outer) & grepl(".shp$", pin_inner_outer)
+inner_outer <- pin_inner_outer[i_o]
+inner_outerSF <- st_read(inner_outer)
+st_transform(inner_outerSF, 27700)
+inner_outer_df <- st_join(londonLSOA, inner_outerSF, by = c("geometry" = "geometry"))
+inner_outer_df <- as.data.frame(inner_outer_df)
+names(inner_outer_df)[names(inner_outer_df) == 'Boundary'] <- 'InnerOuter'
+select.me <- c('LSOA11CD','InnerOuter')
+inner_outer_df <- inner_outer_df[,select.me]
+
+#----join the Inner and Outer London extra data to the LSAO profile data
+londonLSOAProfiles <- inner_join(londonLSOAProfiles, inner_outer_df, by = c("LSOA11CD" = "LSOA11CD"))
+
+#----drop duplicate rows for LSOA11CD, culture_freq, airbnb_price, airbnb_freq columns
+londonLSOAProfiles <- londonLSOAProfiles[!duplicated(londonLSOAProfiles[c("LSOA11CD", "culture_freq", "airbnb_price", "airbnb_freq")]),]
+
+#londonLSOAProfiles <- londonLSOAProfiles[londonLSOAProfiles$InnerOuter == 'Inner London',]
+
+```
+
+
+```{r}
+
+
+#----change the column names of some of the independent variables
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Population Density;Area (Hectares);")] <- "areaLSOA"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Population Density;Persons per hectare;2013")] <- "pop_density"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Ethnic Group;BAME (%);2011")] <- "bame_p"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Country of Birth;% Not United Kingdom;2011")] <- "nonUK"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Tenure;Owned outright (%);2011")] <- "house_own"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Tenure;Owned with a mortgage or loan (%);2011")] <- "house_mortg"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "House Prices;Median Price (£);2014")] <- "house_price"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Economic Activity;Employment Rate;2011")] <- "employees"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Qualifications;% Highest level of qualification: Level 4 qualifications and above;2011")] <- "education"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Household Income, 2011/12;Median Annual Household Income estimate (£)")] <- "income"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Public Transport Accessibility Levels (2014);% 4-6 (good access)")] <- "transport"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "2013 Census Population;Age Structure;16-29")] <- "age16_29"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "2014 Census Population;Age Structure;30-44")] <- "age30_44"
+colnames(londonLSOAProfiles)[which(names(londonLSOAProfiles) == "Dwelling type;All Households;2011")] <- "housing"
+
+#----change the some of the independent variables to density values by dividing by the area of the LSOA in hectares - areaLSOA
+londonLSOAProfiles$young_p <- (londonLSOAProfiles$age16_29 + londonLSOAProfiles$age30_44)/londonLSOAProfiles$areaLSOA
+londonLSOAProfiles$housing <- londonLSOAProfiles$housing/londonLSOAProfiles$areaLSOA
+
+#londonLSOAProfiles$airbnb_freq <- (londonLSOAProfiles$airbnb_freq/londonLSOAProfiles$areaLSOA)*100
+  
+#londonLSOAProfiles$culture_freq <- 100*(londonLSOAProfiles$culture_freq/londonLSOAProfiles$areaLSOA)
+
+#londonLSOAProfiles$theatres_freq <- 100*(londonLSOAProfiles$theatres_freq/londonLSOAProfiles$areaLSOA)
+#londonLSOAProfiles$music_freq <- 100*(londonLSOAProfiles$music_freq/londonLSOAProfiles$areaLSOA)
+#londonLSOAProfiles$galleries_freq <- 100*(londonLSOAProfiles$galleries_freq/londonLSOAProfiles$areaLSOA)
+#londonLSOAProfiles$museums_freq <- 100*(londonLSOAProfiles$museums_freq/londonLSOAProfiles$areaLSOA)
+#londonLSOAProfiles$dance_freq <- 100*(londonLSOAProfiles$dance_freq/londonLSOAProfiles$areaLSOA)
+
+```
+
+
+<!--chapter:end:coursework-load-data.Rmd-->
+
+---
+title: "coursework-maps"
+author: "Vishal Kumar"
+date: "07/01/2020"
+output: html_document
+---
+
+```{r}
+
+
+#----load all the libraries needed
+library(sf)
+library(tmap)
+library(tmaptools)
+library(plyr)
+
+library(pins)
+library(geojsonio)
+
+library(rgdal)
+library(broom)
+library(mapview)
+library(crosstalk)
+library(sp)
+library(spdep)
+library(car)
+library(raster)
+
+library(tidyverse)
+library(tidyr)
+
+# load in libraries
+library(scales)
+library(lubridate)
+library(ggridges) # for geom_density_line()
+library(plotly)
+
+#tmap_mode("plot")
+
+## Andy MacLachlan and Adam Dennett (2019). CASA0005 Geographic Information Systems and Science. URL https://andrewmaclachlan.github.io/CASA0005repo/index.html.
+
+# (MacLachlan & Dennett, 2019: Section X.X)
+
+```
+
+
+
+
+```{r}
+
+londonLSOAProfiles_inner <- londonLSOAProfiles[londonLSOAProfiles$InnerOuter == 'Inner London',]
+
+
+```
+
+
+
+```{r}
+
+p_pubs <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Pubs', fill = londonLSOAProfiles_inner$'Pubs'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Pubs count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+p_music <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Music venues (all)', fill = londonLSOAProfiles_inner$'Music venues (all)'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Music Venues (all) count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+p_community <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Community centres', fill = londonLSOAProfiles_inner$'Community centres'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Community centres count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+p_archives <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Archives', fill = londonLSOAProfiles_inner$'Archives'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Archives count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+p_libraries <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Libraries', fill = londonLSOAProfiles_inner$'Libraries'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Libraries count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+p_theatres <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Theatres', fill = londonLSOAProfiles_inner$'Theatres'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Theatres count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+p_dance_studios <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Dance rehearsal studios', fill = londonLSOAProfiles_inner$'Dance rehearsal studios'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Dance rehearsal studios count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+p_galleries <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Commercial galleries', fill = londonLSOAProfiles_inner$'Commercial galleries'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Commercial galleries count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+p_dance_venues <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Dance performance venues', fill = londonLSOAProfiles_inner$'Dance performance venues'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Dance performance venues count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+p_museums <- ggplot(londonLSOAProfiles_inner) +
+  geom_sf(aes(color = londonLSOAProfiles_inner$'Museums and public galleries', fill = londonLSOAProfiles_inner$'Museums and public galleries'), color = "black", size = 0.3/.pt) + 
+  scale_fill_continuous(name = "Museums and public galleries count\n/LSOA",
+                                 guide = guide_legend()) + theme(legend.position="bottom")
+
+
+ggdraw(align_legend(p_music))
+
+```
+
+
+```{r}
+
+ggsave("1map_pub.png", plot = p_pubs, width = 10, height = 7)
+ggsave("2map_music.png", plot = p_music, width = 10, height = 7)
+ggsave("3map_community.png", plot = p_community, width = 10, height = 7)
+ggsave("4map_archives.png", plot = p_archives, width = 10, height = 7)
+ggsave("5map_libraries.png", plot = p_libraries, width = 10, height = 7)
+ggsave("6map_theatres.png", plot = p_theatres, width = 10, height = 7)
+ggsave("7map_dance_studios.png", plot = p_dance_studios, width = 10, height = 7)
+ggsave("8map_galleries.png", plot = p_galleries, width = 10, height = 7)
+ggsave("9map_dance_venues.png", plot = p_dance_venues, width = 10, height = 7)
+ggsave("10map_museusm.png", plot = p_museums, width = 10, height = 7)
+```
+
+
+
+```{r}
+
+# p1 <- ggplot(londonLSOAProfiles_inner) +
+#   geom_sf(aes(color = Pubs, fill = Pubs), size = 0.3/.pt) +
+#   geom_sf(data = londonLSOAProfiles_inner, fill = NA, color = "grey30", size = 0.2) +
+#   scale_fill_gradient(low = "#56B1F74D", high = "#132b43") +
+#   scale_fill_continuous_sequential(
+#     aesthetics = c("color", "fill"),
+#     palette = "YlGnBu", rev = TRUE, cmax = 20, c2 = 20, p2 = 1.75,
+#     name = "Cultural Infrastructure count\nLSOA",
+#     limits = c(1, 150),
+#     breaks = c(1, 20, 40, 80, 160, 200),
+#     labels = c("1", "20", "40", "80", "160", "200"),
+#     guide = guide_colorbar(
+#       frame.colour = "black",
+#       ticks.colour = "white",
+#       barwidth = grid::unit(15, "pt"),
+#       barheight = grid::unit(90, "pt")
+#     )
+#   ) +
+#   theme_dviz_map(12, rel_small = 1) +
+#   theme(
+#     #plot.background = element_rect(fill = "cornsilk"),
+#     legend.position = c(1, 1),
+#     legend.justification = c(1, 1),
+#     legend.spacing.x = grid::unit(3, "pt"),
+#     legend.title = element_text(hjust = 0.5),
+#     plot.margin = margin(3, 3, 3, 1.5)
+#   )
+
+
+# p2 <- ggplot(londonLSOAProfiles_inner) +
+#   geom_sf(aes(color = londonLSOAProfiles_inner$'Music venues (all)', fill = londonLSOAProfiles_inner$'Music venues (all)'), size = 0.3/.pt) + 
+#   geom_sf(data = londonLSOAProfiles_inner, fill = NA, color = "grey30", size = 0.2) +
+#   scale_fill_gradient(low = "#56B1F74D", high = "#132b43") +
+#   scale_fill_continuous_sequential(
+#     aesthetics = c("color", "fill"),
+#     palette = "YlGnBu", rev = TRUE, cmax = 20, c2 = 20, p2 = 1.75,
+#     name = "Cultural Infrastructure count\nLSOA",
+#     limits = c(1, 200),
+#     breaks = c(1, 20, 40, 80, 160, 200),
+#     labels = c("1", "20", "40", "80", "160", "200"),
+#     guide = guide_colorbar(
+#       frame.colour = "black",
+#       ticks.colour = "white",
+#       barwidth = grid::unit(15, "pt"),
+#       barheight = grid::unit(90, "pt")
+#     )
+#   ) +
+#   theme_dviz_map(12, rel_small = 1) +
+#   theme(
+#     #plot.background = element_rect(fill = "cornsilk"),
+#     legend.position = c(1, 1),
+#     legend.justification = c(1, 1),
+#     legend.spacing.x = grid::unit(3, "pt"),
+#     legend.title = element_text(hjust = 0.5),
+#     plot.margin = margin(3, 3, 3, 1.5)
+#   )
+
+```
+
+
+
+<!--chapter:end:coursework-maps.Rmd-->
+
+---
+title: "rMarkdown GIS Project"
+author: "Vishal Kumar"
+date: "06/12/2019"
+output: html_document
+---
+
+## Import Libraries
+
+```{r}
+
+##Load all our data
+library(sf)
+library(tmap)
+library(tmaptools)
+library(plyr)
+library(tidyverse)
+library(pins)
+library(spatstat)
+library(sp)
+library(rgeos)
+library(maptools)
+library(GISTools)
+library(tmap)
+library(geojson)
+library(geojsonio)
+library(tmaptools)
+library(raster)
+
+tmap_mode("plot")
+
+```
+
+
+## Week 6 - Analysing spatial patterns
+
+# Load shapefiles
+
+
+```{r}
+
+#----the following code has been adapted from (MacLachlan & Dennett, 2019: Section 10.4.1)
+
+#----use the pin function from the pins package to store the GIS London boundary .zip files from data.london
+pin_london_GIS <- pin("https://data.london.gov.uk/download/statistical-gis-boundary-files-london/9ba8c833-6370-4b11-abdc-314aa020d5e0/statistical-gis-boundaries-london.zip")
+
+#----grab the shape files for Borough, Ward and LSOA based on their string values and cache
+s <- grepl("Borough|Ward_|LSOA_2011", pin_london_GIS) & grepl(".shp$", pin_london_GIS)
+
+#----create a list for Borough, Ward and LSOA shape files
+BoroughsWardsLSOA <- pin_london_GIS[s]
+
+#----turn each element in the list into a SF file using the st_read function
+BoroughsWardsLSOAsf <- lapply(BoroughsWardsLSOA, st_read)
+
+BoroughsWardsLSOAsf <- lapply(BoroughsWardsLSOAsf, crs=27700, st_transform)
+
+#----create a variable for LSOAs in London by selecting the third element in the list
+londonLSOA <- BoroughsWardsLSOAsf[[3]]
+
+
+#----use the pin function from the pins package to store the Inner and Outer London boundary .zip files from data.london
+pin_inner_outer <- pin("https://data.london.gov.uk/download/inner-and-outer-london-boundaries-london-plan-consultation-2009/684e59f2-9208-4da1-bf67-d8dfeb72c047/lp-consultation-oct-2009-inner-outer-london-shp.zip")
+
+i_o <- grepl("lp-consultation-oct-2009-inner-outer", pin_inner_outer) & grepl(".shp$", pin_inner_outer)
+
+inner_outer <- pin_inner_outer[i_o]
+
+inner_outerSF <- st_read(inner_outer)
+
+st_transform(inner_outerSF, 27700)
+
+names(inner_outerSF)[names(inner_outerSF) == 'Boundary'] <- 'InnerOuter'
+
+londonLSOA <- st_join(londonLSOA, inner_outerSF, by = c("geometry" = "geometry"))
+
+#londonLSOA <- londonLSOA[londonLSOA$InnerOuter == 'Inner London',]
+
+londonLSOA_SP <- as(londonLSOA, "Spatial")
+
+BNG = "+init=epsg:27700"
+
+londonLSOA_SP <- spTransform(londonLSOA_SP,BNG)
+
+```
+
+
+```{r}
+
+
+#----read in the five Cultural Infrastructure classifications from data.london as a dataframe
+culture <- read.csv("https://raw.githubusercontent.com/vishalkumarlondon/CASA0005_coursework/master/data/all-cultural-infra-map-google-places.csv")
+
+print(colSums(is.na(culture)))
+
+#----only keep rows from the five Cultural Infrastructure classifications if the longitude cell is filled in (i.e. not Null)
+culture <- culture[complete.cases(culture$longitude), ]
+
+#----only keep rows from the five Cultural Infrastructure classifications if the rating cell is filled in (i.e. not Null)
+culture <- culture[!is.na(as.numeric(as.character(culture$rating))),]
+
+#----only keep rows from the five Cultural Infrastructure classifications if the rating cell is not 0
+culture <- culture[culture$rating != 0, ]
+
+#----turn each of the  five Cultural Infrastructure dataframes into spatial objects
+culture <- st_as_sf(culture, coords = c("longitude", "latitude"),  crs = 4326)
+culture <- st_transform(culture, 27700)
+
+culture_SP <- as(culture, "Spatial")
+
+#now set up an EPSG string to help set the projection 
+BNG = "+init=epsg:27700"
+
+culture_BNG <- spTransform(culture_SP, BNG)
+culture_BNG <- remove.duplicates(culture_BNG)
+
+culture_SUB <- culture_BNG[londonLSOA_SP,]
+
+#check to see that they've been removed
+tmap_mode("view")
+tm_shape(londonLSOA_SP) + tm_polygons(col = NA, alpha = 0.5) + tm_shape(culture_SUB) + tm_dots(col = "blue")
+```
+
+
+```{r}
+
+sort(table(culture$Cultural.Venue.Type), decreasing = TRUE)
+```
+
+
+```{r}
+
+#joined <- st_join(londonLSOA, culture, by = c("geometry" = "geometry"))
+
+#joined <- joined[!duplicated(joined[c("Cultural.Venue.Type", "site_name", "address1")]),]
+
+#sort(table(joined$InnerOuter), decreasing = TRUE)
+```
+
+
+
+```{r}
+
+# i=0
+# for (type in 1:nrow(culture_SUB)){
+#   i <- i+1
+#   #all_list <- culture_SUB@data$Cultural.Venue[[i]]
+#   #music_SUB <- culture_SUB[culture_SUB@data$"Cultural.Venue.Type"=="Music venues (all)",]
+#   #all_sub <- list(culture_SUB[culture_SUB@data$"Cultural.Venue.Type"==i,])
+#   # bufSpPolygons <- SpatialPolygons(list(bufPolygons))
+#   # bufSpPolygonDf <-patialPolygonsDataFrame(bufSpPolygons,bufferedPoints@data[i,])
+#   # ptsInBuffer <- which(!is.na(over(pointCloudSpdf,spPolygonDf)))
+#   # 
+#   # # I'm assuming `value` is the field name containing the point height
+#   # localMax <- order(pointCloudSpdf@data$value[ptsInBuffer],decreasing=TRUE)[1]
+#   # localMaxes[localMax] <- TRUE
+# }
+
+#all_list
+
+pub_SUB <- culture_SUB[culture_SUB@data$"Cultural.Venue.Type"=="Pub",]
+
+music_SUB <- culture_SUB[culture_SUB@data$"Cultural.Venue.Type"=="Music venues (all)",]
+
+community_SUB <- culture_SUB[culture_SUB@data$"Cultural.Venue.Type"=="Community centres",]
+
+archive_SUB <- culture_SUB[culture_SUB@data$"Cultural.Venue.Type"=="Archives",]
+
+libraries_SUB <- culture_SUB[culture_SUB@data$"Cultural.Venue.Type"=="Libraries",]
+
+thatres_SUB <- culture_SUB[culture_SUB@data$"Cultural.Venue.Type"=="Theatres",]
+
+dance_rehersal_SUB <- culture_SUB[culture_SUB@data$"Cultural.Venue.Type"=="Dance rehearsal studios",]
+
+galleries_SUB <- culture_SUB[culture_SUB@data$"Cultural.Venue.Type"=="Commercial galleries",]
+
+dance_SUB <- culture_SUB[culture_SUB@data$"Cultural.Venue.Type"=="Dance performance venues",]
+
+museums_SUB <- culture_SUB[culture_SUB@data$"Cultural.Venue.Type"=="Museums and public galleries",]
+
+#music_SUB
+
+tm_shape(londonLSOA_SP) + tm_polygons(col = NA, alpha = 0.5) + tm_shape(music_SUB) + tm_dots(col = "blue")
+
+
+```
+
+
+# Looks at Kernel Density
+
+```{r}
+
+#now set a window as the borough boundary
+# <- as.owin(BoroughMap[BoroughMap@data$LAD11NM=="Camden",])
+
+window <- as.owin(londonLSOA_SP)
+
+#create a point pattern dataset
+culture_SUB.ppp <- ppp(x=culture_SUB@coords[,1], y=culture_SUB@coords[,2],window=window)
+
+
+```
+
+```{r}
+
+plot(density(culture_SUB.ppp, sigma = 200))
+```
+
+```{r}
+
+ggplot(US_states_geoms$albers_revised) + 
+  geom_sf(fill = brown, color = "black", size = 0.5/.pt) +
+  coord_sf(datum = NA, expand = FALSE) +
+  theme_dviz_map() +
+  theme(
+    #plot.background = element_rect(fill = "cornsilk")
+  )
+```
+
+
+
+
+<!-- ```{r} -->
+
+<!-- plot(density(musicSub.ppp, sigma = 200)) -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+
+<!-- plot(density(galleriesSub.ppp, sigma = 200)) -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+
+<!-- plot(density(museumsSub.ppp, sigma = 200)) -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+
+<!-- plot(density(danceSub.ppp, sigma = 200)) -->
+<!-- ``` -->
+
+
+
+
+Quadrant Analysis
+
+
+```{r}
+
+#First plot the points
+plot(culture_SUB.ppp, pch=16, cex=0.5, main="Cultural Infrastructure in Inner London")
+
+#now count the points in that fall in a 6 x 6 grid overlaid across the window
+
+x <- quadratcount(culture_SUB.ppp, nx = 10,  ny = 10)
+
+#, add=T, col="red")
+
+# 
+# plot(quadratcount(culture_SUB.ppp, 
+#                   nx = 10, 
+#                   ny = 10),
+#      add=T,
+#      col="red")
+
+
+```
+
+
+```{r}
+
+#run the quadrat count
+#Qcount<-data.frame(quadratcount(musicSub.ppp, nx = 10, ny = 10))
+
+Qcount <- data.frame(x)
+
+#put the results into a data frame
+QCountTable <- data.frame(table(Qcount$Freq, exclude=NULL))
+
+#view the data frame
+#QCountTable
+
+#we don't need the last row, so remove it
+#QCountTable <- QCountTable[-nrow(QCountTable),]
+
+class(QCountTable[,1])
+
+#oops, looks like it's a factor, so we need to convert it to numeric
+vect<- as.numeric(levels(QCountTable[,1]))
+vect <- vect[1:59]
+QCountTable[,1] <- vect
+
+#calculate the total blue plaques (Var * Freq)
+QCountTable$total <- QCountTable[,1]*QCountTable[,2]
+
+#calculate mean
+sums <- colSums(QCountTable[,-1])
+#sums
+
+#and now calculate our mean Poisson parameter (lambda)
+lambda <- sums[2]/sums[1]
+
+QCountTable$Pr <- ((lambda^QCountTable[,1])*exp(-lambda))/factorial(QCountTable[,1])
+
+options(scipen = 999)
+
+#now calculate the expected counts and save them to the table
+QCountTable$Expected <- round(QCountTable$Pr * sums[1],0)
+
+#QCountTable
+
+QCountTable<-QCountTable %>% drop_na()
+
+```
+
+```{r}
+
+#Compare the frequency distributions of the observed and expected point patterns
+plot(c(1,50),c(0,10), type="n", xlab="Number of Music Venues (Red=Observed, Blue=Expected)", ylab="Frequency of Occurances")
+points(QCountTable$Freq, col="Red", type="o", lwd=3)
+points(QCountTable$Expected, col="Blue", type="o", lwd=3)
+
+```
+
+
+```{r}
+
+teststats <- quadrat.test(culture_SUB.ppp, nx = 10, ny = 10)
+teststats
+
+plot(culture_SUB.ppp, pch=16, cex=0.5, main="Blue Plaques in Harrow")
+plot(teststats, add=T, col = "red")
+
+```
+
+
+```{r}
+
+#K <- Kest(culture_SUB.ppp, correction="border")
+#L <- Lest(culture_SUB.ppp, correction="border")
+
+G <- Gest(culture_SUB.ppp, correction="border")
+
+plot(G)
+
+```
+
+
+
+
+```{r}
+
+library(raster)
+library(fpc)
+library(plyr)
+
+#first check the coordinate reference system of the spatial polygon:
+crs(londonLSOA_SP)
+
+#first extract the points from the spatial points data frame
+culture_SUB_Points <- data.frame(culture_SUB@coords[,1:2])
+
+#now run the dbscan analysis
+db <- fpc::dbscan(culture_SUB_Points, eps = 250, MinPts = 12)
+
+plot(x, col=db$cluster)
+points(x[db$cluster==0,], pch = 3, col = "grey")
+hullplot(x, db)
+
+#now plot the results
+plot(db, culture_SUB_Points, main = "DBSCAN Output", frame = F)
+plot(londonLSOA_SP, add=T)
+
+#if(!require(devtools)) install.packages("devtools")
+#https://rpkgs.datanovia.com/factoextra/index.html
+#devtools::install_github("kassambara/factoextra")
+#library("factoextra")
+#fviz_cluster(km.res, culture_SUB_Points, stand = FALSE, frame = FALSE, geom = "point")
+
+
+```
+
+
+```{r}
+
+# used to find suitable eps value based on the knee in plot
+# k is no of nearest neighbours used, use min points
+library(dbscan)
+
+dbscan::kNNdistplot(culture_SUB_Points, k =  4)
+```
+
+
+```{r}
+
+library(ggplot2)
+
+db
+```
+
+
+```{r}
+
+db$cluster
+```
+
+
+
+DBSAN
+
+```{r}
+#We can now add this cluster membership info back into our dataframe
+
+culture_SUB_Points$cluster <- db$cluster
+
+#Next we are going to create some convex hull polygons to wrap around the points in our clusters. Use the ddply function in the plyr package to get the convex hull coordinates from the cluster groups in our dataframe
+
+library(plyr)
+chulls <- ddply(culture_SUB_Points, .(cluster), function(df) df[chull(df$coords.x1, df$coords.x2), ])
+
+#As 0 isn’t actually a cluster (it’s all points that aren’t in a cluster) drop it from the dataframe
+chulls <- subset(chulls, cluster>=1)
+
+```
+
+
+```{r}
+
+dbplot <- ggplot(data=culture_SUB_Points, 
+                 aes(coords.x1,coords.x2, colour=cluster, fill=cluster)) 
+
+#add the points in
+dbplot <- dbplot + geom_point()
+
+#now the convex hulls
+dbplot <- dbplot + geom_polygon(data = chulls, 
+                                aes(coords.x1,coords.x2, group=cluster), 
+                                alpha = 0.5) 
+
+#now plot, setting the coordinates to scale correctly and as a black and white plot (just for the hell of it)...
+dbplot + theme_bw() + coord_equal()
+```
+
+
+
+
+
+
+```{r}
+
+
+
+###add a basemap First get the bbox in lat long for Harrow
+latlong <- "+init=epsg:4326" 
+BoroughWGS <-spTransform(londonLSOA_SP, CRS(latlong))
+BoroughWGS@bbox
+
+
+```
+
+```{r}
+
+#basemap<-openmap(c(51.5530613,-0.4040719),c(51.6405318,-0.2671556), zoom=NULL,"stamen-toner")
+
+#install.packages("ggmap")
+library(ggmap)
+basemap <- get_stamenmap(bbox = c(left = -51.5530613,
+                                bottom = -0.4040719,
+                                right = 51.6405318,
+                                top = -0.2671556),
+          maptype = "terrain", 
+          crop = FALSE,
+          zoom = 12)
+
+# convert the basemap to British National Grid - remember we created the 
+# BNG object right at the beginning of the practical - it's an epsg string...
+#basemap_bng<-openproj(basemap, projection=BNG)
+
+```
+
+```{r}
+
+ggmap(basemap) + geom_point(data=culture_SUB_Points, 
+                                   aes(coords.x1,coords.x2, 
+                                       colour=cluster, fill=cluster)) + 
+  geom_polygon(data = chulls, aes(coords.x1,coords.x2, group=cluster, fill=cluster), 
+               alpha = 0.5)  
+```
+
+
+
+
+
+
+## Moran's I
+
+```{r}
+
+library(rgdal)
+#read the ward data in
+
+proj4string(londonLSOA_SP) <- CRS("+init=epsg:27700")
+
+#have a look to check that everything looks OK..
+tmap_mode("view")
+
+culture_SP <- culture_BNG[londonLSOA_SP,]
+
+tm_shape(londonLSOA_SP) + tm_polygons(col = NA, alpha = 0.5) + tm_shape(culture_SUB) + tm_dots(col = "blue")
+
+res <- poly.counts(culture_SUB, londonLSOA_SP)
+
+#and add this as a column in our spatialPolygonsDataframe
+londonLSOA_SP@data$BluePlaqueCount <-res
+
+#as the wards are of different sizes, perhaps best that we calculate a density
+londonLSOA_SP@data$BlueDensity <- (londonLSOA_SP$BluePlaqueCount/poly.areas(londonLSOA_SP))
+
+tm_shape(londonLSOA_SP) + tm_polygons("BlueDensity", style="jenks", palette="PuOr", midpoint=NA, title="Blue Plaque Density")
+
+```
+
+
+
+More
+
+
+```{r}
+
+install.packages('spdep')
+
+library(spdep)
+
+#First calculate the centroids of all Wards in London
+coordsW <- coordinates(londonLSOA_SP)
+
+plot(coordsW)
+
+
+```
+
+
+
+```{r}
+
+#create a neighbours list
+LWard_nb <- poly2nb(londonLSOA_SP, queen=T)
+#LWard_nb <- poly2nb(LondonLSOA, queen=FALSE)
+
+#plot them
+plot(LWard_nb, coordinates(coordsW), col="red")
+
+#add a map underneath
+plot(londonLSOA_SP, add=T)
+
+
+```
+
+
+```{r}
+
+#error Empty neighbour sets found keeps popping up when I use LSOAs rather than the Ward shape file
+# I looked at this blog post and entered the zero.policy=T parameter to make sure the code works but the final output is not goo enough
+
+
+#create a spatial weights object from these weights
+Lward.lw <- nb2listw(LWard_nb, zero.policy=TRUE, style="C")
+head(Lward.lw$neighbours)
+
+Lward.lw$neighbours
+
+I_LWard_Global_Density <- moran.test(londonLSOA_SP@data$BlueDensity, Lward.lw, zero.policy=T)
+I_LWard_Global_Density
+
+```
+
+
+
+```{r}
+
+C_LWard_Global_Density <- geary.test(londonLSOA_SP@data$BlueDensity, Lward.lw, zero.policy=T)
+C_LWard_Global_Density
+
+
+```
+
+
+
+```{r}
+
+
+G_LWard_Global_Density <- globalG.test(londonLSOA_SP@data$BlueDensity, Lward.lw, zero.policy=T)
+G_LWard_Global_Density
+
+```
+
+
+```{r}
+
+#use the localmoran function to generate I for each ward in the city
+I_LWard_Local <- localmoran(londonLSOA_SP@data$BluePlaqueCount, Lward.lw)
+I_LWard_Local_Density <- localmoran(londonLSOA_SP@data$BlueDensity, Lward.lw)
+#what does the output (the localMoran object) look like?
+head(I_LWard_Local_Density)
+I_LWard_Local_Density
+
+
+```
+
+```{r}
+
+londonLSOA_SP@data$BLocI <- I_LWard_Local[,1]
+londonLSOA_SP@data$BLocIz <- I_LWard_Local[,4]
+londonLSOA_SP@data$BLocIR <- I_LWard_Local_Density[,1]
+londonLSOA_SP@data$BLocIRz <- I_LWard_Local_Density[,4]
+
+
+```
+
+
+
+```{r}
+
+#install.packages("RColorBrewer")
+
+library(RColorBrewer)
+
+breaks1<-c(-1000,-2.58,-1.96,-1.65,1.65,1.96,2.58,1000)
+
+MoranColours<- rev(brewer.pal(8, "RdGy"))
+
+tm_shape(london) + tm_polygons("BLocIRz", style="fixed", breaks=breaks1, palette=MoranColours, midpoint=NA, title="Local Moran's I, Blue Plaques in London")
+
+```
+
+
+
+<!--chapter:end:coursework-pattern.Rmd-->
+
+---
+title: "coursework"
+author: "Vishal Kumar"
+date: "29/12/2019"
+output: html_document
+---
+
+# Load Libraries
+
+
+```{r}
+
+#----load all the libraries needed
+library(sf)
+library(tmap)
+library(tmaptools)
+library(plyr)
+
+library(pins)
+library(geojsonio)
+
+library(rgdal)
+library(broom)
+library(mapview)
+library(crosstalk)
+library(sp)
+library(spdep)
+library(car)
+library(raster)
+
+library(tidyverse)
+library(tidyr)
+
+# load in libraries
+library(scales)
+library(lubridate)
+library(ggridges) # for geom_density_line()
+library(plotly)
+
+#tmap_mode("plot")
+
+## Andy MacLachlan and Adam Dennett (2019). CASA0005 Geographic Information Systems and Science. URL https://andrewmaclachlan.github.io/CASA0005repo/index.html.
+
+# (MacLachlan & Dennett, 2019: Section X.X)
+
+```
+
+
+
+#Regression Analysis
+
+
+
+```{r}
+
+
+#/young_p
+#/bame_p
+#/nonUK
+#/education
+#/employees
+#/income
+#/housing
+#/house_mortg
+#/house_price
+#/transport
+#/culture_freq
+#/culture_rating
+
+options(scipen = 999)
+
+#run a final OLS model
+model_price <- lm(log(`airbnb_price`) ~ 
+                    `young_p` + 
+                    `bame_p` +
+                    `nonUK` +
+                    `education` +
+                    `employees` +
+                    `income` +
+                    #`housing` +
+                    `house_mortg` +
+                    `house_price` +
+                    #`transport` +
+                    `culture_freq` +
+                    `culture_rating`+
+                    `InnerOuter`,
+                  data = londonLSOAProfiles, na.action=na.exclude, weight = culture_rating)
+
+summary(model_price)
+
+# 
+# #https://stackoverflow.com/questions/50111113/r-replacement-has-x-rows-data-has-y-residuals-from-a-linear-model-in-new
+# library(dplyr)
+# library(broom)
+# 
+# londonLSOAProfiles %>% 
+#   lm(log(`airbnb_price`) ~ `young_p` + 
+#                     `bame_p` +
+#                     `nonUK` +
+#                     `education` +
+#                     `employees` +
+#                     `housing` +
+#                     `house_mortg` +
+#                     `house_price` +
+#                     `culture_freq` +
+#                     `culture_rating`, data = .) %>% 
+#   augment() %>% 
+#   select(.rownames, .std.resid) %>% 
+#   right_join(mutate(londonLSOAProfiles, row = as.character(row_number())), 
+#              by = c(".rownames" = "row"))
+
+# summary(model_price$)
+
+```
+
+```{r}
+
+#https://stackoverflow.com/questions/6882709/how-do-i-deal-with-nas-in-residuals-in-a-regression-in-r
+
+#how to deal with residuals with NA - make use of the row names associated with the data frame provided as input to lm
+londonLSOAProfiles[names(model_price$model_price_resids),"residual"]<-model_price$residuals
+
+#save the residuals into your dataframe
+#londonLSOAProfiles$model_price_resids <- model_price$residuals
+
+qplot(model_price$residuals) + geom_histogram() 
+```
+
+
+
+
+```{r}
+
+
+#run a final OLS model
+model_count <- lm(log(`airbnb_freq`)~ 
+                    `young_p` + 
+                    `bame_p` +
+                    `nonUK` +
+                    `education` +
+                    #`employees` +
+                    `income` +
+                    `housing` +
+                    `house_mortg` +
+                    `house_price` +
+                    `transport` +
+                    `culture_freq` +
+                    `culture_rating`+
+                    `InnerOuter`, 
+                  data = londonLSOAProfiles, na.action=na.exclude, weight = culture_rating)
+
+summary(model_count)
+```
+
+
+
+
+```{r}
+
+
+#https://stackoverflow.com/questions/6882709/how-do-i-deal-with-nas-in-residuals-in-a-regression-in-r
+
+#how to deal with residuals with NA - make use of the row names associated with the data frame provided as input to lm
+londonLSOAProfiles[names(model_count$residuals),"residual"]<-model_count$residuals
+
+#save the residuals into your dataframe
+#londonLSOAProfiles$model_price_resids <- model_price$residuals
+
+qplot(model_count$residuals) + geom_histogram() 
+```
+
+
+
+
+```{r}
+# 
+# #we need to check the Pearson correlation of the variable to check multi-colinearity
+# 
+# library(corrplot)
+# 
+# #first drop the geometry column from the dataframe as it will cause problems
+# tempdf <- st_set_geometry(londonLSOAProfiles, NULL)
+# 
+# #pull out the columns we want to check for multicolinearity
+# tempdf <- tempdf[,c("Ethnic Group;BAME (%);2011", 
+#                     "culture_freq",
+#                     "culture_rating",
+#                     "Tenure (2011);Private rented (%)", 
+#                     "Qualifications (2011);Highest level of qualification: Level 4 qualifications and above;")]
+# 
+# #log houseprice
+# #tempdf[1] <- log(tempdf[1])
+# 
+# #rename the columns to something shorter
+# names(tempdf) <- c("BAME", 
+#                    "Culture Count",
+#                    "Culture Rating",
+#                    "Tenure - Private",
+#                    "Highest Qualifications")
+# 
+# #compute the correlation matrix for the two variables of interest
+# cormat <- cor(tempdf[,1:5], use="complete.obs", method="pearson")
+# 
+# #visualise the correlation matrix
+# corrplot(cormat)
+
+
+```
+
+
+```{r}
+
+#this is another measure for multi-colinarity
+
+vif(model_price, na.action=na.exclude)
+
+```
+
+
+```{r}
+
+#print some model diagnositcs. 
+plot(model_price, na.action=na.exclude)
+
+```
+
+
+
+```{r}
+
+#run durbin-watson test for auto correlation
+durbinWatsonTest(model_price, zero.policy=TRUE)
+
+```
+
+
+
+```{r}
+
+# 
+# STOOOOOOOP
+# 
+# #now plot the residuals to see spatial auto correlation
+# tmap_mode("view")
+# 
+# #from the coordinate values stored in the x and y columns, which look like they are latitude and longitude values, create a new points dataset
+# #all_culture_sf <- st_as_sf(all_culture, coords = c("longitude","latitude"), crs = 4326)
+# 
+# #qtm(all_culture_sf)
+# #qtm(LonWardProfiles, fill = "model1_resids")
+# 
+# tm_shape(londonLSOAProfiles) + 
+#   tm_polygons("model_price_resids", palette = "RdYlBu", midpoint = NA) 
+# #+ tm_shape(all_culture_sf) + tm_dots(col = "red")
+
+```
+
+
+
+
+```{r}
+
+#use Moran's I to test for spatial auto correlation
+
+londonLSOAProfiles_noNA <- londonLSOAProfiles %>% drop_na(model_price_resids)
+
+#Firstly convert our SF object into an SP object:
+londonLSOAProfilesSP <- as(londonLSOAProfiles_noNA, "Spatial")
+
+
+
+
+
+#https://gis.stackexchange.com/questions/89512/r-dealing-with-missing-data-in-spatialpolygondataframes-for-moran-test
+# # USE meuse AS EXAMPLE
+# require(sp)
+#   data(meuse)
+#   coordinates(meuse) <- ~x+y
+# 
+# # DISPLAY NA ROWS IN meuse  
+# londonLSOAProfilesSP@data[!complete.cases(londonLSOAProfilesSP@data),] 
+# 
+# # FUNCTION TO REMOVE NA's IN sp DataFrame OBJECT
+# #   x           sp spatial DataFrame object
+# #   margin      Remove rows (1) or columns (2) 
+# sp.na.omit <- function(x, margin=1) {
+#   if (!inherits(x, "SpatialPointsDataFrame") & !inherits(x, "SpatialPolygonsDataFrame")) 
+#     stop("MUST BE sp SpatialPointsDataFrame OR SpatialPolygonsDataFrame CLASS OBJECT") 
+#   na.index <- unique(as.data.frame(which(is.na(x@data),arr.ind=TRUE))[,margin])
+#     if(margin == 1) {  
+#       cat("DELETING ROWS: ", na.index, "\n") 
+#         return( x[-na.index,]  ) 
+#     }
+#     if(margin == 2) {  
+#       cat("DELETING COLUMNS: ", na.index, "\n") 
+#         return( x[,-na.index]  ) 
+#     }
+#  }
+# 
+# # DELETE NA's IN meuse AND SHOW CHANGE IN dim
+# meuse2 <- sp.na.omit(londonLSOAProfilesSP)     
+#   dim(londonLSOAProfilesSP)
+#     dim(meuse2) 
+# 
+# # PLOT DELETED POINTS IN RED    
+# plot(meuse, col="red", pch=20)
+#   plot(meuse2, col="black", pch=20, add=TRUE)
+# 
+# 
+# # 
+# # 
+# # # FUNCTION TO REMOVE NA's IN sp DataFrame OBJECT
+# # #   x           sp spatial DataFrame object
+# # #   margin      Remove rows (1) or columns (2) 
+# # sp.na.omit <- function(x, margin=1) {
+# #   if (!inherits(x, "SpatialPointsDataFrame") & !inherits(x, "SpatialPolygonsDataFrame")) 
+# #     stop("MUST BE sp SpatialPointsDataFrame OR SpatialPolygonsDataFrame CLASS OBJECT") 
+# #   na.index <- unique(as.data.frame(which(is.na(x@data),arr.ind=TRUE))[,margin])
+# #     if(margin == 1) {  
+# #       cat("DELETING ROWS: ", na.index, "\n") 
+# #         return( x[-na.index,]  ) 
+# #     }
+# #     if(margin == 2) {  
+# #       cat("DELETING COLUMNS: ", na.index, "\n") 
+# #         return( x[,-na.index]  ) 
+# #     }
+# #  }
+# # 
+# # # DELETE NA's IN meuse AND SHOW CHANGE IN dim
+# # londonLSOAProfilesSP <- sp.na.omit(londonLSOAProfilesSP)     
+# #   dim(londonLSOAProfilesSP)
+# #     dim(londonLSOAProfilesSP) 
+# # 
+# # # PLOT DELETED POINTS IN RED    
+# # plot(londonLSOAProfilesSP, col="red", pch=20)
+# #   plot(londonLSOAProfilesSP, col="black", pch=20, add=TRUE)
+
+```
+
+
+
+```{r}
+
+#and calculate the centroids of all LSOAS in London
+coordsW <- coordinates(londonLSOAProfilesSP)
+
+plot(coordsW)
+
+```
+
+
+```{r}
+
+
+#Now we need to generate a spatial weights matrix (remember from the lecture a couple of weeks ago). We'll start with a simple binary matrix of queen's case neighbours
+
+#or nearest neighbours
+knn_wards <- knearneigh(coordsW, k=4)
+
+LWard_knn <- knn2nb(knn_wards)
+
+plot(LWard_knn, coordinates(coordsW), col="blue")
+
+
+```
+
+
+
+```{r}
+
+#create a spatial weights matrix object from these weights
+Lward.knn_4_weight <- nb2listw(LWard_knn, style="C", zero.policy=TRUE)
+
+#now run a moran's I test on the residuals
+
+#then knn = 4
+
+moran.test(londonLSOAProfilesSP@data$model_price_resids, Lward.knn_4_weight, zero.policy=T)
+
+
+```
+
+
+
+
+```{r}
+
+#Dealing with Spatially Autocorrelated Residuals - Spatial Lag and Spatial Error models
+
+library(spatialreg)
+
+#run a spatially-lagged regression model
+slag_dv_model_price_knn4 <- lagsarlm(log(`airbnb_price`) ~ 
+                    `young_p` + 
+                    `bame_p` +
+                    `nonUK` +
+                    `education` +
+                    `employees` +
+                    `income` +
+                    #`housing` +
+                    `house_mortg` +
+                    `house_price` +
+                    #`transport` +
+                    `culture_freq` +
+                    `culture_rating`+
+                    `InnerOuter`, 
+                    data = londonLSOAProfilesSP, 
+                    na.action=na.exclude,
+                    nb2listw(LWard_knn, style="C"), 
+                    method = "eigen")
+
+#what do the outputs show?
+summary(slag_dv_model_price_knn4)
+
+
+```
+
+```{r}
+
+#write out the residuals
+londonLSOAProfilesSP@data$slag_dv_model_price_knn4_resids <- slag_dv_model_price_knn4$residuals
+
+#now test for spatial autocorrelation
+moran.test(londonLSOAProfilesSP@data$slag_dv_model_price_knn4_resids, Lward.knn_4_weight)
+
+```
+
+
+```{r}
+
+sem_model1 <- errorsarlm(log(`airbnb_price`) ~ 
+                    `young_p` + 
+                    `bame_p` +
+                    `nonUK` +
+                    `education` +
+                    `employees` +
+                    `income` +
+                    #`housing` +
+                    `house_mortg` +
+                    `house_price` +
+                    #`transport` +
+                    `culture_freq` +
+                    `culture_rating`+
+                    `InnerOuter`, 
+                    data = londonLSOAProfilesSP, 
+                    na.action=na.exclude,
+                    nb2listw(LWard_knn, style="C"), 
+                    method = "eigen")
+
+summary(sem_model1)
+
+```
+
+
+```{r}
+
+#write.csv(londonLSOAProfiles, 'londonLSOAProfiles.csv')
+
+#limit LSOAprofiles dataframe
+#londonLSOAProfiles<-londonLSOAProfiles[c(0:1,15:1000)]
+```
+
+
+```{r}
+
+p <- ggplot(londonLSOAProfiles, aes(x=`culture_freq`, 
+                                    y=`airbnb_price`))
+
+p + geom_point(aes(colour = InnerOuter)) 
+
+
+```
+
+
+
+```{r}
+
+library(spgwr)
+
+#calculate kernel bandwidth
+GWRbandwidth <- gwr.sel(log(`airbnb_price`) ~ 
+                    `young_p` + 
+                    `bame_p` +
+                    `nonUK` +
+                    `education` +
+                    `employees` +
+                    `income` +
+                    #`housing` +
+                    `house_mortg` +
+                    `house_price` +
+                    #`transport` +
+                    `culture_freq` +
+                    `culture_rating`+
+                    `InnerOuter`, 
+                    data = londonLSOAProfilesSP, 
+                        coords=coordsW,
+                        adapt=T)
+
+```
+
+
+```{r}
+
+#run the gwr model
+gwr.model = gwr(log(`airbnb_price`) ~ 
+                    `young_p` + 
+                    `bame_p` +
+                    `nonUK` +
+                    `education` +
+                    `employees` +
+                    `income` +
+                    #`housing` +
+                    `house_mortg` +
+                    `house_price` +
+                    #`transport` +
+                    `culture_freq` +
+                    `culture_rating`+
+                    `InnerOuter`, 
+                    data = londonLSOAProfilesSP, 
+                coords=coordsW, 
+                adapt=GWRbandwidth, 
+                hatmatrix=TRUE, 
+                se.fit=TRUE)
+
+#print the results of the model
+gwr.model
+
+```
+
+
+```{r}
+
+results<-as.data.frame(gwr.model$SDF)
+
+names(results)
+
+```
+
+
+```{r}
+
+#attach coefficients to original dataframe
+londonLSOAProfilesSP@data$coefBAME <- results$bame_p_se
+
+londonLSOAProfilesSP@data$coefCulture <- results$culture_freq_se
+
+londonLSOAProfilesSP@data$coefCultureRating <- results$culture_rating_se
+# 
+# londonLSOAProfilesSP@data$coefPrivateRent <- results$X.Tenure..2011..Private.rented.....
+# 
+# londonLSOAProfilesSP@data$coefCrime <- results$X.Crime..numbers..Violence.Against.The.Person.2012.13.
+# 
+# londonLSOAProfilesSP@data$coefLev4Qual <- results$X.Qualifications..2011..Highest.level.of.qualification..Level.4.qualifications.and.above..
+
+```
+
+
+<!-- ```{r} -->
+
+<!-- tm_shape(londonLSOAProfilesSP) + -->
+<!--   tm_polygons(col = "coefBAME", palette = "RdBu") -->
+
+<!-- ``` -->
+
+
+
+<!-- ```{r} -->
+
+<!-- tm_shape(londonLSOAProfilesSP) + -->
+<!--   tm_polygons(col = "coefCulture", palette = "RdBu") -->
+
+<!-- ``` -->
+
+<!-- ```{r} -->
+
+<!-- tm_shape(londonLSOAProfilesSP) + -->
+<!--   tm_polygons(col = "coefCultureRating", palette = "RdBu") -->
+
+<!-- ``` -->
+
+
+
+
+<!-- ```{r} -->
+
+<!-- tm_shape(londonLSOAProfilesSP) + -->
+<!--   tm_polygons(col = "coefPrivateRent", palette = "PuOr") -->
+<!-- ``` -->
+
+
+
+
+<!-- ```{r} -->
+
+
+<!-- tm_shape(londonLSOAProfilesSP) + -->
+<!--   tm_polygons(col = "coefCrime", palette = "PRGn") -->
+
+<!-- ``` -->
+
+
+
+<!-- ```{r} -->
+
+<!-- tm_shape(londonLSOAProfilesSP) + -->
+<!--   tm_polygons(col = "coefLev4Qual", palette = "PRGn") -->
+
+<!-- ``` -->
+
+
+
+
+```{r}
+
+#Ethnic Group;BAME (%);2011` + 
+#`culture_freq` + 
+#`Tenure (2011);Private rented (%)` +
+#``+
+#`Qualifications (2011);Highest level of qualification: Level 4 qualifications and above;` +
+#`InnerOuter`, 
+
+#**NOTE** when you run the code below, it's likely that column headers with `column_names` labelled with lots of quotations - as happens when using read_csv, errors will be caused when trying to reference these in gwr.model. To get over these errors, rename your columns as something simple and run the regression again. 
+
+#run the significance test
+sigTest = abs(gwr.model$SDF$"culture_freq") -2 * gwr.model$SDF$"culture_freq_se"
+
+#store significance results
+londonLSOAProfilesSP$GWRUnauthSig <- sigTest
+
+```
+
+
+
+```{r}
+
+tm_shape(londonLSOAProfilesSP) +
+  tm_polygons(col = "GWRUnauthSig", palette = "RdYlBu")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Which type of culture - theatre, music, galleries, museums, dance - impacts Airbnb more?
+
+
+
+
+
+
+
+
+
+
+
+
+#Analyse
+
+<!--chapter:end:coursework-regression.Rmd-->
+

@@ -1,0 +1,23 @@
+# Spatial Patterns
+
+Searching for spaital autocorrelation
+
+
+
+```{r}
+
+culture_SP <- as(culture, "Spatial")
+
+#now set up an EPSG string to help set the projection 
+BNG = "+init=epsg:27700"
+
+culture_BNG <- spTransform(culture_SP, BNG)
+culture_BNG <- remove.duplicates(culture_BNG)
+
+culture_SUB <- culture_BNG[londonLSOA_SP,]
+
+#check to see that they've been removed
+tmap_mode("view")
+tm_shape(londonLSOA_SP) + tm_polygons(col = NA, alpha = 0.5) + tm_shape(culture_SUB) + tm_dots(col = "blue")
+```
+
