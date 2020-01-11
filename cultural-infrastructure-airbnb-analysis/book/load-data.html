@@ -4,27 +4,27 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Load Data | A Minimal Book Example</title>
-  <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <title>Chapter 3 Load Data | Measuring the impact of cultural infrastructure on Airbnb listings in London</title>
+  <meta name="description" content="This study uses cultural data science to measure the impact of cultural infrastructure on the supply and demand of Airbnb listings in London. The output format for this study is bookdown::gitbook." />
   <meta name="generator" content="bookdown 0.16.5 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Load Data | A Minimal Book Example" />
+  <meta property="og:title" content="Chapter 3 Load Data | Measuring the impact of cultural infrastructure on Airbnb listings in London" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta property="og:description" content="This study uses cultural data science to measure the impact of cultural infrastructure on the supply and demand of Airbnb listings in London. The output format for this study is bookdown::gitbook." />
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Load Data | A Minimal Book Example" />
+  <meta name="twitter:title" content="Chapter 3 Load Data | Measuring the impact of cultural infrastructure on Airbnb listings in London" />
   
-  <meta name="twitter:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta name="twitter:description" content="This study uses cultural data science to measure the impact of cultural infrastructure on the supply and demand of Airbnb listings in London. The output format for this study is bookdown::gitbook." />
   
 
-<meta name="author" content="Yihui Xie" />
+<meta name="author" content="Vishal Kumar" />
 
 
-<meta name="date" content="2020-01-09" />
+<meta name="date" content="2020-01-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -106,20 +106,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="./">A Minimal Book Example</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Abstract</a></li>
 <li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
 <li class="chapter" data-level="3" data-path="load-data.html"><a href="load-data.html"><i class="fa fa-check"></i><b>3</b> Load Data</a><ul>
 <li class="chapter" data-level="3.1" data-path="load-data.html"><a href="load-data.html#load-packages"><i class="fa fa-check"></i><b>3.1</b> Load packages</a></li>
-<li class="chapter" data-level="3.2" data-path="load-data.html"><a href="load-data.html#download-airbnb-data"><i class="fa fa-check"></i><b>3.2</b> Download Airbnb data</a></li>
-<li class="chapter" data-level="3.3" data-path="load-data.html"><a href="load-data.html#download-cultural-infrastructure-data"><i class="fa fa-check"></i><b>3.3</b> Download Cultural Infrastructure data</a></li>
-<li class="chapter" data-level="3.4" data-path="load-data.html"><a href="load-data.html#download-london-shapefile-data"><i class="fa fa-check"></i><b>3.4</b> Download London shapefile data</a></li>
-<li class="chapter" data-level="3.5" data-path="load-data.html"><a href="load-data.html#join-airbnb-data-with-lsoa-shapefile"><i class="fa fa-check"></i><b>3.5</b> Join Airbnb data with LSOA shapefile</a></li>
-<li class="chapter" data-level="3.6" data-path="load-data.html"><a href="load-data.html#join-culture-data-with-lsoa-shapefile"><i class="fa fa-check"></i><b>3.6</b> Join Culture data with LSOA shapefile</a></li>
-<li class="chapter" data-level="3.7" data-path="load-data.html"><a href="load-data.html#join-airbnb-culture-and-lsoa-shapefile-data"><i class="fa fa-check"></i><b>3.7</b> Join Airbnb, Culture and LSOA shapefile data</a></li>
-<li class="chapter" data-level="3.8" data-path="load-data.html"><a href="load-data.html#download-the-lsoa-profile-data"><i class="fa fa-check"></i><b>3.8</b> Download the LSOA profile data</a></li>
-<li class="chapter" data-level="3.9" data-path="load-data.html"><a href="load-data.html#join-lsoa-profile-data-to-the-rest"><i class="fa fa-check"></i><b>3.9</b> Join LSOA profile data to the rest</a></li>
-<li class="chapter" data-level="3.10" data-path="load-data.html"><a href="load-data.html#download-innerouter-london-boundaries"><i class="fa fa-check"></i><b>3.10</b> Download Inner/Outer London boundaries</a></li>
-<li class="chapter" data-level="3.11" data-path="load-data.html"><a href="load-data.html#clean-variables-before-analysis"><i class="fa fa-check"></i><b>3.11</b> Clean variables before analysis</a></li>
+<li class="chapter" data-level="3.2" data-path="load-data.html"><a href="load-data.html#download-data"><i class="fa fa-check"></i><b>3.2</b> Download data</a></li>
+<li class="chapter" data-level="3.3" data-path="load-data.html"><a href="load-data.html#join-the-data"><i class="fa fa-check"></i><b>3.3</b> Join the data</a></li>
+<li class="chapter" data-level="3.4" data-path="load-data.html"><a href="load-data.html#clean-variables-before-analysis"><i class="fa fa-check"></i><b>3.4</b> Clean variables before analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>4</b> Exploratory Data Analysis</a><ul>
 <li class="chapter" data-level="4.1" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#airbnb-eda"><i class="fa fa-check"></i><b>4.1</b> Airbnb EDA</a><ul>
@@ -130,18 +123,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.2" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#cultural-infrastructure-eda"><i class="fa fa-check"></i><b>4.2</b> Cultural infrastructure EDA</a><ul>
 <li class="chapter" data-level="4.2.1" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#cultural-infrastructure-venues"><i class="fa fa-check"></i><b>4.2.1</b> Cultural infrastructure venues</a></li>
 <li class="chapter" data-level="4.2.2" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#cultural-infrastructure-ratings"><i class="fa fa-check"></i><b>4.2.2</b> Cultural infrastructure ratings</a></li>
-<li class="chapter" data-level="4.2.3" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#cultural-infrastructure-ratings-1"><i class="fa fa-check"></i><b>4.2.3</b> Cultural infrastructure ratings</a></li>
+<li class="chapter" data-level="4.2.3" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#all-variables"><i class="fa fa-check"></i><b>4.2.3</b> all variables</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>5</b> Final Words</a></li>
+<li class="chapter" data-level="5" data-path="maps.html"><a href="maps.html"><i class="fa fa-check"></i><b>5</b> Maps</a></li>
+<li class="chapter" data-level="6" data-path="regression.html"><a href="regression.html"><i class="fa fa-check"></i><b>6</b> Regression</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
-<li class="chapter" data-level="6" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>6</b> Literature</a></li>
-<li class="chapter" data-level="7" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>7</b> Methods</a></li>
-<li class="chapter" data-level="8" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>8</b> Applications</a><ul>
-<li class="chapter" data-level="8.1" data-path="applications.html"><a href="applications.html#example-one"><i class="fa fa-check"></i><b>8.1</b> Example one</a></li>
-<li class="chapter" data-level="8.2" data-path="applications.html"><a href="applications.html#example-two"><i class="fa fa-check"></i><b>8.2</b> Example two</a></li>
-</ul></li>
-<li class="chapter" data-level="9" data-path="final-words-1.html"><a href="final-words-1.html"><i class="fa fa-check"></i><b>9</b> Final Words</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -154,7 +141,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">A Minimal Book Example</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Measuring the impact of cultural infrastructure on Airbnb listings in London</a>
           </h1>
         </div>
 
@@ -177,8 +164,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <span class="kw">options</span>(<span class="dt">scipen =</span> <span class="dv">999</span>)</code></pre></div>
 </div>
-<div id="download-airbnb-data" class="section level2">
-<h2><span class="header-section-number">3.2</span> Download Airbnb data</h2>
+<div id="download-data" class="section level2">
+<h2><span class="header-section-number">3.2</span> Download data</h2>
+<p><strong>1. Download Airbnb data</strong></p>
 <p>I collected every Airbnb “listings.csv” file for London from the website Inside Airbnb (<a href="http://insideairbnb.com/get-the-data.html" class="uri">http://insideairbnb.com/get-the-data.html</a>) for the years 2017 and 2018, concatinated them all together and put it here (github link) on this project’s GitHub repo. In total, there are 242,490 unqiue listings with 14 columns of attributes. None of that raw data has had any post processing.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#----read in Airbnb London listings data from the project GitHub repo as a dataframe</span>
 airbnb &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/airbnb-london-2017-2018.csv&quot;</span>)
@@ -186,7 +174,8 @@ airbnb &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span clas
 <pre><code>## [1] 242490     14</code></pre>
 <p>This study does not look at the temporal change in price - i.e. the price difference between 2017 to 2018 - as the dependent variable. Rather, it averages out the price for each unique listing (by id) between 2017 and 2018. By doing this, adjustments for natural fluctations - for instance, seasonality - are averaged out. Future research may study dive deeper into the differences in price across time and season.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#----create a new dataframe by grouping the listings id and creating an average price column</span>
-price_average &lt;-<span class="st"> </span>airbnb %&gt;%<span class="st"> </span><span class="kw">group_by</span>(id) %&gt;%<span class="st"> </span><span class="kw">summarise</span>(<span class="dt">price =</span> <span class="kw">mean</span>(price))
+price_average &lt;-<span class="st"> </span>airbnb %&gt;%<span class="st">  </span><span class="kw">group_by</span>(id) %&gt;%<span class="st"> </span><span class="kw">summarise</span>(<span class="dt">price =</span> <span class="kw">mean</span>(price))
+
 <span class="kw">colnames</span>(price_average) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;price_average&quot;</span>)
 
 <span class="co">#----join the new dataframe to the original Airbnb data to add a column for the average price per listing between 2017 and 2018</span>
@@ -236,9 +225,7 @@ airbnb &lt;-<span class="st"> </span>airbnb[airbnb$price_average !=<span class="
 <span class="kw">print</span>(<span class="kw">summary</span>(airbnb$price_average))</code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##    5.00   44.50   75.00   86.82  120.00  258.50</code></pre>
-</div>
-<div id="download-cultural-infrastructure-data" class="section level2">
-<h2><span class="header-section-number">3.3</span> Download Cultural Infrastructure data</h2>
+<p><strong>2. Download Cultural Infrastructure data</strong></p>
 <p>I collected data for every cultural venue in London by borough from data.london.gov (<a href="https://data.london.gov.uk/dataset/cultural-infrastructure-map" class="uri">https://data.london.gov.uk/dataset/cultural-infrastructure-map</a>). Specifically, the “Cultural venues by London borough” zip file was downloaded and then all the files were concatinated. In total there were 10,003 cultural venues in London.</p>
 <p>This entire dataset was then passed to the Google Places API to calculate the average user rating and total number of reviews for each venue. The total run time to recieve a ratings and reviews took 90 minutes, which is why it was much more efficient to calculated these metrics outside of this R script. For more information on the Google Place API, please visit this link (X)</p>
 <p>1,958 venues out of the 10,003 total did not possess any, or had zero, user ratings and reviews on Google Places and were therefore dropped leaving 8,045 venues remaining for the analysis.</p>
@@ -279,358 +266,14 @@ culture &lt;-<span class="st"> </span><span class="kw">st_transform</span>(cultu
 
 <span class="co">#culture_withPubs &lt;- culture</span>
 <span class="co">#culture &lt;- culture[!culture$Cultural.Venue.Type == &#39;Pubs&#39;,]</span></code></pre></div>
-</div>
-<div id="download-london-shapefile-data" class="section level2">
-<h2><span class="header-section-number">3.4</span> Download London shapefile data</h2>
+<p><strong>3. Download London shapefile data</strong></p>
 <p>The GIS shapefile boundaries for London were downloaded from data.london (<a href="https://data.london.gov.uk/dataset/statistical-gis-boundary-files-london" class="uri">https://data.london.gov.uk/dataset/statistical-gis-boundary-files-london</a>). This research is interested in studying the Lower Super Output Area (LSOA) 2011 boundary area, however, Ward and Borough level shape files were also stored in a list if necessary. In total there are 4,835 LSOA areas.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#----the following code has been adapted from (MacLachlan &amp; Dennett, 2019: Section 10.4.1)</span>
 
 <span class="co">#----use the pin function from the pins package to store the GIS London boundary .zip files from data.london</span>
-pin_london_GIS &lt;-<span class="st"> </span><span class="kw">pin</span>(<span class="st">&quot;https://data.london.gov.uk/download/statistical-gis-boundary-files-london/9ba8c833-6370-4b11-abdc-314aa020d5e0/statistical-gis-boundaries-london.zip&quot;</span>)</code></pre></div>
-<pre><code>## 
-  |                                                                            
-  |                                                                      |   0%
-  |                                                                            
-  |                                                                      |   1%
-  |                                                                            
-  |=                                                                     |   1%
-  |                                                                            
-  |=                                                                     |   2%
-  |                                                                            
-  |==                                                                    |   2%
-  |                                                                            
-  |==                                                                    |   3%
-  |                                                                            
-  |==                                                                    |   4%
-  |                                                                            
-  |===                                                                   |   4%
-  |                                                                            
-  |===                                                                   |   5%
-  |                                                                            
-  |====                                                                  |   5%
-  |                                                                            
-  |====                                                                  |   6%
-  |                                                                            
-  |=====                                                                 |   6%
-  |                                                                            
-  |=====                                                                 |   7%
-  |                                                                            
-  |=====                                                                 |   8%
-  |                                                                            
-  |======                                                                |   8%
-  |                                                                            
-  |======                                                                |   9%
-  |                                                                            
-  |=======                                                               |   9%
-  |                                                                            
-  |=======                                                               |  10%
-  |                                                                            
-  |=======                                                               |  11%
-  |                                                                            
-  |========                                                              |  11%
-  |                                                                            
-  |========                                                              |  12%
-  |                                                                            
-  |=========                                                             |  12%
-  |                                                                            
-  |=========                                                             |  13%
-  |                                                                            
-  |=========                                                             |  14%
-  |                                                                            
-  |==========                                                            |  14%
-  |                                                                            
-  |==========                                                            |  15%
-  |                                                                            
-  |===========                                                           |  15%
-  |                                                                            
-  |===========                                                           |  16%
-  |                                                                            
-  |============                                                          |  16%
-  |                                                                            
-  |============                                                          |  17%
-  |                                                                            
-  |============                                                          |  18%
-  |                                                                            
-  |=============                                                         |  18%
-  |                                                                            
-  |=============                                                         |  19%
-  |                                                                            
-  |==============                                                        |  19%
-  |                                                                            
-  |==============                                                        |  20%
-  |                                                                            
-  |==============                                                        |  21%
-  |                                                                            
-  |===============                                                       |  21%
-  |                                                                            
-  |===============                                                       |  22%
-  |                                                                            
-  |================                                                      |  22%
-  |                                                                            
-  |================                                                      |  23%
-  |                                                                            
-  |================                                                      |  24%
-  |                                                                            
-  |=================                                                     |  24%
-  |                                                                            
-  |=================                                                     |  25%
-  |                                                                            
-  |==================                                                    |  25%
-  |                                                                            
-  |==================                                                    |  26%
-  |                                                                            
-  |===================                                                   |  26%
-  |                                                                            
-  |===================                                                   |  27%
-  |                                                                            
-  |===================                                                   |  28%
-  |                                                                            
-  |====================                                                  |  28%
-  |                                                                            
-  |====================                                                  |  29%
-  |                                                                            
-  |=====================                                                 |  29%
-  |                                                                            
-  |=====================                                                 |  30%
-  |                                                                            
-  |=====================                                                 |  31%
-  |                                                                            
-  |======================                                                |  31%
-  |                                                                            
-  |======================                                                |  32%
-  |                                                                            
-  |=======================                                               |  32%
-  |                                                                            
-  |=======================                                               |  33%
-  |                                                                            
-  |=======================                                               |  34%
-  |                                                                            
-  |========================                                              |  34%
-  |                                                                            
-  |========================                                              |  35%
-  |                                                                            
-  |=========================                                             |  35%
-  |                                                                            
-  |=========================                                             |  36%
-  |                                                                            
-  |==========================                                            |  36%
-  |                                                                            
-  |==========================                                            |  37%
-  |                                                                            
-  |==========================                                            |  38%
-  |                                                                            
-  |===========================                                           |  38%
-  |                                                                            
-  |===========================                                           |  39%
-  |                                                                            
-  |============================                                          |  39%
-  |                                                                            
-  |============================                                          |  40%
-  |                                                                            
-  |============================                                          |  41%
-  |                                                                            
-  |=============================                                         |  41%
-  |                                                                            
-  |=============================                                         |  42%
-  |                                                                            
-  |==============================                                        |  42%
-  |                                                                            
-  |==============================                                        |  43%
-  |                                                                            
-  |==============================                                        |  44%
-  |                                                                            
-  |===============================                                       |  44%
-  |                                                                            
-  |===============================                                       |  45%
-  |                                                                            
-  |================================                                      |  45%
-  |                                                                            
-  |================================                                      |  46%
-  |                                                                            
-  |=================================                                     |  46%
-  |                                                                            
-  |=================================                                     |  47%
-  |                                                                            
-  |=================================                                     |  48%
-  |                                                                            
-  |==================================                                    |  48%
-  |                                                                            
-  |==================================                                    |  49%
-  |                                                                            
-  |===================================                                   |  49%
-  |                                                                            
-  |===================================                                   |  50%
-  |                                                                            
-  |===================================                                   |  51%
-  |                                                                            
-  |====================================                                  |  51%
-  |                                                                            
-  |====================================                                  |  52%
-  |                                                                            
-  |=====================================                                 |  52%
-  |                                                                            
-  |=====================================                                 |  53%
-  |                                                                            
-  |=====================================                                 |  54%
-  |                                                                            
-  |======================================                                |  54%
-  |                                                                            
-  |======================================                                |  55%
-  |                                                                            
-  |=======================================                               |  55%
-  |                                                                            
-  |=======================================                               |  56%
-  |                                                                            
-  |========================================                              |  56%
-  |                                                                            
-  |========================================                              |  57%
-  |                                                                            
-  |========================================                              |  58%
-  |                                                                            
-  |=========================================                             |  58%
-  |                                                                            
-  |=========================================                             |  59%
-  |                                                                            
-  |==========================================                            |  59%
-  |                                                                            
-  |==========================================                            |  60%
-  |                                                                            
-  |==========================================                            |  61%
-  |                                                                            
-  |===========================================                           |  61%
-  |                                                                            
-  |===========================================                           |  62%
-  |                                                                            
-  |============================================                          |  62%
-  |                                                                            
-  |============================================                          |  63%
-  |                                                                            
-  |============================================                          |  64%
-  |                                                                            
-  |=============================================                         |  64%
-  |                                                                            
-  |=============================================                         |  65%
-  |                                                                            
-  |==============================================                        |  65%
-  |                                                                            
-  |==============================================                        |  66%
-  |                                                                            
-  |===============================================                       |  66%
-  |                                                                            
-  |===============================================                       |  67%
-  |                                                                            
-  |===============================================                       |  68%
-  |                                                                            
-  |================================================                      |  68%
-  |                                                                            
-  |================================================                      |  69%
-  |                                                                            
-  |=================================================                     |  69%
-  |                                                                            
-  |=================================================                     |  70%
-  |                                                                            
-  |=================================================                     |  71%
-  |                                                                            
-  |==================================================                    |  71%
-  |                                                                            
-  |==================================================                    |  72%
-  |                                                                            
-  |===================================================                   |  72%
-  |                                                                            
-  |===================================================                   |  73%
-  |                                                                            
-  |===================================================                   |  74%
-  |                                                                            
-  |====================================================                  |  74%
-  |                                                                            
-  |====================================================                  |  75%
-  |                                                                            
-  |=====================================================                 |  75%
-  |                                                                            
-  |=====================================================                 |  76%
-  |                                                                            
-  |======================================================                |  76%
-  |                                                                            
-  |======================================================                |  77%
-  |                                                                            
-  |======================================================                |  78%
-  |                                                                            
-  |=======================================================               |  78%
-  |                                                                            
-  |=======================================================               |  79%
-  |                                                                            
-  |========================================================              |  79%
-  |                                                                            
-  |========================================================              |  80%
-  |                                                                            
-  |========================================================              |  81%
-  |                                                                            
-  |=========================================================             |  81%
-  |                                                                            
-  |=========================================================             |  82%
-  |                                                                            
-  |==========================================================            |  82%
-  |                                                                            
-  |==========================================================            |  83%
-  |                                                                            
-  |==========================================================            |  84%
-  |                                                                            
-  |===========================================================           |  84%
-  |                                                                            
-  |===========================================================           |  85%
-  |                                                                            
-  |============================================================          |  85%
-  |                                                                            
-  |============================================================          |  86%
-  |                                                                            
-  |=============================================================         |  86%
-  |                                                                            
-  |=============================================================         |  87%
-  |                                                                            
-  |=============================================================         |  88%
-  |                                                                            
-  |==============================================================        |  88%
-  |                                                                            
-  |==============================================================        |  89%
-  |                                                                            
-  |===============================================================       |  89%
-  |                                                                            
-  |===============================================================       |  90%
-  |                                                                            
-  |===============================================================       |  91%
-  |                                                                            
-  |================================================================      |  91%
-  |                                                                            
-  |================================================================      |  92%
-  |                                                                            
-  |=================================================================     |  92%
-  |                                                                            
-  |=================================================================     |  93%
-  |                                                                            
-  |=================================================================     |  94%
-  |                                                                            
-  |==================================================================    |  94%
-  |                                                                            
-  |==================================================================    |  95%
-  |                                                                            
-  |===================================================================   |  95%
-  |                                                                            
-  |===================================================================   |  96%
-  |                                                                            
-  |====================================================================  |  96%
-  |                                                                            
-  |====================================================================  |  97%
-  |                                                                            
-  |====================================================================  |  98%
-  |                                                                            
-  |===================================================================== |  98%
-  |                                                                            
-  |===================================================================== |  99%
-  |                                                                            
-  |======================================================================|  99%
-  |                                                                            
-  |======================================================================| 100%</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#----grab the shape files for Borough, Ward and LSOA based on their string values and cache</span>
+pin_london_GIS &lt;-<span class="st"> </span><span class="kw">pin</span>(<span class="st">&quot;https://data.london.gov.uk/download/statistical-gis-boundary-files-london/9ba8c833-6370-4b11-abdc-314aa020d5e0/statistical-gis-boundaries-london.zip&quot;</span>)
+
+<span class="co">#----grab the shape files for Borough, Ward and LSOA based on their string values and cache</span>
 s &lt;-<span class="st"> </span><span class="kw">grepl</span>(<span class="st">&quot;Borough|Ward_|LSOA_2011&quot;</span>, pin_london_GIS) &amp;<span class="st"> </span><span class="kw">grepl</span>(<span class="st">&quot;.shp$&quot;</span>, pin_london_GIS)
 
 <span class="co">#----create a list for Borough, Ward and LSOA shape files</span>
@@ -662,10 +305,74 @@ BoroughsWardsLSOAsf &lt;-<span class="st"> </span><span class="kw">lapply</span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BoroughsWardsLSOAsf &lt;-<span class="st"> </span><span class="kw">lapply</span>(BoroughsWardsLSOAsf, <span class="dt">crs=</span><span class="dv">27700</span>, st_transform)
 
 <span class="co">#----create a variable for LSOAs in London by selecting the third element in the list</span>
-londonLSOA &lt;-<span class="st"> </span>BoroughsWardsLSOAsf[[<span class="dv">3</span>]]</code></pre></div>
+londonLSOA &lt;-<span class="st"> </span>BoroughsWardsLSOAsf[[<span class="dv">3</span>]]
+londonWard &lt;-<span class="st"> </span>BoroughsWardsLSOAsf[[<span class="dv">2</span>]]
+londonBorough &lt;-<span class="st"> </span>BoroughsWardsLSOAsf[[<span class="dv">1</span>]]</code></pre></div>
+<p><strong>4. Download the LSOA profile data</strong></p>
+<p>The LSOA atlas (<a href="https://data.london.gov.uk/dataset/lsoa-atlas" class="uri">https://data.london.gov.uk/dataset/lsoa-atlas</a>) provides a summary of demographic and related data for each Lower Super Output Area in Greater London. Some of this attribbute data for each LSOA will be useful as independent variable later in the analysis. This data is downloaded from data.london and subset by 15 columns which are most relevant as per Dudas et al’s (2017) paper.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#----run the code below if you want to read in LSOA attribute data using the current 2011 boundaries</span>
+<span class="co">#----NOTE: There is comparatively less data for the new boundaries compared with the old boundaries</span>
+
+londonLSOAProfiles &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://data.london.gov.uk/download/lsoa-atlas/0193f884-2ccd-49c2-968e-28aa3b1c480d/lsoa-data.csv&quot;</span>, <span class="dt">na =</span> <span class="kw">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;n/a&quot;</span>), <span class="dt">locale =</span> <span class="kw">locale</span>(<span class="dt">encoding =</span> <span class="st">&#39;Latin1&#39;</span>), <span class="dt">col_names =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>## Warning: 2 parsing failures.
+##  row                                col expected actual                                                                                                file
+## 1348 House Prices;Median Price (£);2014 a double      . &#39;https://data.london.gov.uk/download/lsoa-atlas/0193f884-2ccd-49c2-968e-28aa3b1c480d/lsoa-data.csv&#39;
+## 2873 House Prices;Median Price (£);2014 a double      . &#39;https://data.london.gov.uk/download/lsoa-atlas/0193f884-2ccd-49c2-968e-28aa3b1c480d/lsoa-data.csv&#39;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">select.me &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Lower Super Output Area&#39;</span>,
+               <span class="st">&#39;Population Density;Area (Hectares);&#39;</span>,
+               <span class="st">&#39;Population Density;Persons per hectare;2013&#39;</span>,
+               <span class="st">&#39;Ethnic Group;BAME (%);2011&#39;</span>,
+               <span class="st">&#39;Country of Birth;% Not United Kingdom;2011&#39;</span>,
+               <span class="st">&#39;Tenure;Owned outright (%);2011&#39;</span>,
+               <span class="st">&#39;Tenure;Owned with a mortgage or loan (%);2011&#39;</span>,
+               <span class="st">&#39;House Prices;Median Price (£);2014&#39;</span>,
+               <span class="st">&#39;Economic Activity;Employment Rate;2011&#39;</span>,
+               <span class="st">&#39;Qualifications;% Highest level of qualification: Level 4 qualifications and above;2011&#39;</span>,
+               <span class="st">&#39;Household Income, 2011/12;Median Annual Household Income estimate (£)&#39;</span>,
+               <span class="st">&#39;Public Transport Accessibility Levels (2014);% 4-6 (good access)&#39;</span>,
+               <span class="st">&#39;2013 Census Population;Age Structure;16-29&#39;</span>,
+               <span class="st">&#39;2014 Census Population;Age Structure;30-44&#39;</span>,
+               <span class="st">&#39;Dwelling type;All Households;2011&#39;</span>)
+
+londonLSOAProfiles &lt;-<span class="st"> </span>londonLSOAProfiles[,select.me]</code></pre></div>
+<p><strong>5. Download Inner/Outer London boundaries</strong></p>
+<p>It will be useful to compare Airbnb lisitings and cultural infrastructure in Inner London vs Outer London as it is likely that the freqncy, price and average ratings of the former will all be higher than the later.</p>
+<p>Download the Inner/Outer London boundaries from data.london</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#----use the pin function from the pins package to store the Inner and Outer London boundary .zip files from data.london</span>
+pin_inner_outer &lt;-<span class="st"> </span><span class="kw">pin</span>(<span class="st">&quot;https://data.london.gov.uk/download/inner-and-outer-london-boundaries-london-plan-consultation-2009/684e59f2-9208-4da1-bf67-d8dfeb72c047/lp-consultation-oct-2009-inner-outer-london-shp.zip&quot;</span>)
+
+<span class="co">#----pull out the Inner and Outer London shapefile</span>
+i_o &lt;-<span class="st"> </span><span class="kw">grepl</span>(<span class="st">&quot;lp-consultation-oct-2009-inner-outer&quot;</span>, pin_inner_outer) &amp;<span class="st"> </span><span class="kw">grepl</span>(<span class="st">&quot;.shp$&quot;</span>, pin_inner_outer)
+
+<span class="co">#----create a list for the shape file</span>
+inner_outer &lt;-<span class="st"> </span>pin_inner_outer[i_o]
+
+<span class="co">#----turn the shapefile into a SF file using the st_read function</span>
+inner_outerSF &lt;-<span class="st"> </span><span class="kw">st_read</span>(inner_outer)</code></pre></div>
+<pre><code>## Reading layer `lp-consultation-oct-2009-inner-outer-london&#39; from data source `/Users/vishalkumar.london/Library/Caches/pins/local/lp_consultation_oct_2009_inner_outer_london_shp/lp-consultation-oct-2009-inner-outer-london.shp&#39; using driver `ESRI Shapefile&#39;
+## Simple feature collection with 2 features and 5 fields
+## geometry type:  POLYGON
+## dimension:      XY
+## bbox:           xmin: 503568.2 ymin: 155850.8 xmax: 561957.5 ymax: 200933.9
+## epsg (SRID):    27700
+## proj4string:    +proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.06,0.15,0.247,0.842,-20.489 +units=m +no_defs</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">st_transform</span>(inner_outerSF, <span class="dv">27700</span>)</code></pre></div>
+<pre><code>## Simple feature collection with 2 features and 5 fields
+## geometry type:  POLYGON
+## dimension:      XY
+## bbox:           xmin: 503568.2 ymin: 155850.8 xmax: 561957.5 ymax: 200933.9
+## epsg (SRID):    27700
+## proj4string:    +proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.06,0.15,0.247,0.842,-20.489 +units=m +no_defs
+##       Boundary                         Source  Area_Ha Shape_Leng Shape_Area
+## 1 Inner London London Plan Consultation Draft  34863.3   117020.7  348632957
+## 2 Outer London London Plan Consultation Draft 124606.8   373367.7 1246068121
+##                         geometry
+## 1 POLYGON ((522055.6 178014.7...
+## 2 POLYGON ((503611.2 175520.4...</code></pre>
 </div>
-<div id="join-airbnb-data-with-lsoa-shapefile" class="section level2">
-<h2><span class="header-section-number">3.5</span> Join Airbnb data with LSOA shapefile</h2>
+<div id="join-the-data" class="section level2">
+<h2><span class="header-section-number">3.3</span> Join the data</h2>
+<p><strong>1. Join Airbnb data with LSOA shapefile</strong></p>
 <p>The functions below join the Airbnb data to the LSOA areas in London and a) count the number of Airbnb listings per LSOA, b) calculating the average price of Airbnb lisitngs per LSOA, c) counting the number of Airbnb user reviews per LSOA, and d) calculating the average number of Airbnb user reviews per LSOA.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">JoinAirbnb_count &lt;-<span class="st"> </span>function(data1, data2) {
   <span class="co">#----join dataframes</span>
@@ -722,9 +429,7 @@ airbnbLSOA_review_count &lt;-<span class="st"> </span><span class="kw">JoinAirbn
 <span class="co">#----AIRBNB AVERAGE NUMBER OF REVIEWS----#</span>
 <span class="co">#----use the fourth function to calculate the average number of Airbnb reviews in each LSOA</span>
 airbnbLSOA_review_average &lt;-<span class="st"> </span><span class="kw">JoinAirbnb_AVreviews</span>(airbnb, londonLSOA)</code></pre></div>
-</div>
-<div id="join-culture-data-with-lsoa-shapefile" class="section level2">
-<h2><span class="header-section-number">3.6</span> Join Culture data with LSOA shapefile</h2>
+<p><strong>2. Join Culture data with LSOA shapefile</strong></p>
 <p>The functions below join the Cultural Infrastructure data to the LSOA areas in London and a) count the number of Cultural Infrastructure by cultural venue type per LSOA, b) calculating the average Google Places user rating by cultural venue type per LSOA, c) calculating the average number of Google Places user reviews by cultural venue type per LSOA, and d) counting the total number of Google Places user reviews by cultural venue type per LSOA.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">JoinCulture_count &lt;-<span class="st"> </span>function(data1, data2) {
   <span class="co">#----join dataframes</span>
@@ -805,9 +510,7 @@ cultureLSOA_review_count &lt;-<span class="st"> </span><span class="kw">JoinCult
 <span class="co">#----CULTURE AVERAGE NUMBER OF REVIEWS----#</span>
 <span class="co">#----use the third function to count the number of Google Places reviews for each cultural venue category in each LSOA</span>
 cultureLSOA_review_average &lt;-<span class="st"> </span><span class="kw">JoinCulture_AVreviews</span>(culture, londonLSOA)</code></pre></div>
-</div>
-<div id="join-airbnb-culture-and-lsoa-shapefile-data" class="section level2">
-<h2><span class="header-section-number">3.7</span> Join Airbnb, Culture and LSOA shapefile data</h2>
+<p><strong>3. Join Airbnb, Culture and LSOA shapefile data</strong></p>
 <p>Having done the previous calculations for Airbnb and Cultural Infrastructure per LSOA, all the data is joined together.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#----merge all dataframes into one</span>
 <span class="co">#https://stackoverflow.com/questions/8091303/simultaneously-merge-multiple-data-frames-in-a-list</span>
@@ -817,38 +520,7 @@ devtools::<span class="kw">install_github</span>(<span class="st">&quot;moodymud
 
 <span class="co">#----use eat function from safejoin to merge a list of all the dataframes</span>
 londonLSOAextradata &lt;-<span class="st"> </span><span class="kw">eat</span>(airbnbLSOA_count, <span class="kw">list</span>(airbnbLSOA_price, airbnbLSOA_review_count, airbnbLSOA_review_average, cultureLSOA_count, cultureLSOA_rating, cultureLSOA_review_count, cultureLSOA_review_average), <span class="dt">.by =</span> <span class="st">&quot;LSOA11CD&quot;</span>, <span class="dt">.conflict =</span> ~.x)</code></pre></div>
-</div>
-<div id="download-the-lsoa-profile-data" class="section level2">
-<h2><span class="header-section-number">3.8</span> Download the LSOA profile data</h2>
-<p>The LSOA atlas (<a href="https://data.london.gov.uk/dataset/lsoa-atlas" class="uri">https://data.london.gov.uk/dataset/lsoa-atlas</a>) provides a summary of demographic and related data for each Lower Super Output Area in Greater London. Some of this attribbute data for each LSOA will be useful as independent variable later in the analysis. This data is downloaded from data.london and subset by 15 columns which are most relevant as per Dudas et al’s (2017) paper.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#----run the code below if you want to read in LSOA attribute data using the current 2011 boundaries</span>
-<span class="co">#----NOTE: There is comparatively less data for the new boundaries compared with the old boundaries</span>
-
-londonLSOAProfiles &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://data.london.gov.uk/download/lsoa-atlas/0193f884-2ccd-49c2-968e-28aa3b1c480d/lsoa-data.csv&quot;</span>, <span class="dt">na =</span> <span class="kw">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;n/a&quot;</span>), <span class="dt">locale =</span> <span class="kw">locale</span>(<span class="dt">encoding =</span> <span class="st">&#39;Latin1&#39;</span>), <span class="dt">col_names =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>## Warning: 2 parsing failures.
-##  row                                col expected actual                                                                                                file
-## 1348 House Prices;Median Price (£);2014 a double      . &#39;https://data.london.gov.uk/download/lsoa-atlas/0193f884-2ccd-49c2-968e-28aa3b1c480d/lsoa-data.csv&#39;
-## 2873 House Prices;Median Price (£);2014 a double      . &#39;https://data.london.gov.uk/download/lsoa-atlas/0193f884-2ccd-49c2-968e-28aa3b1c480d/lsoa-data.csv&#39;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">select.me &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Lower Super Output Area&#39;</span>,
-               <span class="st">&#39;Population Density;Area (Hectares);&#39;</span>,
-               <span class="st">&#39;Population Density;Persons per hectare;2013&#39;</span>,
-               <span class="st">&#39;Ethnic Group;BAME (%);2011&#39;</span>,
-               <span class="st">&#39;Country of Birth;% Not United Kingdom;2011&#39;</span>,
-               <span class="st">&#39;Tenure;Owned outright (%);2011&#39;</span>,
-               <span class="st">&#39;Tenure;Owned with a mortgage or loan (%);2011&#39;</span>,
-               <span class="st">&#39;House Prices;Median Price (£);2014&#39;</span>,
-               <span class="st">&#39;Economic Activity;Employment Rate;2011&#39;</span>,
-               <span class="st">&#39;Qualifications;% Highest level of qualification: Level 4 qualifications and above;2011&#39;</span>,
-               <span class="st">&#39;Household Income, 2011/12;Median Annual Household Income estimate (£)&#39;</span>,
-               <span class="st">&#39;Public Transport Accessibility Levels (2014);% 4-6 (good access)&#39;</span>,
-               <span class="st">&#39;2013 Census Population;Age Structure;16-29&#39;</span>,
-               <span class="st">&#39;2014 Census Population;Age Structure;30-44&#39;</span>,
-               <span class="st">&#39;Dwelling type;All Households;2011&#39;</span>)
-
-londonLSOAProfiles &lt;-<span class="st"> </span>londonLSOAProfiles[,select.me]</code></pre></div>
-</div>
-<div id="join-lsoa-profile-data-to-the-rest" class="section level2">
-<h2><span class="header-section-number">3.9</span> Join LSOA profile data to the rest</h2>
+<p><strong>4. Join LSOA profile data to the rest</strong></p>
 <p>Now that we have all of our data, we join them all together to create the londonLSOAProfiles sf object. Moreover, we caclulate the frequency density of cultural venue type per km^2 in every LSAO as per</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#----merge the LSOA boundaries shapefile with the and LSOA attribute dataframe</span>
 londonLSOAProfiles &lt;-<span class="st"> </span><span class="kw">inner_join</span>(londonLSOA, londonLSOAProfiles, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;LSOA11CD&quot;</span> =<span class="st"> &quot;Lower Super Output Area&quot;</span>))</code></pre></div>
@@ -860,42 +532,8 @@ londonLSOAProfiles &lt;-<span class="st"> </span><span class="kw">inner_join</sp
 londonLSOAProfiles &lt;-<span class="st"> </span><span class="kw">inner_join</span>(londonLSOAProfiles, londonLSOAextradata, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&#39;LSOA11CD&#39;</span>))</code></pre></div>
 <pre><code>## Warning: Column `LSOA11CD` joining character vector and factor, coercing into
 ## character vector</code></pre>
-</div>
-<div id="download-innerouter-london-boundaries" class="section level2">
-<h2><span class="header-section-number">3.10</span> Download Inner/Outer London boundaries</h2>
-<p>It will be useful to compare Airbnb lisitings and cultural infrastructure in Inner London vs Outer London as it is likely that the freqncy, price and average ratings of the former will all be higher than the later.</p>
-<p>Download the Inner/Outer London boundaries from data.london and join with our dataset.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#----use the pin function from the pins package to store the Inner and Outer London boundary .zip files from data.london</span>
-pin_inner_outer &lt;-<span class="st"> </span><span class="kw">pin</span>(<span class="st">&quot;https://data.london.gov.uk/download/inner-and-outer-london-boundaries-london-plan-consultation-2009/684e59f2-9208-4da1-bf67-d8dfeb72c047/lp-consultation-oct-2009-inner-outer-london-shp.zip&quot;</span>)
-
-<span class="co">#----pull out the Inner and Outer London shapefile</span>
-i_o &lt;-<span class="st"> </span><span class="kw">grepl</span>(<span class="st">&quot;lp-consultation-oct-2009-inner-outer&quot;</span>, pin_inner_outer) &amp;<span class="st"> </span><span class="kw">grepl</span>(<span class="st">&quot;.shp$&quot;</span>, pin_inner_outer)
-
-<span class="co">#----create a list for the shape file</span>
-inner_outer &lt;-<span class="st"> </span>pin_inner_outer[i_o]
-
-<span class="co">#----turn the shapefile into a SF file using the st_read function</span>
-inner_outerSF &lt;-<span class="st"> </span><span class="kw">st_read</span>(inner_outer)</code></pre></div>
-<pre><code>## Reading layer `lp-consultation-oct-2009-inner-outer-london&#39; from data source `/Users/vishalkumar.london/Library/Caches/pins/local/lp_consultation_oct_2009_inner_outer_london_shp/lp-consultation-oct-2009-inner-outer-london.shp&#39; using driver `ESRI Shapefile&#39;
-## Simple feature collection with 2 features and 5 fields
-## geometry type:  POLYGON
-## dimension:      XY
-## bbox:           xmin: 503568.2 ymin: 155850.8 xmax: 561957.5 ymax: 200933.9
-## epsg (SRID):    27700
-## proj4string:    +proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.06,0.15,0.247,0.842,-20.489 +units=m +no_defs</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">st_transform</span>(inner_outerSF, <span class="dv">27700</span>)</code></pre></div>
-<pre><code>## Simple feature collection with 2 features and 5 fields
-## geometry type:  POLYGON
-## dimension:      XY
-## bbox:           xmin: 503568.2 ymin: 155850.8 xmax: 561957.5 ymax: 200933.9
-## epsg (SRID):    27700
-## proj4string:    +proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.06,0.15,0.247,0.842,-20.489 +units=m +no_defs
-##       Boundary                         Source  Area_Ha Shape_Leng Shape_Area
-## 1 Inner London London Plan Consultation Draft  34863.3   117020.7  348632957
-## 2 Outer London London Plan Consultation Draft 124606.8   373367.7 1246068121
-##                         geometry
-## 1 POLYGON ((522055.6 178014.7...
-## 2 POLYGON ((503611.2 175520.4...</code></pre>
+<p><strong>5. Join Inner/Outer London boundaries with the data</strong></p>
+<p>Inner/Outer London boundaries join with dataset.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#----join the shapefile to the LSOA SF obbject on geometry</span>
 inner_outer_df &lt;-<span class="st"> </span><span class="kw">st_join</span>(londonLSOA, inner_outerSF, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;geometry&quot;</span> =<span class="st"> &quot;geometry&quot;</span>))
 inner_outer_df &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(inner_outer_df)
@@ -913,7 +551,7 @@ londonLSOAProfiles &lt;-<span class="st"> </span>londonLSOAProfiles[!<span class
 <span class="co">#londonLSOAProfiles &lt;- londonLSOAProfiles[londonLSOAProfiles$InnerOuter == &#39;Inner London&#39;,]</span></code></pre></div>
 </div>
 <div id="clean-variables-before-analysis" class="section level2">
-<h2><span class="header-section-number">3.11</span> Clean variables before analysis</h2>
+<h2><span class="header-section-number">3.4</span> Clean variables before analysis</h2>
 <p>Some variable names are changed before the analysis for ease of use and also to align with Dudas et al (2017).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#----change the column names of some of the independent variables</span>
 <span class="kw">colnames</span>(londonLSOAProfiles)[<span class="kw">which</span>(<span class="kw">names</span>(londonLSOAProfiles) ==<span class="st"> &quot;Population Density;Area (Hectares);&quot;</span>)] &lt;-<span class="st"> &quot;areaLSOA&quot;</span>
@@ -950,10 +588,25 @@ A &lt;-<span class="st"> </span>function(x) (x /<span class="st"> </span>londonL
 londonLSOAProfiles[<span class="dv">33</span>:<span class="dv">66</span>] &lt;-<span class="st"> </span><span class="kw">lapply</span>(londonLSOAProfiles[<span class="dv">33</span>:<span class="dv">66</span>], A)</code></pre></div>
 <pre><code>## Warning in `[&lt;-.data.frame`(`*tmp*`, 33:66, value = list(Archives =
 ## c(23.0769230769231, : provided 35 variables to replace 34 variables</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span>
-<span class="co"># #devtools::install_github(&#39;rstudio/bookdown&#39;)</span>
-<span class="co"># library(bookdown)</span>
-<span class="co"># preview_chapter(&quot;02-load-data.Rmd&quot;)</span></code></pre></div>
+<p>Create Dummy Variables for the rating and reviews of cultural infrastructure from Airbnb</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#https://support.google.com/business/answer/4801187?hl=en-GB rating criteria</span>
+londonLSOAProfiles$culture_rating_good &lt;-<span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">as.numeric</span>(londonLSOAProfiles$culture_rating) &gt;=<span class="st"> </span><span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">0</span>)
+<span class="kw">quantile</span>(londonLSOAProfiles$culture_av_reviews, <span class="fl">0.80</span>,  <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>##      80% 
+## 437.0026</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">londonLSOAProfiles$culture_reviews_popular &lt;-<span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">as.numeric</span>(londonLSOAProfiles$culture_av_reviews) &gt;=<span class="st"> </span><span class="dv">400</span>, <span class="dv">1</span>, <span class="dv">0</span>)
+
+
+<span class="co"># londonLSOAProfiles &lt;- londonLSOAProfiles %&gt;%</span>
+<span class="co">#   mutate(culture_rating_loved = as.numeric(culture_rating &gt;= quantile(culture_rating, 0.90, na.rm=TRUE)),</span>
+<span class="co">#          culture_rating_liked = as.numeric(culture_rating &gt;= quantile(culture_rating, 0.75, na.rm=TRUE) &amp; culture_rating &lt; quantile(culture_rating, 0.90, na.rm=TRUE)),</span>
+<span class="co">#          culture_rating_okay = as.numeric(culture_rating &gt;= quantile(culture_rating, 0.50, na.rm=TRUE) &amp; culture_rating &lt; quantile(culture_rating, 0.75, na.rm=TRUE)),</span>
+<span class="co">#          culture_rating_disliked = as.numeric(culture_rating &gt;= quantile(culture_rating, 0.25, na.rm=TRUE) &amp; culture_rating &lt; quantile(culture_rating, 0.50, na.rm=TRUE)),</span>
+<span class="co">#          culture_rating_hated = as.numeric(culture_rating &lt;= quantile(culture_rating, 0.25, na.rm=TRUE)))</span>
+
+<span class="co"># londonLSOAProfiles &lt;- londonLSOAProfiles %&gt;%</span>
+<span class="co">#   mutate(culture_rating_good = as.numeric(culture_rating &gt;= quantile(culture_rating, 0.50, na.rm=TRUE)),</span>
+<span class="co">#          culture_rating_bad = as.numeric(culture_rating &lt; quantile(culture_rating, 0.50, na.rm=TRUE)))</span></code></pre></div>
 
 </div>
 </div>

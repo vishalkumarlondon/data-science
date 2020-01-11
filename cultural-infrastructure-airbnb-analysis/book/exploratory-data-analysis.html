@@ -4,27 +4,27 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 4 Exploratory Data Analysis | A Minimal Book Example</title>
-  <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <title>Chapter 4 Exploratory Data Analysis | Measuring the impact of cultural infrastructure on Airbnb listings in London</title>
+  <meta name="description" content="This study uses cultural data science to measure the impact of cultural infrastructure on the supply and demand of Airbnb listings in London. The output format for this study is bookdown::gitbook." />
   <meta name="generator" content="bookdown 0.16.5 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 4 Exploratory Data Analysis | A Minimal Book Example" />
+  <meta property="og:title" content="Chapter 4 Exploratory Data Analysis | Measuring the impact of cultural infrastructure on Airbnb listings in London" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta property="og:description" content="This study uses cultural data science to measure the impact of cultural infrastructure on the supply and demand of Airbnb listings in London. The output format for this study is bookdown::gitbook." />
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 4 Exploratory Data Analysis | A Minimal Book Example" />
+  <meta name="twitter:title" content="Chapter 4 Exploratory Data Analysis | Measuring the impact of cultural infrastructure on Airbnb listings in London" />
   
-  <meta name="twitter:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta name="twitter:description" content="This study uses cultural data science to measure the impact of cultural infrastructure on the supply and demand of Airbnb listings in London. The output format for this study is bookdown::gitbook." />
   
 
-<meta name="author" content="Yihui Xie" />
+<meta name="author" content="Vishal Kumar" />
 
 
-<meta name="date" content="2020-01-09" />
+<meta name="date" content="2020-01-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="load-data.html"/>
-<link rel="next" href="final-words.html"/>
+<link rel="next" href="maps.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -106,20 +106,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="./">A Minimal Book Example</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Abstract</a></li>
 <li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
 <li class="chapter" data-level="3" data-path="load-data.html"><a href="load-data.html"><i class="fa fa-check"></i><b>3</b> Load Data</a><ul>
 <li class="chapter" data-level="3.1" data-path="load-data.html"><a href="load-data.html#load-packages"><i class="fa fa-check"></i><b>3.1</b> Load packages</a></li>
-<li class="chapter" data-level="3.2" data-path="load-data.html"><a href="load-data.html#download-airbnb-data"><i class="fa fa-check"></i><b>3.2</b> Download Airbnb data</a></li>
-<li class="chapter" data-level="3.3" data-path="load-data.html"><a href="load-data.html#download-cultural-infrastructure-data"><i class="fa fa-check"></i><b>3.3</b> Download Cultural Infrastructure data</a></li>
-<li class="chapter" data-level="3.4" data-path="load-data.html"><a href="load-data.html#download-london-shapefile-data"><i class="fa fa-check"></i><b>3.4</b> Download London shapefile data</a></li>
-<li class="chapter" data-level="3.5" data-path="load-data.html"><a href="load-data.html#join-airbnb-data-with-lsoa-shapefile"><i class="fa fa-check"></i><b>3.5</b> Join Airbnb data with LSOA shapefile</a></li>
-<li class="chapter" data-level="3.6" data-path="load-data.html"><a href="load-data.html#join-culture-data-with-lsoa-shapefile"><i class="fa fa-check"></i><b>3.6</b> Join Culture data with LSOA shapefile</a></li>
-<li class="chapter" data-level="3.7" data-path="load-data.html"><a href="load-data.html#join-airbnb-culture-and-lsoa-shapefile-data"><i class="fa fa-check"></i><b>3.7</b> Join Airbnb, Culture and LSOA shapefile data</a></li>
-<li class="chapter" data-level="3.8" data-path="load-data.html"><a href="load-data.html#download-the-lsoa-profile-data"><i class="fa fa-check"></i><b>3.8</b> Download the LSOA profile data</a></li>
-<li class="chapter" data-level="3.9" data-path="load-data.html"><a href="load-data.html#join-lsoa-profile-data-to-the-rest"><i class="fa fa-check"></i><b>3.9</b> Join LSOA profile data to the rest</a></li>
-<li class="chapter" data-level="3.10" data-path="load-data.html"><a href="load-data.html#download-innerouter-london-boundaries"><i class="fa fa-check"></i><b>3.10</b> Download Inner/Outer London boundaries</a></li>
-<li class="chapter" data-level="3.11" data-path="load-data.html"><a href="load-data.html#clean-variables-before-analysis"><i class="fa fa-check"></i><b>3.11</b> Clean variables before analysis</a></li>
+<li class="chapter" data-level="3.2" data-path="load-data.html"><a href="load-data.html#download-data"><i class="fa fa-check"></i><b>3.2</b> Download data</a></li>
+<li class="chapter" data-level="3.3" data-path="load-data.html"><a href="load-data.html#join-the-data"><i class="fa fa-check"></i><b>3.3</b> Join the data</a></li>
+<li class="chapter" data-level="3.4" data-path="load-data.html"><a href="load-data.html#clean-variables-before-analysis"><i class="fa fa-check"></i><b>3.4</b> Clean variables before analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>4</b> Exploratory Data Analysis</a><ul>
 <li class="chapter" data-level="4.1" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#airbnb-eda"><i class="fa fa-check"></i><b>4.1</b> Airbnb EDA</a><ul>
@@ -130,18 +123,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.2" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#cultural-infrastructure-eda"><i class="fa fa-check"></i><b>4.2</b> Cultural infrastructure EDA</a><ul>
 <li class="chapter" data-level="4.2.1" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#cultural-infrastructure-venues"><i class="fa fa-check"></i><b>4.2.1</b> Cultural infrastructure venues</a></li>
 <li class="chapter" data-level="4.2.2" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#cultural-infrastructure-ratings"><i class="fa fa-check"></i><b>4.2.2</b> Cultural infrastructure ratings</a></li>
-<li class="chapter" data-level="4.2.3" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#cultural-infrastructure-ratings-1"><i class="fa fa-check"></i><b>4.2.3</b> Cultural infrastructure ratings</a></li>
+<li class="chapter" data-level="4.2.3" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#all-variables"><i class="fa fa-check"></i><b>4.2.3</b> all variables</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>5</b> Final Words</a></li>
+<li class="chapter" data-level="5" data-path="maps.html"><a href="maps.html"><i class="fa fa-check"></i><b>5</b> Maps</a></li>
+<li class="chapter" data-level="6" data-path="regression.html"><a href="regression.html"><i class="fa fa-check"></i><b>6</b> Regression</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
-<li class="chapter" data-level="6" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>6</b> Literature</a></li>
-<li class="chapter" data-level="7" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>7</b> Methods</a></li>
-<li class="chapter" data-level="8" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>8</b> Applications</a><ul>
-<li class="chapter" data-level="8.1" data-path="applications.html"><a href="applications.html#example-one"><i class="fa fa-check"></i><b>8.1</b> Example one</a></li>
-<li class="chapter" data-level="8.2" data-path="applications.html"><a href="applications.html#example-two"><i class="fa fa-check"></i><b>8.2</b> Example two</a></li>
-</ul></li>
-<li class="chapter" data-level="9" data-path="final-words-1.html"><a href="final-words-1.html"><i class="fa fa-check"></i><b>9</b> Final Words</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -154,7 +141,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">A Minimal Book Example</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Measuring the impact of cultural infrastructure on Airbnb listings in London</a>
           </h1>
         </div>
 
@@ -177,10 +164,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="co">#----data visualization packages - https://serialmentor.com/dataviz/geospatial-data.html</span>
 
 <span class="co">#install.packages(&quot;remotes&quot;)</span>
-<span class="co">#install.packages(&quot;devtools&quot;)</span>
 <span class="kw">library</span>(remotes)
 
-<span class="co">#install.packages(&quot;cowplot&quot;)</span>
 <span class="co">#devtools::install_github(&quot;wilkelab/cowplot&quot;)</span>
 <span class="kw">library</span>(cowplot)
 
@@ -191,6 +176,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="co">#https://rdrr.io/github/clauswilke/dviz.supp/</span>
 <span class="co">#devtools::install_github(&quot;clauswilke/dviz.supp&quot;)</span>
 <span class="kw">library</span>(dviz.supp)
+
+<span class="co">#----googd bblog post on the formattable package: https://www.littlemissdata.com/blog/prettytables</span>
+<span class="co">#install.packages(&quot;data.table&quot;)</span>
+<span class="co">#install.packages(&quot;dplyr&quot;)</span>
+<span class="co">#install.packages(&quot;formattable&quot;)</span>
+<span class="co">#install.packages(&quot;tidyr&quot;)</span>
+
+<span class="kw">library</span>(data.table)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(formattable)
+<span class="kw">library</span>(tidyr)
 
 <span class="kw">options</span>(<span class="dt">scipen =</span> <span class="dv">999</span>)</code></pre></div>
 <p>Then, we set up some basic settings from this great Kaggle Kernel by X for data visualisation of exploratory data analysis of variables <a href="https://www.kaggle.com/jaseziv83/a-deep-dive-eda-into-all-variables/report" class="uri">https://www.kaggle.com/jaseziv83/a-deep-dive-eda-into-all-variables/report</a></p>
@@ -209,6 +205,24 @@ col_pal &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st"
 <div id="airbnb-eda" class="section level2">
 <h2><span class="header-section-number">4.1</span> Airbnb EDA</h2>
 <p>First we do EDA on the Airbnb data</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">londonLSOAProfiles_nogeom &lt;-<span class="st"> </span><span class="kw">st_set_geometry</span>(londonLSOAProfiles, <span class="ot">NULL</span>)</code></pre></div>
+<pre><code>## Error in st_set_geometry(londonLSOAProfiles, NULL): could not find function &quot;st_set_geometry&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">a1 &lt;-<span class="st"> </span>londonLSOAProfiles_nogeom %&gt;%
+<span class="st">          </span><span class="kw">group_by</span>(LAD11NM) %&gt;%
+<span class="st">          </span><span class="kw">summarise</span>(
+                <span class="dt">airbnb_freq=</span><span class="kw">mean</span>(airbnb_freq), 
+                <span class="dt">airbnb_no_reviews=</span><span class="kw">mean</span>(airbnb_no_reviews),
+                <span class="dt">airbnb_price=</span><span class="kw">mean</span>(airbnb_price), 
+                <span class="dt">culture_freq=</span><span class="kw">mean</span>(culture_freq, <span class="dt">na.rm=</span><span class="ot">TRUE</span>),
+                <span class="dt">culture_rating=</span><span class="kw">mean</span>(culture_rating, <span class="dt">na.rm=</span><span class="ot">TRUE</span>), 
+                <span class="dt">culture_av_reviews=</span><span class="kw">mean</span>(culture_av_reviews, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)
+          ) %&gt;%
+<span class="st">          </span><span class="kw">arrange</span>(<span class="kw">desc</span>(airbnb_freq)) %&gt;%<span class="st"> </span><span class="kw">top_n</span>(<span class="dt">n =</span> <span class="dv">11</span>, <span class="dt">wt =</span> airbnb_freq)</code></pre></div>
+<pre><code>## Error in londonLSOAProfiles_nogeom %&gt;% group_by(LAD11NM) %&gt;% summarise(airbnb_freq = mean(airbnb_freq), : could not find function &quot;%&gt;%&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">digits =</span> <span class="dv">3</span>)
+
+<span class="kw">formattable</span>(a1)</code></pre></div>
+<pre><code>## Error in formattable(a1): could not find function &quot;formattable&quot;</code></pre>
 <div id="airbnb-freqency-distributions" class="section level3">
 <h3><span class="header-section-number">4.1.1</span> Airbnb freqency distributions</h3>
 <p>When looking at the distribution of Airbnb listings we see that there are some outliter. After</p>
@@ -255,7 +269,7 @@ plot3 &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> <
 
 
 g &lt;-<span class="st"> </span><span class="kw">grid.arrange</span>(plot1, plot2, plot3, <span class="dt">ncol=</span><span class="dv">3</span>)</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-20-1.png" width="960" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-21-1.png" width="960" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#ggsave(&quot;graphs/1.png&quot;, plot = g, width = 10, height = 4)</span></code></pre></div>
 </div>
 <div id="airbnb-log-freqency-distributions" class="section level3">
@@ -288,7 +302,7 @@ plot6 &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> <
 <span class="st">          </span><span class="kw">labs</span>(<span class="dt">x=</span> <span class="st">&quot;log(Airbnb reviews)&quot;</span>, <span class="dt">y=</span> <span class="st">&quot;Count&quot;</span>)
 
 <span class="kw">grid.arrange</span>(plot4, plot5, plot6, <span class="dt">ncol=</span><span class="dv">3</span>)</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-21-1.png" width="960" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-22-1.png" width="960" /></p>
 </div>
 <div id="airbnb-inner-vs-outer-london" class="section level3">
 <h3><span class="header-section-number">4.1.3</span> Airbnb Inner vs Outer London</h3>
@@ -322,7 +336,7 @@ plot9 &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> <
 <span class="st">          </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(), <span class="dt">legend.position =</span> <span class="st">&quot;top&quot;</span>)
 
 <span class="kw">grid.arrange</span>(plot7, plot8, plot9, <span class="dt">ncol=</span><span class="dv">3</span>)</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-22-1.png" width="960" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-23-1.png" width="960" /></p>
 </div>
 </div>
 <div id="cultural-infrastructure-eda" class="section level2">
@@ -353,7 +367,7 @@ plot11 &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> 
 <span class="st">            </span><span class="kw">geom_histogram</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">fill =</span> col_pal[<span class="dv">2</span>], <span class="dt">colour =</span> <span class="st">&quot;#4D4D4D&quot;</span>) +
 <span class="st">            </span><span class="kw">scale_x_continuous</span>(<span class="dt">labels =</span> comma) +
 <span class="st">            </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> comma) +
-<span class="st">            </span><span class="kw">ggtitle</span>(<span class="st">&quot;CULTURAL INFRASTRUCUTRE PRICE&quot;</span>, <span class="dt">subtitle =</span> <span class="st">&quot;Cultural Infrastructure price still skewed even for non-outliers&quot;</span>) +
+<span class="st">            </span><span class="kw">ggtitle</span>(<span class="st">&quot;CULTURAL INFRASTRUCUTRE Rating&quot;</span>, <span class="dt">subtitle =</span> <span class="st">&quot;Cultural Infrastructure price still skewed even for non-outliers&quot;</span>) +
 <span class="st">            </span><span class="kw">labs</span>(<span class="dt">x=</span> <span class="st">&quot;Cultural Infrastructure price per LSOA&quot;</span>, <span class="dt">y=</span> <span class="st">&quot;Count&quot;</span>) +
 <span class="st">            </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>outlier, <span class="dt">scales =</span> <span class="st">&quot;free&quot;</span>)
 
@@ -377,7 +391,7 @@ plot12 &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> 
 ## Warning: Removed 2116 rows containing non-finite values (stat_bin).
 
 ## Warning: Removed 2116 rows containing non-finite values (stat_bin).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-23-1.png" width="960" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-24-1.png" width="960" /></p>
 </div>
 <div id="cultural-infrastructure-ratings" class="section level3">
 <h3><span class="header-section-number">4.2.2</span> Cultural infrastructure ratings</h3>
@@ -392,7 +406,7 @@ plot13 &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> 
 
 <span class="co">#----this log distribution function was taken from Zivkovic (2019)</span>
 plot14 &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> </span>
-<span class="st">          </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span> <span class="kw">log</span>(culture_rating))) +
+<span class="st">          </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span> culture_rating)) +
 <span class="st">          </span><span class="kw">geom_histogram</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">fill =</span> col_pal[<span class="dv">2</span>], <span class="dt">colour =</span> <span class="st">&quot;#4D4D4D&quot;</span>) +
 <span class="st">          </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> comma) +
 <span class="st">          </span><span class="kw">ggtitle</span>(<span class="st">&quot;LOG CULTURE RATINGS&quot;</span>, <span class="dt">subtitle =</span> <span class="st">&quot;The variable looks a lot more workable now&quot;</span>) +
@@ -413,13 +427,124 @@ plot15 &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> 
 ## Warning: Removed 2116 rows containing non-finite values (stat_bin).
 
 ## Warning: Removed 2116 rows containing non-finite values (stat_bin).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-24-1.png" width="960" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-25-1.png" width="960" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#gather_count &lt;- londonLSOAProfiles %&gt;% gather(culture, culture_density, Archives:Theatres)</span>
 
 <span class="co">#gather_ratings &lt;- londonLSOAProfiles %&gt;% gather(culture, culture_rating, Archives:Theatres)</span></code></pre></div>
 </div>
-<div id="cultural-infrastructure-ratings-1" class="section level3">
-<h3><span class="header-section-number">4.2.3</span> Cultural infrastructure ratings</h3>
+<div id="all-variables" class="section level3">
+<h3><span class="header-section-number">4.2.3</span> all variables</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#list1 &lt;- cbind(list1, seq.int(nrow(list1)))</span>
+##you will notice that there are some non-numeric columns, we want to exclue these, and drop the geometry 
+<span class="co">#LondonSub &lt;- LondonWardsSF[,c(1:73,83:86)]</span>
+
+<span class="co">#----find the column numbers for first and last cultural venue type</span>
+<span class="kw">which</span>( <span class="kw">colnames</span>(londonLSOAProfiles)==<span class="st">&quot;bame_p&quot;</span> )</code></pre></div>
+<pre><code>## [1] 17</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">which</span>( <span class="kw">colnames</span>(londonLSOAProfiles)==<span class="st">&quot;housing&quot;</span> )</code></pre></div>
+<pre><code>## [1] 28</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#check which variables are numeric first</span>
+
+list1 &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">cbind</span>(<span class="kw">lapply</span>(londonLSOAProfiles, class)))
+list1 &lt;-<span class="st"> </span><span class="kw">cbind</span>(list1, <span class="kw">seq.int</span>(<span class="kw">nrow</span>(list1)))
+
+list1</code></pre></div>
+<pre><code>##                                                    V1 seq.int(nrow(list1))
+## LSOA11CD                                    character                    1
+## LSOA11NM                                       factor                    2
+## MSOA11CD                                       factor                    3
+## MSOA11NM                                       factor                    4
+## LAD11CD                                        factor                    5
+## LAD11NM                                        factor                    6
+## RGN11CD                                        factor                    7
+## RGN11NM                                        factor                    8
+## USUALRES                                      integer                    9
+## HHOLDRES                                      integer                   10
+## COMESTRES                                     integer                   11
+## POPDEN                                        numeric                   12
+## HHOLDS                                        integer                   13
+## AVHHOLDSZ                                     numeric                   14
+## areaLSOA                                      numeric                   15
+## pop_density                                   numeric                   16
+## bame_p                                        numeric                   17
+## nonUK                                         numeric                   18
+## house_own                                     numeric                   19
+## house_mortg                                   numeric                   20
+## house_price                                   numeric                   21
+## employees                                     numeric                   22
+## education                                     numeric                   23
+## income                                        numeric                   24
+## transport                                     numeric                   25
+## age16_29                                      numeric                   26
+## age30_44                                      numeric                   27
+## housing                                       numeric                   28
+## airbnb_freq                                   numeric                   29
+## airbnb_price                                  numeric                   30
+## airbnb_no_reviews                             numeric                   31
+## airbnb_av_reviews                             numeric                   32
+## Archives                                      numeric                   33
+## Artists workspaces                            numeric                   34
+## Arts centres                                  numeric                   35
+## Cinemas                                       numeric                   36
+## Commercial galleries                          numeric                   37
+## Community centres                             numeric                   38
+## Creative co-working desk space                numeric                   39
+## Creative workspaces                           numeric                   40
+## Dance performance venues                      numeric                   41
+## Dance rehearsal studios                       numeric                   42
+## Fashion and design                            numeric                   43
+## Jewellery design                              numeric                   44
+## Large media production studios                numeric                   45
+## Legal street art walls                        numeric                   46
+## LGBT+ night time venues                       numeric                   47
+## Libraries                                     numeric                   48
+## Live in artists&#39; workspace                    numeric                   49
+## Makerspaces                                   numeric                   50
+## Making and manufacturing                      numeric                   51
+## Museums and public galleries                  numeric                   52
+## Music (office based businesses)               numeric                   53
+## Music recording studios                       numeric                   54
+## Music rehearsal studios                       numeric                   55
+## Music venues (all)                            numeric                   56
+## Music venues (grassroots)                     numeric                   57
+## Outdoor spaces for cultural use               numeric                   58
+## Prop and costume making                       numeric                   59
+## Pubs                                          numeric                   60
+## Set and exhibition building                   numeric                   61
+## Skate Parks                                   numeric                   62
+## Textile design                                numeric                   63
+## Theatre rehearsal studio                      numeric                   64
+## Theatres                                      numeric                   65
+## culture_freq                                  numeric                   66
+## culture_rating                                numeric                   67
+## culture_no_reviews                            numeric                   68
+## culture_av_reviews                            numeric                   69
+## InnerOuter                                     factor                   70
+## geometry                        sfc_MULTIPOLYGON, sfc                   71
+## young_p                                       numeric                   72
+## culture_rating_good                           numeric                   73
+## culture_reviews_popular                       numeric                   74</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#you will notice that there are some non-numeric columns, we want to exclue these, and drop the geometry </span>
+
+londonSub &lt;-<span class="st"> </span>londonLSOAProfiles[,<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">2</span>, <span class="dv">17</span>:<span class="dv">28</span>)]
+
+<span class="co">#make sure the geometry is null or we will get errors - also create some subsets so that we can see our data better</span>
+<span class="co">#londonSub &lt;- subset(londonLSOAProfiles, select = c(17:28))</span>
+londonSub &lt;-<span class="st"> </span><span class="kw">st_set_geometry</span>(londonSub, <span class="ot">NULL</span>)
+
+<span class="kw">library</span>(reshape2)
+
+londonSub &lt;-<span class="st"> </span><span class="kw">melt</span>(londonSub, <span class="dt">id.vars =</span> <span class="dv">1</span>:<span class="dv">2</span>)
+<span class="kw">attach</span>(londonSub)
+
+hist2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(londonSub, <span class="kw">aes</span>(<span class="dt">x=</span>value)) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">y =</span> ..density..)) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">colour=</span><span class="st">&quot;red&quot;</span>, <span class="dt">size=</span><span class="dv">1</span>, <span class="dt">adjust=</span><span class="dv">1</span>)
+
+hist2 +<span class="st"> </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>variable, <span class="dt">scales=</span><span class="st">&quot;free&quot;</span>)</code></pre></div>
+<pre><code>## Warning: Removed 2 rows containing non-finite values (stat_bin).</code></pre>
+<pre><code>## Warning: Removed 2 rows containing non-finite values (stat_density).</code></pre>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
 <p>Correlations</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ggplot(londonLSOAProfiles, aes(log(airbnb_freq), log(airbnb_price))) + </span>
 <span class="co">#   geom_point(pch = 21, fill = &quot;gray25&quot;, color = &quot;white&quot;, size = 2.5) +</span>
@@ -453,7 +578,7 @@ plot15 &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> 
     <span class="dt">legend.background =</span> <span class="kw">element_rect</span>(<span class="dt">fill =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">color =</span> <span class="ot">NA</span>),
     <span class="dt">legend.key.width =</span> <span class="kw">unit</span>(<span class="dv">10</span>, <span class="st">&quot;pt&quot;</span>)
   )</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(londonLSOAProfiles, <span class="kw">aes</span>(<span class="kw">log</span>(culture_no_reviews), <span class="kw">log</span>(airbnb_no_reviews), <span class="dt">fill =</span> InnerOuter)) +
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">pch =</span> <span class="dv">21</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="fl">2.5</span>) +
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">name =</span> <span class="st">&quot;culture_no_reviews PER LSOA (km2)&quot;</span>) +
@@ -481,7 +606,7 @@ plot15 &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> 
     <span class="dt">legend.key.width =</span> <span class="kw">unit</span>(<span class="dv">10</span>, <span class="st">&quot;pt&quot;</span>)
   )</code></pre></div>
 <pre><code>## Warning: Removed 2116 rows containing missing values (geom_point).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(londonLSOAProfiles, <span class="kw">aes</span>(<span class="kw">log</span>(culture_no_reviews), <span class="kw">log</span>(airbnb_freq), <span class="dt">fill =</span> InnerOuter)) +
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">pch =</span> <span class="dv">21</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="fl">2.5</span>) +
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">name =</span> <span class="st">&quot;culture_no_reviews PER LSOA (km2)&quot;</span>) +
@@ -509,7 +634,7 @@ plot15 &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> 
     <span class="dt">legend.key.width =</span> <span class="kw">unit</span>(<span class="dv">10</span>, <span class="st">&quot;pt&quot;</span>)
   )</code></pre></div>
 <pre><code>## Warning: Removed 2116 rows containing missing values (geom_point).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(londonLSOAProfiles, <span class="kw">aes</span>(<span class="kw">log</span>(culture_no_reviews), <span class="kw">log</span>(airbnb_price), <span class="dt">fill =</span> InnerOuter)) +
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">pch =</span> <span class="dv">21</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="fl">2.5</span>) +
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">name =</span> <span class="st">&quot;culture_no_reviews PER LSOA (km2)&quot;</span>) +
@@ -537,7 +662,7 @@ plot15 &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> 
     <span class="dt">legend.key.width =</span> <span class="kw">unit</span>(<span class="dv">10</span>, <span class="st">&quot;pt&quot;</span>)
   )</code></pre></div>
 <pre><code>## Warning: Removed 2116 rows containing missing values (geom_point).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(londonLSOAProfiles, <span class="kw">aes</span>(<span class="kw">log</span>(culture_no_reviews), <span class="kw">log</span>(house_price), <span class="dt">fill =</span> InnerOuter)) +
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">pch =</span> <span class="dv">21</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="fl">2.5</span>) +
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">name =</span> <span class="st">&quot;culture_no_reviews PER LSOA (km2)&quot;</span>) +
@@ -565,7 +690,7 @@ plot15 &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> 
     <span class="dt">legend.key.width =</span> <span class="kw">unit</span>(<span class="dv">10</span>, <span class="st">&quot;pt&quot;</span>)
   )</code></pre></div>
 <pre><code>## Warning: Removed 2118 rows containing missing values (geom_point).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(londonLSOAProfiles, <span class="kw">aes</span>(<span class="kw">log</span>(culture_freq), <span class="kw">log</span>(house_price), <span class="dt">fill =</span> InnerOuter)) +
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">pch =</span> <span class="dv">21</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="fl">2.5</span>) +
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">name =</span> <span class="st">&quot;culture_freq PER LSOA (km2)&quot;</span>) +
@@ -593,7 +718,7 @@ plot15 &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> 
     <span class="dt">legend.key.width =</span> <span class="kw">unit</span>(<span class="dv">10</span>, <span class="st">&quot;pt&quot;</span>)
   )</code></pre></div>
 <pre><code>## Warning: Removed 2118 rows containing missing values (geom_point).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(londonLSOAProfiles, <span class="kw">aes</span>(culture_rating, <span class="kw">log</span>(house_price), <span class="dt">fill =</span> InnerOuter)) +
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">pch =</span> <span class="dv">21</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="fl">2.5</span>) +
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">name =</span> <span class="st">&quot;culture_rating PER LSOA (km2)&quot;</span>) +
@@ -621,7 +746,7 @@ plot15 &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> 
     <span class="dt">legend.key.width =</span> <span class="kw">unit</span>(<span class="dv">10</span>, <span class="st">&quot;pt&quot;</span>)
   )</code></pre></div>
 <pre><code>## Warning: Removed 2118 rows containing missing values (geom_point).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
 
 </div>
 </div>
@@ -632,7 +757,7 @@ plot15 &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> 
         </div>
       </div>
 <a href="load-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="final-words.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="maps.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
