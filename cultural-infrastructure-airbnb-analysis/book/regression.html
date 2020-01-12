@@ -24,7 +24,7 @@
 <meta name="author" content="Vishal Kumar" />
 
 
-<meta name="date" content="2020-01-11" />
+<meta name="date" content="2020-01-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -127,7 +127,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="maps.html"><a href="maps.html"><i class="fa fa-check"></i><b>5</b> Maps</a></li>
-<li class="chapter" data-level="6" data-path="regression.html"><a href="regression.html"><i class="fa fa-check"></i><b>6</b> Regression</a></li>
+<li class="chapter" data-level="6" data-path="regression.html"><a href="regression.html"><i class="fa fa-check"></i><b>6</b> Regression</a><ul>
+<li class="chapter" data-level="6.1" data-path="regression.html"><a href="regression.html#normal-regression-models"><i class="fa fa-check"></i><b>6.1</b> Normal Regression Models</a></li>
+<li class="chapter" data-level="6.2" data-path="regression.html"><a href="regression.html#spatial-lag-regression-model"><i class="fa fa-check"></i><b>6.2</b> Spatial lag regression model</a></li>
+<li class="chapter" data-level="6.3" data-path="regression.html"><a href="regression.html#spatial-non-stationarity-and-geographically-weighted-regression-models-gwr"><i class="fa fa-check"></i><b>6.3</b> Spatial Non-stationarity and Geographically Weighted Regression Models (GWR)</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -189,14 +193,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">library</span>(jtools)
 
 <span class="kw">options</span>(<span class="dt">scipen =</span> <span class="dv">999</span>)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#londonLSOAProfiles_inner &lt;- londonLSOAProfiles[londonLSOAProfiles$&#39;InnerOuter&#39; == &quot;Inner London&quot;]</span>
-<span class="co">#londonLSOAProfiles_inner &lt;- subset(londonLSOAProfiles, InnerOuter == &quot;Inner London&quot;)</span>
-
-<span class="co">#first, let&#39;s make sure R is reading our InnerOuter variable as a factor</span>
+<div id="normal-regression-models" class="section level2">
+<h2><span class="header-section-number">6.1</span> Normal Regression Models</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#first, let&#39;s make sure R is reading our InnerOuter variable as a factor</span>
 londonLSOAProfiles$InnerOuter &lt;-<span class="st"> </span><span class="kw">as.factor</span>(londonLSOAProfiles$InnerOuter)
 
 <span class="co">#---SUPPLY SIDE MODEL</span>
-model_freq &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_freq</span><span class="st">`</span>) ~<span class="st"> </span>
+modelFreq &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_freq</span><span class="st">`</span>) ~<span class="st"> </span>
 <span class="st">                    `</span><span class="dt">bame_p</span><span class="st">`</span> +
 <span class="st">                    </span><span class="kw">log</span>(<span class="st">`</span><span class="dt">young_p</span><span class="st">`</span>) +
 <span class="st">                    `</span><span class="dt">nonUK</span><span class="st">`</span> +
@@ -206,13 +209,13 @@ model_freq &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class=
 <span class="st">                    `</span><span class="dt">house_price</span><span class="st">`</span> +
 <span class="st">                    </span><span class="kw">log</span>(culture_freq) +
 <span class="st">                    </span><span class="co">#log(culture_rating) +</span>
-<span class="st">                    </span>culture_rating_good +
-<span class="st">                    </span>culture_reviews_popular +
+<span class="st">                    `</span><span class="dt">culture_rating_good</span><span class="st">`</span> +
+<span class="st">                    `</span><span class="dt">culture_reviews_popular</span><span class="st">`</span> +
 <span class="st">                    `</span><span class="dt">InnerOuter</span><span class="st">`</span>,
                   <span class="dt">data =</span> londonLSOAProfiles, <span class="dt">na.action=</span>na.exclude)
 
 <span class="co">#---DEMAND SIDE MODEL</span>
-model_reviews &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_no_reviews</span><span class="st">`</span>) ~
+modelReviews &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_no_reviews</span><span class="st">`</span>) ~
 <span class="st">                    `</span><span class="dt">bame_p</span><span class="st">`</span> +
 <span class="st">                    </span><span class="kw">log</span>(<span class="st">`</span><span class="dt">young_p</span><span class="st">`</span>) +
 <span class="st">                    `</span><span class="dt">nonUK</span><span class="st">`</span> +
@@ -222,13 +225,13 @@ model_reviews &lt;-<span class="st"> </span><span class="kw">lm</span>(<span cla
 <span class="st">                    `</span><span class="dt">house_mortg</span><span class="st">`</span> +
 <span class="st">                    `</span><span class="dt">house_price</span><span class="st">`</span> +
 <span class="st">                    </span><span class="kw">log</span>(<span class="st">`</span><span class="dt">culture_freq</span><span class="st">`</span>) +
-<span class="st">                    </span>culture_rating_good +
-<span class="st">                    </span>culture_reviews_popular +
+<span class="st">                    `</span><span class="dt">culture_rating_good</span><span class="st">`</span> +
+<span class="st">                    `</span><span class="dt">culture_reviews_popular</span><span class="st">`</span> +
 <span class="st">                    `</span><span class="dt">InnerOuter</span><span class="st">`</span>,
                   <span class="dt">data =</span> londonLSOAProfiles, <span class="dt">na.action=</span>na.exclude)
 
 <span class="co">#---AIRBNB PRICE MODEL</span>
-model_price &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_price</span><span class="st">`</span>) ~
+modelPrice &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_price</span><span class="st">`</span>) ~
 <span class="st">                    `</span><span class="dt">bame_p</span><span class="st">`</span> +
 <span class="st">                    `</span><span class="dt">nonUK</span><span class="st">`</span> +
 <span class="st">                    `</span><span class="dt">education</span><span class="st">`</span> +
@@ -237,16 +240,12 @@ model_price &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class
 <span class="st">                    `</span><span class="dt">house_mortg</span><span class="st">`</span> +
 <span class="st">                    `</span><span class="dt">house_price</span><span class="st">`</span> +
 <span class="st">                    </span><span class="kw">log</span>(culture_freq) +
-<span class="st">                    </span>culture_rating_good +
-<span class="st">                    </span>culture_reviews_popular +
+<span class="st">                    `</span><span class="dt">culture_rating_good</span><span class="st">`</span> +
+<span class="st">                    `</span><span class="dt">culture_reviews_popular</span><span class="st">`</span> +
 <span class="st">                    `</span><span class="dt">InnerOuter</span><span class="st">`</span>,
-                  <span class="dt">data =</span> londonLSOAProfiles, <span class="dt">na.action=</span>na.exclude)
-
-<span class="co">#summary(model_reviews)</span>
-<span class="co">#summary(model_freq)</span>
-<span class="co">#summary(model_price)</span></code></pre></div>
+                  <span class="dt">data =</span> londonLSOAProfiles, <span class="dt">na.action=</span>na.exclude)</code></pre></div>
 <p>Dudas et al said remove all variables where vif is above 5</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">vif</span>(model_freq))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">vif</span>(modelFreq))</code></pre></div>
 <pre><code>##                  bame_p            log(young_p)                   nonUK 
 ##                    4.54                    2.69                    4.06 
 ##               education                  income             house_mortg 
@@ -255,7 +254,7 @@ model_price &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class
 ##                    2.76                    2.56                    1.04 
 ## culture_reviews_popular              InnerOuter 
 ##                    1.10                    2.02</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">vif</span>(model_reviews))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">vif</span>(modelReviews))</code></pre></div>
 <pre><code>##                  bame_p            log(young_p)                   nonUK 
 ##                    4.89                    2.73                    4.07 
 ##               education               employees             log(income) 
@@ -264,7 +263,7 @@ model_price &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class
 ##                    3.85                    2.56                    2.56 
 ##     culture_rating_good culture_reviews_popular              InnerOuter 
 ##                    1.05                    1.10                    2.04</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">vif</span>(model_price))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">vif</span>(modelPrice))</code></pre></div>
 <pre><code>##                  bame_p                   nonUK               education 
 ##                    4.81                    4.00                    6.72 
 ##               employees                  income             house_mortg 
@@ -275,7 +274,7 @@ model_price &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class
 ##                    1.07                    1.93</code></pre>
 <p>Run the regression again without the high vif variable and insignificant variables</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#---SUPPLY SIDE MODEL</span>
-model_freq &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_freq</span><span class="st">`</span>) ~<span class="st"> </span>
+modelFreq &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_freq</span><span class="st">`</span>) ~<span class="st"> </span>
 <span class="st">                    `</span><span class="dt">bame_p</span><span class="st">`</span> +
 <span class="st">                    </span><span class="kw">log</span>(<span class="st">`</span><span class="dt">young_p</span><span class="st">`</span>) +
 <span class="st">                    `</span><span class="dt">nonUK</span><span class="st">`</span> +
@@ -283,12 +282,12 @@ model_freq &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class=
 <span class="st">                    `</span><span class="dt">house_mortg</span><span class="st">`</span> +
 <span class="st">                    `</span><span class="dt">house_price</span><span class="st">`</span> +
 <span class="st">                    </span><span class="kw">log</span>(culture_freq) +
-<span class="st">                    </span>culture_rating_good +
+<span class="st">                    `</span><span class="dt">culture_rating_good</span><span class="st">`</span> +
 <span class="st">                    `</span><span class="dt">InnerOuter</span><span class="st">`</span>,
                   <span class="dt">data =</span> londonLSOAProfiles, <span class="dt">na.action=</span>na.exclude)
 
 <span class="co">#---DEMAND SIDE MODEL</span>
-model_reviews &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_no_reviews</span><span class="st">`</span>) ~
+modelReviews &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_no_reviews</span><span class="st">`</span>) ~
 <span class="st">                    `</span><span class="dt">bame_p</span><span class="st">`</span> +
 <span class="st">                    </span><span class="kw">log</span>(<span class="st">`</span><span class="dt">young_p</span><span class="st">`</span>) +
 <span class="st">                    `</span><span class="dt">nonUK</span><span class="st">`</span> +
@@ -296,45 +295,41 @@ model_reviews &lt;-<span class="st"> </span><span class="kw">lm</span>(<span cla
 <span class="st">                    `</span><span class="dt">house_mortg</span><span class="st">`</span> +
 <span class="st">                    `</span><span class="dt">house_price</span><span class="st">`</span> +
 <span class="st">                    </span><span class="kw">log</span>(<span class="st">`</span><span class="dt">culture_freq</span><span class="st">`</span>) +
-<span class="st">                    </span>culture_rating_good +
+<span class="st">                    `</span><span class="dt">culture_rating_good</span><span class="st">`</span> +
 <span class="st">                    `</span><span class="dt">InnerOuter</span><span class="st">`</span>,
                   <span class="dt">data =</span> londonLSOAProfiles, <span class="dt">na.action=</span>na.exclude)
 
 <span class="co">#---AIRBNB PRICE MODEL</span>
-model_price &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_price</span><span class="st">`</span>) ~
+modelPrice &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_price</span><span class="st">`</span>) ~
 <span class="st">                    `</span><span class="dt">bame_p</span><span class="st">`</span> +
 <span class="st">                    `</span><span class="dt">nonUK</span><span class="st">`</span> +
 <span class="st">                    `</span><span class="dt">employees</span><span class="st">`</span> +
 <span class="st">                    `</span><span class="dt">house_mortg</span><span class="st">`</span> +
 <span class="st">                    `</span><span class="dt">house_price</span><span class="st">`</span> +
 <span class="st">                    </span><span class="kw">log</span>(culture_freq) +
-<span class="st">                    </span>culture_rating_good +
+<span class="st">                    `</span><span class="dt">culture_rating_good</span><span class="st">`</span> +
 <span class="st">                    `</span><span class="dt">InnerOuter</span><span class="st">`</span>,
-                  <span class="dt">data =</span> londonLSOAProfiles, <span class="dt">na.action=</span>na.exclude)
-
-<span class="co">#summary(model_reviews)</span>
-<span class="co">#summary(model_freq)</span>
-<span class="co">#summary(model_price)</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">vif</span>(model_freq))</code></pre></div>
+                  <span class="dt">data =</span> londonLSOAProfiles, <span class="dt">na.action=</span>na.exclude)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">vif</span>(modelFreq))</code></pre></div>
 <pre><code>##              bame_p        log(young_p)               nonUK           education 
 ##                4.49                2.48                4.03                2.62 
 ##         house_mortg         house_price   log(culture_freq) culture_rating_good 
 ##                2.62                1.79                2.52                1.04 
 ##          InnerOuter 
 ##                2.00</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">vif</span>(model_reviews))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">vif</span>(modelReviews))</code></pre></div>
 <pre><code>##              bame_p        log(young_p)               nonUK           employees 
 ##                4.31                2.46                3.55                2.33 
 ##         house_mortg         house_price   log(culture_freq) culture_rating_good 
 ##                3.08                1.77                2.51                1.04 
 ##          InnerOuter 
 ##                1.86</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">vif</span>(model_price))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">vif</span>(modelPrice))</code></pre></div>
 <pre><code>##              bame_p               nonUK           employees         house_mortg 
 ##                4.30                3.45                2.32                3.08 
 ##         house_price   log(culture_freq) culture_rating_good          InnerOuter 
 ##                1.72                1.73                1.04                1.75</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summ</span>(model_freq) </code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summ</span>(modelFreq) </code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <tbody>
 <tr>
@@ -590,7 +585,7 @@ InnerOuterOuter London
 </tr>
 </tfoot>
 </table>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summ</span>(model_reviews)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summ</span>(modelReviews)</code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <tbody>
 <tr>
@@ -846,7 +841,7 @@ InnerOuterOuter London
 </tr>
 </tfoot>
 </table>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summ</span>(model_price)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summ</span>(modelPrice)</code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <tbody>
 <tr>
@@ -1085,179 +1080,205 @@ InnerOuterOuter London
 </tr>
 </tfoot>
 </table>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># #effect_plot(model_freq, data = londonLSOAProfiles, pred = culture_rating, interval = TRUE, plot.points = TRUE)</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># #effect_plot(modelFreq, data = londonLSOAProfiles, pred = culture_rating, interval = TRUE, plot.points = TRUE)</span>
 <span class="co"># </span>
-<span class="co"># #plot_summs(model_freq, model_reviews, scale = TRUE)</span>
+<span class="co"># #plot_summs(modelFreq, modelReviews, scale = TRUE)</span>
 <span class="co"># </span>
 <span class="co"># #install.packages(&#39;huxtable&#39;)</span>
 <span class="co"># library(huxtable)</span>
 <span class="co"># </span>
-<span class="co"># export_summs(model_freq)</span></code></pre></div>
+<span class="co"># export_summs(modelFreq)</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#and for future use, write the residuals out to a column in your dataframe</span>
 
-londonLSOAProfiles$model_freq_resids &lt;-<span class="st"> </span><span class="kw">residuals</span>(model_freq)
-londonLSOAProfiles$model_reviews_resids &lt;-<span class="st"> </span><span class="kw">residuals</span>(model_reviews)
-londonLSOAProfiles$model_price_resids &lt;-<span class="st"> </span><span class="kw">residuals</span>(model_price)</code></pre></div>
+londonLSOAProfiles$modelFreq_resids &lt;-<span class="st"> </span><span class="kw">residuals</span>(modelFreq)
+londonLSOAProfiles$modelReviews_resids &lt;-<span class="st"> </span><span class="kw">residuals</span>(modelReviews)
+londonLSOAProfiles$modelPrice_resids &lt;-<span class="st"> </span><span class="kw">residuals</span>(modelPrice)</code></pre></div>
+<p>Plot the residuals of the normal regression model.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># #https://stackoverflow.com/questions/6882709/how-do-i-deal-with-nas-in-residuals-in-a-regression-in-r</span>
 <span class="co"># #how to deal with residuals with NA - make use of the row names associated with the data frame provided as input to lm</span>
 
-model_freq_resids_graph &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> </span>
-<span class="st">                                </span><span class="kw">drop_na</span>(model_freq_resids) %&gt;%
-<span class="st">                                    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span> model_freq_resids)) +
+modelFreq_resids_graph &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> </span>
+<span class="st">                                </span><span class="kw">drop_na</span>(modelFreq_resids) %&gt;%
+<span class="st">                                    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span> modelFreq_resids)) +
 <span class="st">                                    </span><span class="kw">geom_histogram</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">fill =</span> <span class="st">&quot;#5EB296&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;#4D4D4D&quot;</span>) +
 <span class="st">                                    </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> comma) +
 <span class="st">                                    </span><span class="kw">ggtitle</span>(<span class="st">&quot;RESIDUAL DISTRUBUTION&quot;</span>, <span class="dt">subtitle =</span> <span class="st">&quot;Residual distrubution of the Airbnb Price model&quot;</span>) +
 <span class="st">                                    </span><span class="kw">labs</span>(<span class="dt">x=</span> <span class="st">&quot;log(Airbnb Freq)&quot;</span>, <span class="dt">y=</span> <span class="st">&quot;Count&quot;</span>)
 
-model_reviews_resids_graph &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> </span>
-<span class="st">                                </span><span class="kw">drop_na</span>(model_reviews_resids) %&gt;%
-<span class="st">                                    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span> model_reviews_resids)) +
+modelReviews_resids_graph &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> </span>
+<span class="st">                                </span><span class="kw">drop_na</span>(modelReviews_resids) %&gt;%
+<span class="st">                                    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span> modelReviews_resids)) +
 <span class="st">                                    </span><span class="kw">geom_histogram</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">fill =</span> <span class="st">&quot;#5EB296&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;#4D4D4D&quot;</span>) +
 <span class="st">                                    </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> comma) +
 <span class="st">                                    </span><span class="kw">ggtitle</span>(<span class="st">&quot;RESIDUAL DISTRUBUTION&quot;</span>, <span class="dt">subtitle =</span> <span class="st">&quot;Residual distrubution of the Airbnb Price model&quot;</span>) +
 <span class="st">                                    </span><span class="kw">labs</span>(<span class="dt">x=</span> <span class="st">&quot;log(Airbnb Freq)&quot;</span>, <span class="dt">y=</span> <span class="st">&quot;Count&quot;</span>)
 
-model_price_resids_graph &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> </span>
-<span class="st">                                </span><span class="kw">drop_na</span>(model_price_resids) %&gt;%
-<span class="st">                                    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span> model_price_resids)) +
+modelPrice_resids_graph &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> </span>
+<span class="st">                                </span><span class="kw">drop_na</span>(modelPrice_resids) %&gt;%
+<span class="st">                                    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span> modelPrice_resids)) +
 <span class="st">                                    </span><span class="kw">geom_histogram</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">fill =</span> <span class="st">&quot;#5EB296&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;#4D4D4D&quot;</span>) +
 <span class="st">                                    </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> comma) +
 <span class="st">                                    </span><span class="kw">ggtitle</span>(<span class="st">&quot;RESIDUAL DISTRUBUTION&quot;</span>, <span class="dt">subtitle =</span> <span class="st">&quot;Residual distrubution of the Airbnb Price model&quot;</span>) +
 <span class="st">                                    </span><span class="kw">labs</span>(<span class="dt">x=</span> <span class="st">&quot;log(Airbnb Freq)&quot;</span>, <span class="dt">y=</span> <span class="st">&quot;Count&quot;</span>)
 
-g &lt;-<span class="st"> </span><span class="kw">grid.arrange</span>(model_freq_resids_graph, model_reviews_resids_graph, model_price_resids_graph, <span class="dt">ncol=</span><span class="dv">3</span>)</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-49-1.png" width="960" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#plot(model_freq)</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#nona &lt;- londonLSOAProfiles[londonLSOAProfiles$model_freq_resids != 0]</span>
+g &lt;-<span class="st"> </span><span class="kw">grid.arrange</span>(modelFreq_resids_graph, modelReviews_resids_graph, modelPrice_resids_graph, <span class="dt">ncol=</span><span class="dv">3</span>)</code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-50-1.png" width="960" /></p>
+<p>There might be some spatial autocorrealtion in our models. Run a Durbin Watson test as recommended by Andy and Adam to test for this. If is it near 2 then there is no spatial autocorrelation.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#nona &lt;- londonLSOAProfiles[londonLSOAProfiles$modelFreq_resids != 0]</span>
 
 <span class="co">#run durbin-watson test</span>
-<span class="kw">print</span>(<span class="kw">durbinWatsonTest</span>(model_freq$residuals))</code></pre></div>
+<span class="kw">print</span>(<span class="kw">durbinWatsonTest</span>(modelFreq$residuals))</code></pre></div>
 <pre><code>## [1] 1.5</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">durbinWatsonTest</span>(model_reviews$residuals))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">durbinWatsonTest</span>(modelReviews$residuals))</code></pre></div>
 <pre><code>## [1] 1.58</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">durbinWatsonTest</span>(model_price$residuals))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">durbinWatsonTest</span>(modelPrice$residuals))</code></pre></div>
 <pre><code>## [1] 1.73</code></pre>
+<p>Plot the residuals of each of the models. Colors that are close together mean that there might be some spatial autocorrelation</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#plot the residuals to see for spatial autocorrelation</span>
 
-<span class="kw">tm_shape</span>(londonLSOAProfiles) +
-<span class="st">  </span><span class="kw">tm_borders</span>(<span class="dt">col =</span> <span class="st">&#39;dimgray&#39;</span>, <span class="dt">lwd =</span> <span class="fl">0.3</span>, <span class="dt">lty =</span> <span class="st">&quot;solid&quot;</span>) +
-<span class="st">  </span><span class="kw">tm_polygons</span>(<span class="st">&quot;model_freq_resids&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdYlBu&quot;</span>)</code></pre></div>
-<pre><code>## Warning: The shape londonLSOAProfiles is invalid. See sf::st_is_valid</code></pre>
-<pre><code>## Warning: One tm layer group has duplicated layer types, which are omitted. To
-## draw multiple layers of the same type, use multiple layer groups (i.e. specify
-## tm_shape prior to each of them).</code></pre>
+resid_plot1 &lt;-<span class="st"> </span><span class="kw">tm_shape</span>(londonLSOAProfiles) +
+<span class="st">  </span><span class="kw">tm_borders</span>(<span class="dt">col =</span> <span class="st">&#39;dimgray&#39;</span>, <span class="dt">lwd =</span> <span class="fl">0.1</span>, <span class="dt">lty =</span> <span class="st">&quot;solid&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_polygons</span>(<span class="st">&quot;modelFreq_resids&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdYlBu&quot;</span>)
+
+resid_plot2 &lt;-<span class="st"> </span><span class="kw">tm_shape</span>(londonLSOAProfiles) +
+<span class="st">  </span><span class="kw">tm_borders</span>(<span class="dt">col =</span> <span class="st">&#39;dimgray&#39;</span>, <span class="dt">lwd =</span> <span class="fl">0.1</span>, <span class="dt">lty =</span> <span class="st">&quot;solid&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_polygons</span>(<span class="st">&quot;modelReviews_resids&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdYlBu&quot;</span>)
+
+resid_plot3 &lt;-<span class="st"> </span><span class="kw">tm_shape</span>(londonLSOAProfiles) +
+<span class="st">  </span><span class="kw">tm_borders</span>(<span class="dt">col =</span> <span class="st">&#39;dimgray&#39;</span>, <span class="dt">lwd =</span> <span class="fl">0.1</span>, <span class="dt">lty =</span> <span class="st">&quot;solid&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_polygons</span>(<span class="st">&quot;modelPrice_resids&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdYlBu&quot;</span>)
+
+resid_plots =<span class="st"> </span><span class="kw">tmap_arrange</span>(resid_plot1, resid_plot2, resid_plot3, 
+                               <span class="dt">ncol=</span><span class="dv">3</span>)
+
+resid_plots</code></pre></div>
 <p><img src="bookdown-demo_files/figure-html/unnamed-chunk-52-1.png" width="672" /></p>
+<p>We can also use another calculation called Moran’s I to check for spatial autocorrelation. Use the residuals of the original model to run through to the calculation. If is it 0 then there is no spatial auto correlation.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#use Moran&#39;s I to test for spatial auto correlation</span>
 
-model_freq_resids_noNA &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> </span><span class="kw">drop_na</span>(model_freq_resids)
+modelFreq_resids_noNA &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> </span><span class="kw">drop_na</span>(modelFreq_resids)
+modelReviews_resids_noNA &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> </span><span class="kw">drop_na</span>(modelReviews_resids)
+modelPrice_resids_noNA &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> </span><span class="kw">drop_na</span>(modelPrice_resids)
 
 <span class="co">#Firstly convert our SF object into an SP object:</span>
-model_freq_resids_SP &lt;-<span class="st"> </span><span class="kw">as</span>(model_freq_resids_noNA, <span class="st">&quot;Spatial&quot;</span>)</code></pre></div>
+modelFreq_resids_SP &lt;-<span class="st"> </span><span class="kw">as</span>(modelFreq_resids_noNA, <span class="st">&quot;Spatial&quot;</span>)
+modelReviews_resids_SP &lt;-<span class="st"> </span><span class="kw">as</span>(modelFreq_resids_noNA, <span class="st">&quot;Spatial&quot;</span>)
+modelPrice_resids_SP &lt;-<span class="st"> </span><span class="kw">as</span>(modelFreq_resids_noNA, <span class="st">&quot;Spatial&quot;</span>)</code></pre></div>
+<p>Now that we have spatial variables for each of the models, we need to do a few other steps. 1) Calulate centroids of the shapes with resdiuals. 2) Run those polygons through a spatial weights matrix. 3) Calculate the Moran’s I</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#and calculate the centroids of all LSOAS in London</span>
-coordsW &lt;-<span class="st"> </span><span class="kw">coordinates</span>(model_freq_resids_SP)
+coordsFreq &lt;-<span class="st"> </span><span class="kw">coordinates</span>(modelFreq_resids_SP)
+coordsReviews &lt;-<span class="st"> </span><span class="kw">coordinates</span>(modelReviews_resids_SP)
+coordsPrice &lt;-<span class="st"> </span><span class="kw">coordinates</span>(modelPrice_resids_SP)
 
-<span class="kw">plot</span>(coordsW)</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-54-1.png" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Now we need to generate a spatial weights matrix (remember from the lecture a couple of weeks ago). We&#39;ll start with a simple binary matrix of queen&#39;s case neighbours</span>
+<span class="co">#plot(coordsW)</span>
 
-<span class="co">#or nearest neighbours</span>
-knn_wards &lt;-<span class="st"> </span><span class="kw">knearneigh</span>(coordsW, <span class="dt">k=</span><span class="dv">4</span>)
+<span class="co">#Now we need to generate a spatial weights matrix using nearest neighbours</span>
+knnFreq &lt;-<span class="st"> </span><span class="kw">knearneigh</span>(coordsFreq, <span class="dt">k=</span><span class="dv">4</span>)
+knnReviews &lt;-<span class="st"> </span><span class="kw">knearneigh</span>(coordsReviews, <span class="dt">k=</span><span class="dv">4</span>)
+knnPrice &lt;-<span class="st"> </span><span class="kw">knearneigh</span>(coordsPrice, <span class="dt">k=</span><span class="dv">4</span>)
 
-LWard_knn &lt;-<span class="st"> </span><span class="kw">knn2nb</span>(knn_wards)
+Freq_knn &lt;-<span class="st"> </span><span class="kw">knn2nb</span>(knnFreq)
+Reviews_knn &lt;-<span class="st"> </span><span class="kw">knn2nb</span>(knnReviews)
+Price_knn &lt;-<span class="st"> </span><span class="kw">knn2nb</span>(knnPrice)
 
-<span class="kw">plot</span>(LWard_knn, <span class="kw">coordinates</span>(coordsW), <span class="dt">col=</span><span class="st">&quot;blue&quot;</span>)</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-55-1.png" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#create a spatial weights matrix object from these weights</span>
-Lward.knn_4_weight &lt;-<span class="st"> </span><span class="kw">nb2listw</span>(LWard_knn, <span class="dt">style=</span><span class="st">&quot;C&quot;</span>, <span class="dt">zero.policy=</span><span class="ot">TRUE</span>)
+<span class="co">#plot(LWard_knn, coordinates(coordsW), col=&quot;blue&quot;)</span>
+
+<span class="co">#create a spatial weights matrix object from these weights</span>
+Freq.knn_4_weight &lt;-<span class="st"> </span><span class="kw">nb2listw</span>(Freq_knn, <span class="dt">style=</span><span class="st">&quot;C&quot;</span>, <span class="dt">zero.policy=</span><span class="ot">TRUE</span>)
+Reviews.knn_4_weight &lt;-<span class="st"> </span><span class="kw">nb2listw</span>(Reviews_knn, <span class="dt">style=</span><span class="st">&quot;C&quot;</span>, <span class="dt">zero.policy=</span><span class="ot">TRUE</span>)
+Price.knn_4_weight &lt;-<span class="st"> </span><span class="kw">nb2listw</span>(Price_knn, <span class="dt">style=</span><span class="st">&quot;C&quot;</span>, <span class="dt">zero.policy=</span><span class="ot">TRUE</span>)
 
 <span class="co">#now run a moran&#39;s I test on the residuals</span>
-<span class="kw">moran.test</span>(model_freq_resids_SP@data$model_freq_resids, Lward.knn_4_weight, <span class="dt">zero.policy=</span>T)</code></pre></div>
+<span class="kw">print</span>(<span class="kw">moran.test</span>(modelFreq_resids_SP@data$modelFreq_resids, Freq.knn_4_weight, <span class="dt">zero.policy=</span>T))</code></pre></div>
 <pre><code>## 
 ##  Moran I test under randomisation
 ## 
-## data:  model_freq_resids_SP@data$model_freq_resids  
-## weights: Lward.knn_4_weight    
+## data:  modelFreq_resids_SP@data$modelFreq_resids  
+## weights: Freq.knn_4_weight    
 ## 
-## Moran I statistic standard deviate = 22, p-value &lt;2e-16
+## Moran I statistic standard deviate = 22, p-value &lt;0.0000000000000002
 ## alternative hypothesis: greater
 ## sample estimates:
 ## Moran I statistic       Expectation          Variance 
 ##          0.315132         -0.000452          0.000202</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">moran.test</span>(modelReviews_resids_SP@data$modelReviews_resids, Reviews.knn_4_weight, <span class="dt">zero.policy=</span>T))</code></pre></div>
+<pre><code>## 
+##  Moran I test under randomisation
+## 
+## data:  modelReviews_resids_SP@data$modelReviews_resids  
+## weights: Reviews.knn_4_weight    
+## 
+## Moran I statistic standard deviate = 19, p-value &lt;0.0000000000000002
+## alternative hypothesis: greater
+## sample estimates:
+## Moran I statistic       Expectation          Variance 
+##          0.268238         -0.000452          0.000202</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">moran.test</span>(modelPrice_resids_SP@data$modelPrice_resids, Price.knn_4_weight, <span class="dt">zero.policy=</span>T))</code></pre></div>
+<pre><code>## 
+##  Moran I test under randomisation
+## 
+## data:  modelPrice_resids_SP@data$modelPrice_resids  
+## weights: Price.knn_4_weight    
+## 
+## Moran I statistic standard deviate = 8, p-value &lt;0.0000000000000002
+## alternative hypothesis: greater
+## sample estimates:
+## Moran I statistic       Expectation          Variance 
+##          0.118458         -0.000452          0.000202</code></pre>
+</div>
+<div id="spatial-lag-regression-model" class="section level2">
+<h2><span class="header-section-number">6.2</span> Spatial lag regression model</h2>
+<p>To deal with any spatial autocorrelation - if shown in the the Moran’s I statistic - we have to re-run the models through a spatial lag model</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Dealing with Spatially Autocorrelated Residuals - Spatial Lag and Spatial Error models</span>
 
 <span class="kw">library</span>(spatialreg)
 
-<span class="co"># #run a spatially-lagged regression model</span>
-<span class="co"># slag_dv_model_price_knn4 &lt;- lagsarlm(log(`airbnb_price`) ~ </span>
-<span class="co">#                     `young_p` + </span>
-<span class="co">#                     `bame_p` +</span>
-<span class="co">#                     `nonUK` +</span>
-<span class="co">#                     `education` +</span>
-<span class="co">#                     `employees` +</span>
-<span class="co">#                     `income` +</span>
-<span class="co">#                     #`housing` +</span>
-<span class="co">#                     `house_mortg` +</span>
-<span class="co">#                     `house_price` +</span>
-<span class="co">#                     #`transport` +</span>
-<span class="co">#                     `culture_freq` +</span>
-<span class="co">#                     `culture_rating`+</span>
-<span class="co">#                     `InnerOuter`, </span>
-<span class="co">#                     data = r, cache = TRUE, message=FALSE, error=TRUE, </span>
-<span class="co">#                     na.action=na.exclude,</span>
-<span class="co">#                     nb2listw(LWard_knn, style=&quot;C&quot;), </span>
-<span class="co">#                     method = &quot;eigen&quot;)</span>
-
-
 <span class="co">#---SUPPLY SIDE MODEL</span>
-slag_dv_model_freq_knn4 &lt;-<span class="st"> </span><span class="kw">lagsarlm</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_freq</span><span class="st">`</span>) ~<span class="st"> </span>
-<span class="st">                                  `</span><span class="dt">bame_p</span><span class="st">`</span> +
-<span class="st">                                  </span><span class="kw">log</span>(<span class="st">`</span><span class="dt">young_p</span><span class="st">`</span>) +
-<span class="st">                                  `</span><span class="dt">nonUK</span><span class="st">`</span> +
-<span class="st">                                  `</span><span class="dt">education</span><span class="st">`</span> +
-<span class="st">                                  `</span><span class="dt">house_mortg</span><span class="st">`</span> +
-<span class="st">                                  `</span><span class="dt">house_price</span><span class="st">`</span> +
-<span class="st">                                  </span><span class="kw">log</span>(culture_freq) +
-<span class="st">                                  </span>culture_rating_good +
-<span class="st">                                  `</span><span class="dt">InnerOuter</span><span class="st">`</span>,
-                                  <span class="dt">data =</span> model_freq_resids_SP, 
-                                  <span class="dt">na.action=</span>na.exclude,
-                                  <span class="kw">nb2listw</span>(LWard_knn, <span class="dt">style=</span><span class="st">&quot;C&quot;</span>), 
-                                  <span class="dt">method =</span> <span class="st">&quot;eigen&quot;</span>)
-<span class="co"># </span>
+slag_modelFreq &lt;-<span class="st"> </span><span class="kw">lagsarlm</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_freq</span><span class="st">`</span>) ~<span class="st"> </span>
+<span class="st">                                          `</span><span class="dt">bame_p</span><span class="st">`</span> +
+<span class="st">                                          </span><span class="kw">log</span>(<span class="st">`</span><span class="dt">young_p</span><span class="st">`</span>) +
+<span class="st">                                          `</span><span class="dt">nonUK</span><span class="st">`</span> +
+<span class="st">                                          `</span><span class="dt">education</span><span class="st">`</span> +
+<span class="st">                                          `</span><span class="dt">house_mortg</span><span class="st">`</span> +
+<span class="st">                                          `</span><span class="dt">house_price</span><span class="st">`</span> +
+<span class="st">                                          </span><span class="kw">log</span>(culture_freq) +
+<span class="st">                                          </span>culture_rating_good +
+<span class="st">                                          `</span><span class="dt">InnerOuter</span><span class="st">`</span>,
+                                  <span class="dt">data =</span> modelFreq_resids_SP, 
+                                  <span class="dt">na.action=</span>na.exclude, <span class="kw">nb2listw</span>(Freq_knn, <span class="dt">style=</span><span class="st">&quot;C&quot;</span>),  <span class="dt">method =</span> <span class="st">&quot;eigen&quot;</span>)
+
 <span class="co"># #---DEMAND SIDE MODEL</span>
-<span class="co"># slag_dv_model_reviews_knn4 &lt;- lagsarlm(log(`airbnb_no_reviews`) ~</span>
-<span class="co">#                     `bame_p` +</span>
-<span class="co">#                     log(`young_p`) +</span>
-<span class="co">#                     `nonUK` +</span>
-<span class="co">#                     `employees` +</span>
-<span class="co">#                     `house_mortg` +</span>
-<span class="co">#                     `house_price` +</span>
-<span class="co">#                     log(`culture_freq`) +</span>
-<span class="co">#                     culture_rating_good +</span>
-<span class="co">#                     `InnerOuter`,</span>
-<span class="co">#                   data = londonLSOAProfiles, na.action=na.exclude, nb2listw(LWard_knn, style=&quot;C&quot;),  method = &quot;eigen&quot;)</span>
-<span class="co"># </span>
+slag_modelReviews &lt;-<span class="st"> </span><span class="kw">lagsarlm</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_no_reviews</span><span class="st">`</span>) ~
+<span class="st">                                            `</span><span class="dt">bame_p</span><span class="st">`</span> +
+<span class="st">                                            </span><span class="kw">log</span>(<span class="st">`</span><span class="dt">young_p</span><span class="st">`</span>) +
+<span class="st">                                            `</span><span class="dt">nonUK</span><span class="st">`</span> +
+<span class="st">                                            `</span><span class="dt">employees</span><span class="st">`</span> +
+<span class="st">                                            `</span><span class="dt">house_mortg</span><span class="st">`</span> +
+<span class="st">                                            `</span><span class="dt">house_price</span><span class="st">`</span> +
+<span class="st">                                            </span><span class="kw">log</span>(<span class="st">`</span><span class="dt">culture_freq</span><span class="st">`</span>) +
+<span class="st">                                            </span>culture_rating_good +
+<span class="st">                                            `</span><span class="dt">InnerOuter</span><span class="st">`</span>,
+                                  <span class="dt">data =</span> modelReviews_resids_SP, 
+                                  <span class="dt">na.action=</span>na.exclude, <span class="kw">nb2listw</span>(Reviews_knn, <span class="dt">style=</span><span class="st">&quot;C&quot;</span>),  <span class="dt">method =</span> <span class="st">&quot;eigen&quot;</span>)
+
 <span class="co"># #---AIRBNB PRICE MODEL</span>
-<span class="co"># slag_dv_model_price_knn4 &lt;- lagsarlm(log(`airbnb_price`) ~</span>
-<span class="co">#                     `bame_p` +</span>
-<span class="co">#                     `nonUK` +</span>
-<span class="co">#                     `employees` +</span>
-<span class="co">#                     `house_mortg` +</span>
-<span class="co">#                     `house_price` +</span>
-<span class="co">#                     log(culture_freq) +</span>
-<span class="co">#                     culture_rating_good +</span>
-<span class="co">#                     `InnerOuter`,</span>
-<span class="co">#                   data = londonLSOAProfiles, na.action=na.exclude, nb2listw(LWard_knn, style=&quot;C&quot;),  method = &quot;eigen&quot;)</span>
-
-
-<span class="co">#what do the outputs show?</span>
-<span class="co">#options(digits = 2)</span>
-<span class="kw">summary</span>(slag_dv_model_freq_knn4)</code></pre></div>
+slag_modelPrice &lt;-<span class="st"> </span><span class="kw">lagsarlm</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_price</span><span class="st">`</span>) ~
+<span class="st">                                          `</span><span class="dt">bame_p</span><span class="st">`</span> +
+<span class="st">                                          `</span><span class="dt">nonUK</span><span class="st">`</span> +
+<span class="st">                                          `</span><span class="dt">employees</span><span class="st">`</span> +
+<span class="st">                                          `</span><span class="dt">house_mortg</span><span class="st">`</span> +
+<span class="st">                                          `</span><span class="dt">house_price</span><span class="st">`</span> +
+<span class="st">                                          </span><span class="kw">log</span>(culture_freq) +
+<span class="st">                                          </span>culture_rating_good +
+<span class="st">                                          `</span><span class="dt">InnerOuter</span><span class="st">`</span>,
+                                  <span class="dt">data =</span> modelPrice_resids_SP, 
+                                  <span class="dt">na.action=</span>na.exclude, <span class="kw">nb2listw</span>(Price_knn, <span class="dt">style=</span><span class="st">&quot;C&quot;</span>),  <span class="dt">method =</span> <span class="st">&quot;eigen&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(slag_modelFreq)</code></pre></div>
 <pre><code>## 
 ## Call:lagsarlm(formula = log(airbnb_freq) ~ bame_p + log(young_p) + 
 ##     nonUK + education + house_mortg + house_price + log(culture_freq) + 
-##     culture_rating_good + InnerOuter, data = model_freq_resids_SP, 
-##     listw = nb2listw(LWard_knn, style = &quot;C&quot;), na.action = na.exclude, 
+##     culture_rating_good + InnerOuter, data = modelFreq_resids_SP, 
+##     listw = nb2listw(Freq_knn, style = &quot;C&quot;), na.action = na.exclude, 
 ##     method = &quot;eigen&quot;)
 ## 
 ## Residuals:
@@ -1266,22 +1287,33 @@ slag_dv_model_freq_knn4 &lt;-<span class="st"> </span><span class="kw">lagsarlm<
 ## 
 ## Type: lag 
 ## Coefficients: (asymptotic standard errors) 
-##                           Estimate  Std. Error  z value  Pr(&gt;|z|)
-## (Intercept)            -3.8647e+00  1.7617e-01 -21.9377 &lt; 2.2e-16
-## bame_p                 -6.5774e-03  1.3908e-03  -4.7290 2.256e-06
-## log(young_p)            6.5594e-01  2.2635e-02  28.9790 &lt; 2.2e-16
-## nonUK                   7.1146e-03  1.8829e-03   3.7786 0.0001577
-## education               9.4630e-03  1.3735e-03   6.8897 5.591e-12
-## house_mortg            -1.0351e-02  1.8525e-03  -5.5876 2.302e-08
-## house_price            -6.6579e-08  4.1486e-08  -1.6048 0.1085302
-## log(culture_freq)       1.4033e-01  1.6886e-02   8.3102 &lt; 2.2e-16
-## culture_rating_good     6.6976e-02  3.1723e-02   2.1113 0.0347505
-## InnerOuterOuter London -2.7503e-01  3.8473e-02  -7.1486 8.769e-13
+##                               Estimate      Std. Error  z value
+## (Intercept)            -3.864746861872  0.176169240827 -21.9377
+## bame_p                 -0.006577353255  0.001390846161  -4.7290
+## log(young_p)            0.655938637916  0.022634992627  28.9790
+## nonUK                   0.007114575987  0.001882870903   3.7786
+## education               0.009462974429  0.001373496658   6.8897
+## house_mortg            -0.010351223767  0.001852521784  -5.5876
+## house_price            -0.000000066579  0.000000041486  -1.6048
+## log(culture_freq)       0.140327046315  0.016886146511   8.3102
+## culture_rating_good     0.066976165455  0.031723413885   2.1113
+## InnerOuterOuter London -0.275028944896  0.038473292820  -7.1486
+##                                     Pr(&gt;|z|)
+## (Intercept)            &lt; 0.00000000000000022
+## bame_p                    0.0000022559502459
+## log(young_p)           &lt; 0.00000000000000022
+## nonUK                              0.0001577
+## education                 0.0000000000055911
+## house_mortg               0.0000000230176933
+## house_price                        0.1085302
+## log(culture_freq)      &lt; 0.00000000000000022
+## culture_rating_good                0.0347505
+## InnerOuterOuter London    0.0000000000008769
 ## 
-## Rho: 0.506, LR test value: 823, p-value: &lt; 2.22e-16
+## Rho: 0.506, LR test value: 823, p-value: &lt; 0.000000000000000222
 ## Asymptotic standard error: 0.0154
-##     z-value: 33, p-value: &lt; 2.22e-16
-## Wald statistic: 1087, p-value: &lt; 2.22e-16
+##     z-value: 33, p-value: &lt; 0.000000000000000222
+## Wald statistic: 1087, p-value: &lt; 0.000000000000000222
 ## 
 ## Log likelihood: -1940 for lag model
 ## ML residual variance (sigma squared): 0.318, (sigma: 0.564)
@@ -1290,97 +1322,152 @@ slag_dv_model_freq_knn4 &lt;-<span class="st"> </span><span class="kw">lagsarlm<
 ## AIC: 3905, (AIC for lm: 4726)
 ## LM test for residual autocorrelation
 ## test value: 5.71, p-value: 0.016878</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(slag_modelReviews)</code></pre></div>
+<pre><code>## 
+## Call:lagsarlm(formula = log(airbnb_no_reviews) ~ bame_p + log(young_p) + 
+##     nonUK + employees + house_mortg + house_price + log(culture_freq) + 
+##     culture_rating_good + InnerOuter, data = modelReviews_resids_SP, 
+##     listw = nb2listw(Reviews_knn, style = &quot;C&quot;), na.action = na.exclude, 
+##     method = &quot;eigen&quot;)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -3.851473 -0.472263  0.076411  0.592502  3.225916 
+## 
+## Type: lag 
+## Coefficients: (asymptotic standard errors) 
+##                                Estimate       Std. Error  z value
+## (Intercept)            -3.8278852762823  0.3449326470713 -11.0975
+## bame_p                 -0.0107589245390  0.0023716648667  -4.5364
+## log(young_p)            0.6837600655456  0.0381590866272  17.9187
+## nonUK                   0.0150245478000  0.0030878524955   4.8657
+## employees               0.0184256744696  0.0034087853982   5.4053
+## house_mortg            -0.0181398561573  0.0034014079543  -5.3330
+## house_price            -0.0000000087975  0.0000000714463  -0.1231
+## log(culture_freq)       0.1748529451653  0.0289750727252   6.0346
+## culture_rating_good     0.0910488713677  0.0546313384622   1.6666
+## InnerOuterOuter London -0.4684272673378  0.0641806010691  -7.2986
+##                                     Pr(&gt;|z|)
+## (Intercept)            &lt; 0.00000000000000022
+## bame_p                    0.0000057210707605
+## log(young_p)           &lt; 0.00000000000000022
+## nonUK                     0.0000011405541400
+## employees                 0.0000000646823521
+## house_mortg               0.0000000965802298
+## house_price                          0.90200
+## log(culture_freq)         0.0000000015935790
+## culture_rating_good                  0.09559
+## InnerOuterOuter London    0.0000000000002909
+## 
+## Rho: 0.502, LR test value: 606, p-value: &lt; 0.000000000000000222
+## Asymptotic standard error: 0.0182
+##     z-value: 27.6, p-value: &lt; 0.000000000000000222
+## Wald statistic: 762, p-value: &lt; 0.000000000000000222
+## 
+## Log likelihood: -3144 for lag model
+## ML residual variance (sigma squared): 0.945, (sigma: 0.972)
+## Number of observations: 2213 
+## Number of parameters estimated: 12 
+## AIC: 6312, (AIC for lm: 6916)
+## LM test for residual autocorrelation
+## test value: 53.2, p-value: 0.00000000000030742</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(slag_modelPrice)</code></pre></div>
+<pre><code>## 
+## Call:lagsarlm(formula = log(airbnb_price) ~ bame_p + nonUK + employees + 
+##     house_mortg + house_price + log(culture_freq) + culture_rating_good + 
+##     InnerOuter, data = modelPrice_resids_SP, listw = nb2listw(Price_knn, 
+##     style = &quot;C&quot;), na.action = na.exclude, method = &quot;eigen&quot;)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -1.765769 -0.153072  0.018155  0.166949  1.833482 
+## 
+## Type: lag 
+## Coefficients: (asymptotic standard errors) 
+##                               Estimate      Std. Error z value
+## (Intercept)             2.607552753690  0.133168684962 19.5808
+## bame_p                 -0.005927522370  0.000801777452 -7.3930
+## nonUK                   0.005618192809  0.000999832125  5.6191
+## employees               0.004021075483  0.001113265531  3.6120
+## house_mortg            -0.004510901513  0.001110076412 -4.0636
+## house_price             0.000000169145  0.000000023453  7.2121
+## log(culture_freq)       0.036315936079  0.007909307131  4.5915
+## culture_rating_good     0.063060591400  0.017928591132  3.5173
+## InnerOuterOuter London -0.132309188204  0.018962794134 -6.9773
+##                                     Pr(&gt;|z|)
+## (Intercept)            &lt; 0.00000000000000022
+## bame_p                    0.0000000000001437
+## nonUK                     0.0000000191914613
+## employees                          0.0003039
+## house_mortg               0.0000483225380596
+## house_price               0.0000000000005509
+## log(culture_freq)         0.0000043997769053
+## culture_rating_good                0.0004359
+## InnerOuterOuter London    0.0000000000030089
+## 
+## Rho: 0.307, LR test value: 137, p-value: &lt; 0.000000000000000222
+## Asymptotic standard error: 0.0252
+##     z-value: 12.2, p-value: &lt; 0.000000000000000222
+## Wald statistic: 149, p-value: &lt; 0.000000000000000222
+## 
+## Log likelihood: -638 for lag model
+## ML residual variance (sigma squared): 0.102, (sigma: 0.319)
+## Number of observations: 2213 
+## Number of parameters estimated: 11 
+## AIC: 1298, (AIC for lm: 1433)
+## LM test for residual autocorrelation
+## test value: 98.4, p-value: &lt; 0.000000000000000222</code></pre>
+<p>Take the residuals from the spatial lag model and run again to Moran’s I calculation to see if there is any spatial autocorrelation.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#write out the residuals</span>
-model_freq_resids_SP@data$slag_dv_model_freq_knn4_resids &lt;-<span class="st"> </span>slag_dv_model_freq_knn4$residuals
+modelFreq_resids_SP@data$slag_modelFreq_resids &lt;-<span class="st"> </span>slag_modelFreq$residuals
+modelReviews_resids_SP@data$slag_modelReviews_resids &lt;-<span class="st"> </span>slag_modelReviews$residuals
+modelPrice_resids_SP@data$slag_modelPrice_resids &lt;-<span class="st"> </span>slag_modelPrice$residuals
 
 <span class="co">#now test for spatial autocorrelation</span>
-<span class="kw">moran.test</span>(model_freq_resids_SP@data$slag_dv_model_freq_knn4_resids, Lward.knn_4_weight)</code></pre></div>
+<span class="kw">print</span>(<span class="kw">moran.test</span>(modelFreq_resids_SP@data$slag_modelFreq_resids, Freq.knn_4_weight))</code></pre></div>
 <pre><code>## 
 ##  Moran I test under randomisation
 ## 
-## data:  model_freq_resids_SP@data$slag_dv_model_freq_knn4_resids  
-## weights: Lward.knn_4_weight    
+## data:  modelFreq_resids_SP@data$slag_modelFreq_resids  
+## weights: Freq.knn_4_weight    
 ## 
 ## Moran I statistic standard deviate = -2, p-value = 1
 ## alternative hypothesis: greater
 ## sample estimates:
 ## Moran I statistic       Expectation          Variance 
 ##         -0.025299         -0.000452          0.000202</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># sem_model1 &lt;- errorsarlm(log(`airbnb_price`) ~ </span>
-<span class="co">#                     `young_p` + </span>
-<span class="co">#                     `bame_p` +</span>
-<span class="co">#                     `nonUK` +</span>
-<span class="co">#                     `education` +</span>
-<span class="co">#                     `employees` +</span>
-<span class="co">#                     `income` +</span>
-<span class="co">#                     #`housing` +</span>
-<span class="co">#                     `house_mortg` +</span>
-<span class="co">#                     `house_price` +</span>
-<span class="co">#                     #`transport` +</span>
-<span class="co">#                     `culture_freq` +</span>
-<span class="co">#                     `culture_rating`+</span>
-<span class="co">#                     `InnerOuter`, </span>
-<span class="co">#                     data = r, cache = TRUE, message=FALSE, error=TRUE, </span>
-<span class="co">#                     na.action=na.exclude,</span>
-<span class="co">#                     nb2listw(LWard_knn, style=&quot;C&quot;), </span>
-<span class="co">#                     method = &quot;eigen&quot;)</span>
-
-<span class="co">#---SUPPLY SIDE MODEL</span>
-sem_model_freq &lt;-<span class="st"> </span><span class="kw">errorsarlm</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_freq</span><span class="st">`</span>) ~<span class="st"> </span>
-<span class="st">                                  `</span><span class="dt">bame_p</span><span class="st">`</span> +
-<span class="st">                                  </span><span class="kw">log</span>(<span class="st">`</span><span class="dt">young_p</span><span class="st">`</span>) +
-<span class="st">                                  `</span><span class="dt">nonUK</span><span class="st">`</span> +
-<span class="st">                                  `</span><span class="dt">education</span><span class="st">`</span> +
-<span class="st">                                  `</span><span class="dt">house_mortg</span><span class="st">`</span> +
-<span class="st">                                  `</span><span class="dt">house_price</span><span class="st">`</span> +
-<span class="st">                                  </span><span class="kw">log</span>(culture_freq) +
-<span class="st">                                  </span>culture_rating_good +
-<span class="st">                                  `</span><span class="dt">InnerOuter</span><span class="st">`</span>,
-                                  <span class="dt">data =</span> model_freq_resids_SP, 
-                                  <span class="dt">na.action=</span>na.exclude,
-                                  <span class="kw">nb2listw</span>(LWard_knn, <span class="dt">style=</span><span class="st">&quot;C&quot;</span>), 
-                                  <span class="dt">method =</span> <span class="st">&quot;eigen&quot;</span>)
-
-<span class="kw">summary</span>(sem_model_freq)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">moran.test</span>(modelReviews_resids_SP@data$slag_modelReviews_resids, Reviews.knn_4_weight))</code></pre></div>
 <pre><code>## 
-## Call:errorsarlm(formula = log(airbnb_freq) ~ bame_p + log(young_p) + 
-##     nonUK + education + house_mortg + house_price + log(culture_freq) + 
-##     culture_rating_good + InnerOuter, data = model_freq_resids_SP, 
-##     listw = nb2listw(LWard_knn, style = &quot;C&quot;), na.action = na.exclude, 
-##     method = &quot;eigen&quot;)
+##  Moran I test under randomisation
 ## 
-## Residuals:
-##       Min        1Q    Median        3Q       Max 
-## -2.676039 -0.318667  0.051536  0.381209  2.243631 
+## data:  modelReviews_resids_SP@data$slag_modelReviews_resids  
+## weights: Reviews.knn_4_weight    
 ## 
-## Type: error 
-## Coefficients: (asymptotic standard errors) 
-##                           Estimate  Std. Error  z value  Pr(&gt;|z|)
-## (Intercept)            -2.7745e+00  2.2412e-01 -12.3796 &lt; 2.2e-16
-## bame_p                 -8.1577e-03  2.1570e-03  -3.7821 0.0001555
-## log(young_p)            7.6456e-01  2.4821e-02  30.8032 &lt; 2.2e-16
-## nonUK                   1.5620e-02  2.7804e-03   5.6180 1.932e-08
-## education               1.5775e-02  1.9643e-03   8.0308 8.882e-16
-## house_mortg            -1.4264e-02  2.2348e-03  -6.3828 1.739e-10
-## house_price            -1.6738e-08  5.3372e-08  -0.3136 0.7538149
-## log(culture_freq)       1.3114e-01  1.8897e-02   6.9400 3.922e-12
-## culture_rating_good     3.2871e-02  3.1798e-02   1.0337 0.3012610
-## InnerOuterOuter London -9.5427e-01  6.5359e-02 -14.6006 &lt; 2.2e-16
+## Moran I statistic standard deviate = -4, p-value = 1
+## alternative hypothesis: greater
+## sample estimates:
+## Moran I statistic       Expectation          Variance 
+##         -0.064016         -0.000452          0.000202</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">moran.test</span>(modelPrice_resids_SP@data$slag_modelPrice_resids, Price.knn_4_weight))</code></pre></div>
+<pre><code>## 
+##  Moran I test under randomisation
 ## 
-## Lambda: 0.625, LR test value: 510, p-value: &lt; 2.22e-16
-## Asymptotic standard error: 0.0185
-##     z-value: 33.7, p-value: &lt; 2.22e-16
-## Wald statistic: 1137, p-value: &lt; 2.22e-16
+## data:  modelPrice_resids_SP@data$slag_modelPrice_resids  
+## weights: Price.knn_4_weight    
 ## 
-## Log likelihood: -2097 for error model
-## ML residual variance (sigma squared): 0.352, (sigma: 0.593)
-## Number of observations: 2213 
-## Number of parameters estimated: 12 
-## AIC: 4218, (AIC for lm: 4726)</code></pre>
+## Moran I statistic standard deviate = -4, p-value = 1
+## alternative hypothesis: greater
+## sample estimates:
+## Moran I statistic       Expectation          Variance 
+##         -0.053694         -0.000452          0.000202</code></pre>
+</div>
+<div id="spatial-non-stationarity-and-geographically-weighted-regression-models-gwr" class="section level2">
+<h2><span class="header-section-number">6.3</span> Spatial Non-stationarity and Geographically Weighted Regression Models (GWR)</h2>
+<p>Finally other model can be used.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(spgwr)
 
 <span class="co">#calculate kernel bandwidth</span>
-GWRbandwidth &lt;-<span class="st"> </span><span class="kw">gwr.sel</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_freq</span><span class="st">`</span>) ~<span class="st"> </span>
+GWRbandwidth_Freq &lt;-<span class="st"> </span><span class="kw">gwr.sel</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_freq</span><span class="st">`</span>) ~<span class="st"> </span>
 <span class="st">                                  `</span><span class="dt">bame_p</span><span class="st">`</span> +
 <span class="st">                                  </span><span class="kw">log</span>(<span class="st">`</span><span class="dt">young_p</span><span class="st">`</span>) +
 <span class="st">                                  `</span><span class="dt">nonUK</span><span class="st">`</span> +
@@ -1390,11 +1477,9 @@ GWRbandwidth &lt;-<span class="st"> </span><span class="kw">gwr.sel</span>(<span
 <span class="st">                                  </span><span class="kw">log</span>(culture_freq) +
 <span class="st">                                  </span>culture_rating_good +
 <span class="st">                                  `</span><span class="dt">InnerOuter</span><span class="st">`</span>,
-                                  <span class="dt">data =</span> model_freq_resids_SP, 
-                        <span class="dt">coords=</span>coordsW,
+                                  <span class="dt">data =</span> modelFreq_resids_SP, 
+                        <span class="dt">coords=</span>coordsFreq,
                         <span class="dt">adapt=</span>T)</code></pre></div>
-<pre><code>## Warning in gwr.sel(log(airbnb_freq) ~ bame_p + log(young_p) + nonUK + education
-## + : data is Spatial* object, ignoring coords argument</code></pre>
 <pre><code>## Adaptive q: 0.382 CV score: 1048 
 ## Adaptive q: 0.618 CV score: 1069 
 ## Adaptive q: 0.236 CV score: 1024 
@@ -1412,8 +1497,72 @@ GWRbandwidth &lt;-<span class="st"> </span><span class="kw">gwr.sel</span>(<span
 ## Adaptive q: 0.0098 CV score: 773 
 ## Adaptive q: 0.00971 CV score: 773 
 ## Adaptive q: 0.00975 CV score: 773</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># #---DEMAND SIDE MODEL</span>
+GWRbandwidth_Reviews &lt;-<span class="st"> </span><span class="kw">gwr.sel</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_no_reviews</span><span class="st">`</span>) ~
+<span class="st">                    `</span><span class="dt">bame_p</span><span class="st">`</span> +
+<span class="st">                    </span><span class="kw">log</span>(<span class="st">`</span><span class="dt">young_p</span><span class="st">`</span>) +
+<span class="st">                    `</span><span class="dt">nonUK</span><span class="st">`</span> +
+<span class="st">                    `</span><span class="dt">employees</span><span class="st">`</span> +
+<span class="st">                    `</span><span class="dt">house_mortg</span><span class="st">`</span> +
+<span class="st">                    `</span><span class="dt">house_price</span><span class="st">`</span> +
+<span class="st">                    </span><span class="kw">log</span>(<span class="st">`</span><span class="dt">culture_freq</span><span class="st">`</span>) +
+<span class="st">                    </span>culture_rating_good +
+<span class="st">                    `</span><span class="dt">InnerOuter</span><span class="st">`</span>,
+                  <span class="dt">data =</span> modelReviews_resids_SP, 
+                        <span class="dt">coords=</span>coordsReviews,
+                        <span class="dt">adapt=</span>T)</code></pre></div>
+<pre><code>## Adaptive q: 0.382 CV score: 2784 
+## Adaptive q: 0.618 CV score: 2845 
+## Adaptive q: 0.236 CV score: 2731 
+## Adaptive q: 0.146 CV score: 2666 
+## Adaptive q: 0.0902 CV score: 2568 
+## Adaptive q: 0.0557 CV score: 2435 
+## Adaptive q: 0.0344 CV score: 2292 
+## Adaptive q: 0.0213 CV score: 2203 
+## Adaptive q: 0.0132 CV score: 2178 
+## Adaptive q: 0.00825 CV score: 2204 
+## Adaptive q: 0.0149 CV score: 2178 
+## Adaptive q: 0.014 CV score: 2177 
+## Adaptive q: 0.0139 CV score: 2177 
+## Adaptive q: 0.0137 CV score: 2177 
+## Adaptive q: 0.0135 CV score: 2177 
+## Adaptive q: 0.0138 CV score: 2177 
+## Adaptive q: 0.0137 CV score: 2177 
+## Adaptive q: 0.0137 CV score: 2177</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># #---AIRBNB PRICE MODEL</span>
+GWRbandwidth_Price &lt;-<span class="st"> </span><span class="kw">gwr.sel</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_price</span><span class="st">`</span>) ~
+<span class="st">                    `</span><span class="dt">bame_p</span><span class="st">`</span> +
+<span class="st">                    `</span><span class="dt">nonUK</span><span class="st">`</span> +
+<span class="st">                    `</span><span class="dt">employees</span><span class="st">`</span> +
+<span class="st">                    `</span><span class="dt">house_mortg</span><span class="st">`</span> +
+<span class="st">                    `</span><span class="dt">house_price</span><span class="st">`</span> +
+<span class="st">                    </span><span class="kw">log</span>(culture_freq) +
+<span class="st">                    </span>culture_rating_good +
+<span class="st">                    `</span><span class="dt">InnerOuter</span><span class="st">`</span>,
+                  <span class="dt">data =</span> modelPrice_resids_SP, 
+                        <span class="dt">coords=</span>coordsPrice,
+                        <span class="dt">adapt=</span>T)</code></pre></div>
+<pre><code>## Adaptive q: 0.382 CV score: 241 
+## Adaptive q: 0.618 CV score: 244 
+## Adaptive q: 0.236 CV score: 239 
+## Adaptive q: 0.146 CV score: 236 
+## Adaptive q: 0.0902 CV score: 232 
+## Adaptive q: 0.0557 CV score: 228 
+## Adaptive q: 0.0344 CV score: 225 
+## Adaptive q: 0.0213 CV score: 224 
+## Adaptive q: 0.0183 CV score: 225 
+## Adaptive q: 0.0255 CV score: 224 
+## Adaptive q: 0.0253 CV score: 224 
+## Adaptive q: 0.0241 CV score: 224 
+## Adaptive q: 0.0248 CV score: 224 
+## Adaptive q: 0.0251 CV score: 224 
+## Adaptive q: 0.0254 CV score: 224 
+## Adaptive q: 0.0252 CV score: 224 
+## Adaptive q: 0.0253 CV score: 224 
+## Adaptive q: 0.0253 CV score: 224</code></pre>
+<p>Run the GWR models</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#run the gwr model</span>
-gwr.model =<span class="st"> </span><span class="kw">gwr</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_freq</span><span class="st">`</span>) ~<span class="st"> </span>
+gwr_modelFreq =<span class="st"> </span><span class="kw">gwr</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_freq</span><span class="st">`</span>) ~<span class="st"> </span>
 <span class="st">                                  `</span><span class="dt">bame_p</span><span class="st">`</span> +
 <span class="st">                                  </span><span class="kw">log</span>(<span class="st">`</span><span class="dt">young_p</span><span class="st">`</span>) +
 <span class="st">                                  `</span><span class="dt">nonUK</span><span class="st">`</span> +
@@ -1423,35 +1572,78 @@ gwr.model =<span class="st"> </span><span class="kw">gwr</span>(<span class="kw"
 <span class="st">                                  </span><span class="kw">log</span>(culture_freq) +
 <span class="st">                                  </span>culture_rating_good +
 <span class="st">                                  `</span><span class="dt">InnerOuter</span><span class="st">`</span>,
-                                  <span class="dt">data =</span> model_freq_resids_SP, 
+                                  <span class="dt">data =</span> modelFreq_resids_SP, 
                 <span class="dt">coords=</span>coordsW, 
-                <span class="dt">adapt=</span>GWRbandwidth, 
+                <span class="dt">adapt=</span>GWRbandwidth_Freq, 
                 <span class="dt">hatmatrix=</span><span class="ot">TRUE</span>, 
-                <span class="dt">se.fit=</span><span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>## Warning in gwr(log(airbnb_freq) ~ bame_p + log(young_p) + nonUK + education + :
-## data is Spatial* object, ignoring coords argument</code></pre>
+                <span class="dt">se.fit=</span><span class="ot">TRUE</span>)
+
+
+<span class="co"># #---DEMAND SIDE MODEL</span>
+gwr_modelReviews &lt;-<span class="st"> </span><span class="kw">gwr</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_no_reviews</span><span class="st">`</span>) ~
+<span class="st">                    `</span><span class="dt">bame_p</span><span class="st">`</span> +
+<span class="st">                    </span><span class="kw">log</span>(<span class="st">`</span><span class="dt">young_p</span><span class="st">`</span>) +
+<span class="st">                    `</span><span class="dt">nonUK</span><span class="st">`</span> +
+<span class="st">                    `</span><span class="dt">employees</span><span class="st">`</span> +
+<span class="st">                    `</span><span class="dt">house_mortg</span><span class="st">`</span> +
+<span class="st">                    `</span><span class="dt">house_price</span><span class="st">`</span> +
+<span class="st">                    </span><span class="kw">log</span>(<span class="st">`</span><span class="dt">culture_freq</span><span class="st">`</span>) +
+<span class="st">                    </span>culture_rating_good +
+<span class="st">                    `</span><span class="dt">InnerOuter</span><span class="st">`</span>,
+                  <span class="dt">data =</span> modelReviews_resids_SP, 
+                  <span class="dt">coords=</span>coordsReviews,
+                  <span class="dt">adapt=</span>GWRbandwidth_Reviews,
+                  <span class="dt">hatmatrix=</span><span class="ot">TRUE</span>, 
+                  <span class="dt">se.fit=</span><span class="ot">TRUE</span>)
+
+<span class="co"># #---AIRBNB PRICE MODEL</span>
+gwr_modelPrice &lt;-<span class="st"> </span><span class="kw">gwr</span>(<span class="kw">log</span>(<span class="st">`</span><span class="dt">airbnb_price</span><span class="st">`</span>) ~
+<span class="st">                    `</span><span class="dt">bame_p</span><span class="st">`</span> +
+<span class="st">                    `</span><span class="dt">nonUK</span><span class="st">`</span> +
+<span class="st">                    `</span><span class="dt">employees</span><span class="st">`</span> +
+<span class="st">                    `</span><span class="dt">house_mortg</span><span class="st">`</span> +
+<span class="st">                    `</span><span class="dt">house_price</span><span class="st">`</span> +
+<span class="st">                    </span><span class="kw">log</span>(culture_freq) +
+<span class="st">                    </span>culture_rating_good +
+<span class="st">                    `</span><span class="dt">InnerOuter</span><span class="st">`</span>,
+                  <span class="dt">data =</span> modelPrice_resids_SP, 
+                  <span class="dt">coords=</span>coordsPrice,
+                  <span class="dt">adapt=</span>GWRbandwidth_Price,
+                  <span class="dt">hatmatrix=</span><span class="ot">TRUE</span>, 
+                  <span class="dt">se.fit=</span><span class="ot">TRUE</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#print the results of the model</span>
-gwr.model</code></pre></div>
+<span class="kw">print</span>(gwr_modelFreq)</code></pre></div>
 <pre><code>## Call:
 ## gwr(formula = log(airbnb_freq) ~ bame_p + log(young_p) + nonUK + 
 ##     education + house_mortg + house_price + log(culture_freq) + 
-##     culture_rating_good + InnerOuter, data = model_freq_resids_SP, 
-##     coords = coordsW, adapt = GWRbandwidth, hatmatrix = TRUE, 
+##     culture_rating_good + InnerOuter, data = modelFreq_resids_SP, 
+##     coords = coordsW, adapt = GWRbandwidth_Freq, hatmatrix = TRUE, 
 ##     se.fit = TRUE)
 ## Kernel function: gwr.Gauss 
 ## Adaptive quantile: 0.00975 (about 21 of 2213 data points)
 ## Summary of GWR coefficient estimates at data points:
-##                             Min.   1st Qu.    Median   3rd Qu.      Max. Global
-## X.Intercept.           -7.23e+00 -4.32e+00 -3.36e+00 -2.17e+00  1.36e+00  -3.70
-## bame_p                 -5.66e-02 -2.04e-02 -9.49e-03  5.62e-04  2.86e-02  -0.01
-## log.young_p.            4.42e-01  6.66e-01  7.64e-01  8.75e-01  1.11e+00   0.87
-## nonUK                  -2.72e-02  1.29e-02  2.19e-02  3.22e-02  7.71e-02   0.01
-## education              -1.64e-02  4.47e-03  1.57e-02  2.71e-02  7.34e-02   0.02
-## house_mortg            -5.83e-02 -2.21e-02 -1.20e-02 -4.04e-03  3.95e-02  -0.03
-## house_price            -4.55e-06 -1.37e-07  1.43e-07  5.24e-07  5.62e-06   0.00
-## log.culture_freq.      -1.80e-01  6.66e-02  1.17e-01  1.82e-01  5.13e-01   0.22
-## culture_rating_good    -4.56e-01 -5.28e-02  4.13e-02  1.58e-01  7.38e-01   0.13
-## InnerOuterOuter.London -1.94e+00 -7.92e-01 -5.25e-01 -3.46e-01  6.10e-01  -0.83
+##                                Min.      1st Qu.       Median      3rd Qu.
+## X.Intercept.           -7.228820395 -4.319789816 -3.356872760 -2.172254939
+## bame_p                 -0.056631038 -0.020388705 -0.009492280  0.000562019
+## log.young_p.            0.441952771  0.665956210  0.763927932  0.875261391
+## nonUK                  -0.027227673  0.012942068  0.021944621  0.032198658
+## education              -0.016416092  0.004472656  0.015710952  0.027060467
+## house_mortg            -0.058304472 -0.022080586 -0.012004387 -0.004038183
+## house_price            -0.000004548 -0.000000137  0.000000143  0.000000524
+## log.culture_freq.      -0.180120837  0.066620191  0.117374426  0.181595751
+## culture_rating_good    -0.456250455 -0.052754436  0.041295964  0.158318162
+## InnerOuterOuter.London -1.939145318 -0.792031789 -0.525073058 -0.346280818
+##                                Max. Global
+## X.Intercept.            1.364047846  -3.70
+## bame_p                  0.028639223  -0.01
+## log.young_p.            1.113674260   0.87
+## nonUK                   0.077050795   0.01
+## education               0.073447528   0.02
+## house_mortg             0.039463252  -0.03
+## house_price             0.000005619   0.00
+## log.culture_freq.       0.512502876   0.22
+## culture_rating_good     0.738215167   0.13
+## InnerOuterOuter.London  0.610011644  -0.83
 ## Number of data points: 2213 
 ## Effective number of parameters (residual: 2traceS - traceS&#39;S): 517 
 ## Effective degrees of freedom (residual: 2traceS - traceS&#39;S): 1696 
@@ -1464,62 +1656,230 @@ gwr.model</code></pre></div>
 ## AIC (GWR p. 96, eq. 4.22): 3472 
 ## Residual sum of squares: 527 
 ## Quasi-global R2: 0.925</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results&lt;-<span class="kw">as.data.frame</span>(gwr.model$SDF)
-
-<span class="kw">names</span>(results)</code></pre></div>
-<pre><code>##  [1] &quot;sum.w&quot;                         &quot;X.Intercept.&quot;                 
-##  [3] &quot;bame_p&quot;                        &quot;log.young_p.&quot;                 
-##  [5] &quot;nonUK&quot;                         &quot;education&quot;                    
-##  [7] &quot;house_mortg&quot;                   &quot;house_price&quot;                  
-##  [9] &quot;log.culture_freq.&quot;             &quot;culture_rating_good&quot;          
-## [11] &quot;InnerOuterOuter.London&quot;        &quot;X.Intercept._se&quot;              
-## [13] &quot;bame_p_se&quot;                     &quot;log.young_p._se&quot;              
-## [15] &quot;nonUK_se&quot;                      &quot;education_se&quot;                 
-## [17] &quot;house_mortg_se&quot;                &quot;house_price_se&quot;               
-## [19] &quot;log.culture_freq._se&quot;          &quot;culture_rating_good_se&quot;       
-## [21] &quot;InnerOuterOuter.London_se&quot;     &quot;gwr.e&quot;                        
-## [23] &quot;pred&quot;                          &quot;pred.se&quot;                      
-## [25] &quot;localR2&quot;                       &quot;X.Intercept._se_EDF&quot;          
-## [27] &quot;bame_p_se_EDF&quot;                 &quot;log.young_p._se_EDF&quot;          
-## [29] &quot;nonUK_se_EDF&quot;                  &quot;education_se_EDF&quot;             
-## [31] &quot;house_mortg_se_EDF&quot;            &quot;house_price_se_EDF&quot;           
-## [33] &quot;log.culture_freq._se_EDF&quot;      &quot;culture_rating_good_se_EDF&quot;   
-## [35] &quot;InnerOuterOuter.London_se_EDF&quot; &quot;pred.se.1&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(gwr_modelReviews)</code></pre></div>
+<pre><code>## Call:
+## gwr(formula = log(airbnb_no_reviews) ~ bame_p + log(young_p) + 
+##     nonUK + employees + house_mortg + house_price + log(culture_freq) + 
+##     culture_rating_good + InnerOuter, data = modelReviews_resids_SP, 
+##     coords = coordsReviews, adapt = GWRbandwidth_Reviews, hatmatrix = TRUE, 
+##     se.fit = TRUE)
+## Kernel function: gwr.Gauss 
+## Adaptive quantile: 0.0137 (about 30 of 2213 data points)
+## Summary of GWR coefficient estimates at data points:
+##                                  Min.        1st Qu.         Median
+## X.Intercept.           -13.1249044566  -4.2990042540  -2.1322390416
+## bame_p                  -0.0673920704  -0.0264361860  -0.0168454847
+## log.young_p.             0.2962644983   0.7104407578   0.7966153681
+## nonUK                   -0.0253076014   0.0149662604   0.0244575458
+## employees               -0.0404097031   0.0080033190   0.0232935411
+## house_mortg             -0.0837240785  -0.0413736361  -0.0264244002
+## house_price             -0.0000017767   0.0000000184   0.0000006749
+## log.culture_freq.       -0.2143739765   0.0538927270   0.1459554600
+## culture_rating_good     -0.4975656656  -0.0797557088   0.0595354611
+## InnerOuterOuter.London  -2.1271858449  -1.0632967199  -0.8073073773
+##                               3rd Qu.           Max. Global
+## X.Intercept.            -0.3319368859   4.3143429650  -3.20
+## bame_p                  -0.0038919355   0.0358206509  -0.02
+## log.young_p.             0.9170125684   1.4457155616   0.93
+## nonUK                    0.0417218356   0.1332173524   0.03
+## employees                0.0411799667   0.1323364615   0.03
+## house_mortg             -0.0125132418   0.0285296028  -0.04
+## house_price              0.0000015409   0.0000072197   0.00
+## log.culture_freq.        0.2496648532   0.5996471601   0.30
+## culture_rating_good      0.1972137996   1.0141863234   0.20
+## InnerOuterOuter.London  -0.5516926757   0.4718993510  -1.23
+## Number of data points: 2213 
+## Effective number of parameters (residual: 2traceS - traceS&#39;S): 381 
+## Effective degrees of freedom (residual: 2traceS - traceS&#39;S): 1832 
+## Sigma (residual: 2traceS - traceS&#39;S): 0.957 
+## Effective number of parameters (model: traceS): 268 
+## Effective degrees of freedom (model: traceS): 1945 
+## Sigma (model: traceS): 0.929 
+## Sigma (ML): 0.871 
+## AICc (GWR p. 61, eq 2.33; p. 96, eq. 4.21): 6281 
+## AIC (GWR p. 96, eq. 4.22): 5936 
+## Residual sum of squares: 1678 
+## Quasi-global R2: 0.854</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(gwr_modelPrice)</code></pre></div>
+<pre><code>## Call:
+## gwr(formula = log(airbnb_price) ~ bame_p + nonUK + employees + 
+##     house_mortg + house_price + log(culture_freq) + culture_rating_good + 
+##     InnerOuter, data = modelPrice_resids_SP, coords = coordsPrice, 
+##     adapt = GWRbandwidth_Price, hatmatrix = TRUE, se.fit = TRUE)
+## Kernel function: gwr.Gauss 
+## Adaptive quantile: 0.0253 (about 55 of 2213 data points)
+## Summary of GWR coefficient estimates at data points:
+##                                Min.      1st Qu.       Median      3rd Qu.
+## X.Intercept.            2.500214662  3.538704781  4.069999942  4.468446100
+## bame_p                 -0.015424445 -0.009380794 -0.007055678 -0.004504425
+## nonUK                  -0.006937825  0.001506222  0.004750759  0.007936557
+## employees              -0.006229052 -0.001566686  0.003712517  0.009022674
+## house_mortg            -0.018564285 -0.009237530 -0.006614671 -0.003634590
+## house_price            -0.000000160  0.000000160  0.000000312  0.000000516
+## log.culture_freq.      -0.066927493  0.020334462  0.035065210  0.049558440
+## culture_rating_good    -0.053919306  0.007444818  0.032589542  0.071154426
+## InnerOuterOuter.London -0.338525113 -0.195922175 -0.141414710 -0.084696516
+##                                Max. Global
+## X.Intercept.            4.964758429   3.86
+## bame_p                  0.003728537  -0.01
+## nonUK                   0.017629376   0.01
+## employees               0.020072036   0.00
+## house_mortg             0.002520510  -0.01
+## house_price             0.000001127   0.00
+## log.culture_freq.       0.107282776   0.05
+## culture_rating_good     0.196372849   0.07
+## InnerOuterOuter.London  0.114393575  -0.18
+## Number of data points: 2213 
+## Effective number of parameters (residual: 2traceS - traceS&#39;S): 191 
+## Effective degrees of freedom (residual: 2traceS - traceS&#39;S): 2022 
+## Sigma (residual: 2traceS - traceS&#39;S): 0.312 
+## Effective number of parameters (model: traceS): 132 
+## Effective degrees of freedom (model: traceS): 2081 
+## Sigma (model: traceS): 0.308 
+## Sigma (ML): 0.299 
+## AICc (GWR p. 61, eq 2.33; p. 96, eq. 4.21): 1216 
+## AIC (GWR p. 96, eq. 4.22): 1064 
+## Residual sum of squares: 197 
+## Quasi-global R2: 0.564</code></pre>
+<p>Save results as a dataframe</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resultsFreq &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(gwr_modelFreq$SDF)
+resultsReviews &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(gwr_modelReviews$SDF)
+resultsPrice &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(gwr_modelPrice$SDF)</code></pre></div>
+<p>Check sig</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#sigTest = abs(gwr_modelFreq$SDF$log.culture_freq.) -2 * gwr_modelFreq$SDF$log.culture_freq._se </span>
+<span class="co">#LondonWards$GWRUnauthSig&lt;-sigTest</span>
+<span class="co">#sigTest</span></code></pre></div>
+<p>Plot</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#attach coefficients to original dataframe</span>
-model_freq_resids_SP@data$coefCultureFreq &lt;-<span class="st"> </span>results$log.culture_freq.
+modelFreq_resids_SP@data$coefCultureFreq &lt;-<span class="st"> </span>resultsFreq$log.culture_freq.
+modelFreq_resids_SP@data$coefCultureRatingGood &lt;-<span class="st"> </span>resultsFreq$culture_rating_good
 
-model_freq_resids_SP@data$coefCultureRatingGood &lt;-<span class="st"> </span>results$culture_rating_good
+modelReviews_resids_SP@data$coefCultureFreq &lt;-<span class="st"> </span>resultsReviews$log.culture_freq.
+modelReviews_resids_SP@data$coefCultureRatingGood &lt;-<span class="st"> </span>resultsReviews$culture_rating_good
 
-<span class="co">#model_freq_resids_SP@data$coefCultureRating &lt;- results$culture_rating_se</span>
-<span class="co"># </span>
-<span class="co"># model_freq_resids_SP@data$coefPrivateRent &lt;- results$X.Tenure..2011..Private.rented.....</span>
-<span class="co"># </span>
-<span class="co"># model_freq_resids_SP@data$coefCrime &lt;- results$X.Crime..numbers..Violence.Against.The.Person.2012.13.</span>
-<span class="co"># </span>
-<span class="co"># model_freq_resids_SPdata$coefLev4Qual &lt;- results$X.Qualifications..2011..Highest.level.of.qualification..Level.4.qualifications.and.above..</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tm_shape</span>(model_freq_resids_SP) +
-<span class="st">  </span><span class="kw">tm_polygons</span>(<span class="dt">col =</span> <span class="st">&quot;coefCultureFreq&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdBu&quot;</span>)</code></pre></div>
-<pre><code>## Warning: The shape model_freq_resids_SP is invalid. See sf::st_is_valid</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-64-1.png" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tm_shape</span>(model_freq_resids_SP) +
-<span class="st">  </span><span class="kw">tm_polygons</span>(<span class="dt">col =</span> <span class="st">&quot;coefCultureRatingGood&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdBu&quot;</span>)</code></pre></div>
-<pre><code>## Warning: The shape model_freq_resids_SP is invalid. See sf::st_is_valid</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-65-1.png" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># #run a final OLS model</span>
-<span class="co"># model_house_price &lt;- lm(log(`house_price`) ~</span>
-<span class="co">#                     `bame_p` +</span>
-<span class="co">#                     `nonUK` +</span>
-<span class="co">#                     `education` +</span>
-<span class="co">#                     `employees` +</span>
-<span class="co">#                     `income` +</span>
-<span class="co">#                     `house_mortg` +</span>
-<span class="co">#                     `house_price` +</span>
-<span class="co">#                     log(culture_freq) +</span>
-<span class="co">#                     `InnerOuter`,</span>
-<span class="co">#                   data = londonLSOAProfiles, na.action=na.exclude)</span>
-<span class="co"># </span>
-<span class="co"># summary(model_house_price)</span></code></pre></div>
+modelPrice_resids_SP@data$coefCultureFreq &lt;-<span class="st"> </span>resultsPrice$log.culture_freq.
+modelPrice_resids_SP@data$coefCultureRatingGood &lt;-<span class="st"> </span>resultsPrice$culture_rating_good</code></pre></div>
+<p>Plot</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelFreq_resids_SP_inner &lt;-<span class="st"> </span>modelFreq_resids_SP[modelFreq_resids_SP@data$<span class="st">`</span><span class="dt">InnerOuter</span><span class="st">`</span> ==<span class="st"> &quot;Inner London&quot;</span>, ]
 
+gwr_plot1 &lt;-<span class="st"> </span><span class="kw">tm_shape</span>(modelFreq_resids_SP) +
+<span class="st">  </span><span class="kw">tm_borders</span>(<span class="dt">col =</span> <span class="st">&#39;dimgray&#39;</span>, <span class="dt">lwd =</span> <span class="fl">0.1</span>, <span class="dt">lty =</span> <span class="st">&quot;solid&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_polygons</span>(<span class="dt">title =</span> <span class="st">&quot;coeficient of Culture Freq&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;coefCultureFreq&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdBu&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_layout</span>(<span class="dt">frame=</span><span class="ot">FALSE</span>) +
+<span class="st">  </span><span class="kw">tm_legend</span>(<span class="dt">position=</span><span class="kw">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;bottom&quot;</span>), <span class="dt">outside=</span><span class="ot">TRUE</span>) +
+<span class="st">  </span><span class="kw">tm_credits</span>(<span class="st">&quot;Greater London&quot;</span>, <span class="dt">position =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.9</span>), <span class="dt">size=</span><span class="fl">0.7</span>)
+
+gwr_plot2 &lt;-<span class="st"> </span><span class="kw">tm_shape</span>(modelFreq_resids_SP_inner) +
+<span class="st">  </span><span class="kw">tm_borders</span>(<span class="dt">col =</span> <span class="st">&#39;dimgray&#39;</span>, <span class="dt">lwd =</span> <span class="fl">0.1</span>, <span class="dt">lty =</span> <span class="st">&quot;solid&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_polygons</span>(<span class="dt">title =</span> <span class="st">&quot;coeficient of Culture Freq&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;coefCultureFreq&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdBu&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_layout</span>(<span class="dt">frame=</span><span class="ot">FALSE</span>) +
+<span class="st">  </span><span class="kw">tm_legend</span>(<span class="dt">position=</span><span class="kw">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;bottom&quot;</span>), <span class="dt">outside=</span><span class="ot">TRUE</span>) +
+<span class="st">  </span><span class="kw">tm_credits</span>(<span class="st">&quot;Inner London&quot;</span>, <span class="dt">position =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.9</span>), <span class="dt">size=</span><span class="fl">0.7</span>)
+
+gwr_plot3 &lt;-<span class="st"> </span><span class="kw">tm_shape</span>(modelFreq_resids_SP) +
+<span class="st">  </span><span class="kw">tm_borders</span>(<span class="dt">col =</span> <span class="st">&#39;dimgray&#39;</span>, <span class="dt">lwd =</span> <span class="fl">0.1</span>, <span class="dt">lty =</span> <span class="st">&quot;solid&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_polygons</span>(<span class="dt">title =</span> <span class="st">&quot;coeficient of Culture Rating (Good)&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;coefCultureRatingGood&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdBu&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_layout</span>(<span class="dt">frame=</span><span class="ot">FALSE</span>) +
+<span class="st">  </span><span class="kw">tm_legend</span>(<span class="dt">position=</span><span class="kw">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;bottom&quot;</span>), <span class="dt">outside=</span><span class="ot">TRUE</span>) +
+<span class="st">  </span><span class="kw">tm_credits</span>(<span class="st">&quot;Greater London&quot;</span>, <span class="dt">position =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.9</span>), <span class="dt">size=</span><span class="fl">0.7</span> )
+
+gwr_plot4 &lt;-<span class="st"> </span><span class="kw">tm_shape</span>(modelFreq_resids_SP_inner) +
+<span class="st">  </span><span class="kw">tm_borders</span>(<span class="dt">col =</span> <span class="st">&#39;dimgray&#39;</span>, <span class="dt">lwd =</span> <span class="fl">0.1</span>, <span class="dt">lty =</span> <span class="st">&quot;solid&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_polygons</span>(<span class="dt">title =</span> <span class="st">&quot;coeficient of Culture Rating (Good)&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;coefCultureRatingGood&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdBu&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_layout</span>(<span class="dt">frame=</span><span class="ot">FALSE</span>) +
+<span class="st">  </span><span class="kw">tm_legend</span>(<span class="dt">position=</span><span class="kw">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;bottom&quot;</span>), <span class="dt">outside=</span><span class="ot">TRUE</span>) +
+<span class="st">  </span><span class="kw">tm_credits</span>(<span class="st">&quot;Inner London&quot;</span>, <span class="dt">position =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.9</span>), <span class="dt">size=</span><span class="fl">0.7</span>)
+
+gwr_plotFreq =<span class="st"> </span><span class="kw">tmap_arrange</span>(gwr_plot1, gwr_plot2, gwr_plot3, gwr_plot4, <span class="dt">ncol=</span><span class="dv">2</span>)
+
+gwr_plotFreq</code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-66-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tmap_save</span>(gwr_plotFreq, <span class="dt">filename =</span> <span class="st">&quot;maps/regression/gwr_modelFreq_SUPPLY.png&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelReviews_resids_SP_inner &lt;-<span class="st"> </span>modelReviews_resids_SP[modelReviews_resids_SP@data$<span class="st">`</span><span class="dt">InnerOuter</span><span class="st">`</span> ==<span class="st"> &quot;Inner London&quot;</span>, ]
+
+gwr_plot5 &lt;-<span class="st"> </span><span class="kw">tm_shape</span>(modelReviews_resids_SP) +
+<span class="st">  </span><span class="kw">tm_borders</span>(<span class="dt">col =</span> <span class="st">&#39;dimgray&#39;</span>, <span class="dt">lwd =</span> <span class="fl">0.1</span>, <span class="dt">lty =</span> <span class="st">&quot;solid&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_polygons</span>(<span class="dt">title =</span> <span class="st">&quot;coeficient of Culture Freq)&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;coefCultureFreq&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdBu&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_layout</span>(<span class="dt">frame=</span><span class="ot">FALSE</span>) +
+<span class="st">  </span><span class="kw">tm_legend</span>(<span class="dt">position=</span><span class="kw">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;bottom&quot;</span>), <span class="dt">outside=</span><span class="ot">TRUE</span>) +
+<span class="st">  </span><span class="kw">tm_credits</span>(<span class="st">&quot;Greater London&quot;</span>, <span class="dt">position =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.9</span>), <span class="dt">size=</span><span class="fl">0.7</span>)
+
+gwr_plot6 &lt;-<span class="st"> </span><span class="kw">tm_shape</span>(modelReviews_resids_SP_inner) +
+<span class="st">  </span><span class="kw">tm_borders</span>(<span class="dt">col =</span> <span class="st">&#39;dimgray&#39;</span>, <span class="dt">lwd =</span> <span class="fl">0.1</span>, <span class="dt">lty =</span> <span class="st">&quot;solid&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_polygons</span>(<span class="dt">title =</span> <span class="st">&quot;coeficient of Culture Freq&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;coefCultureFreq&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdBu&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_layout</span>(<span class="dt">frame=</span><span class="ot">FALSE</span>) +
+<span class="st">  </span><span class="kw">tm_legend</span>(<span class="dt">position=</span><span class="kw">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;bottom&quot;</span>), <span class="dt">outside=</span><span class="ot">TRUE</span>) +
+<span class="st">  </span><span class="kw">tm_credits</span>(<span class="st">&quot;Inner London&quot;</span>, <span class="dt">position =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.9</span>), <span class="dt">size=</span><span class="fl">0.7</span>)
+
+gwr_plot7 &lt;-<span class="st"> </span><span class="kw">tm_shape</span>(modelReviews_resids_SP) +
+<span class="st">  </span><span class="kw">tm_borders</span>(<span class="dt">col =</span> <span class="st">&#39;dimgray&#39;</span>, <span class="dt">lwd =</span> <span class="fl">0.1</span>, <span class="dt">lty =</span> <span class="st">&quot;solid&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_polygons</span>(<span class="dt">title =</span> <span class="st">&quot;coeficient of Culture Rating (Good)&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;coefCultureRatingGood&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdBu&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_layout</span>(<span class="dt">frame=</span><span class="ot">FALSE</span>) +
+<span class="st">  </span><span class="kw">tm_legend</span>(<span class="dt">position=</span><span class="kw">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;bottom&quot;</span>), <span class="dt">outside=</span><span class="ot">TRUE</span>) +
+<span class="st">  </span><span class="kw">tm_credits</span>(<span class="st">&quot;Greater London&quot;</span>, <span class="dt">position =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.9</span>), <span class="dt">size=</span><span class="fl">0.7</span>)
+
+gwr_plot8 &lt;-<span class="st"> </span><span class="kw">tm_shape</span>(modelReviews_resids_SP_inner) +
+<span class="st">  </span><span class="kw">tm_borders</span>(<span class="dt">col =</span> <span class="st">&#39;dimgray&#39;</span>, <span class="dt">lwd =</span> <span class="fl">0.1</span>, <span class="dt">lty =</span> <span class="st">&quot;solid&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_polygons</span>(<span class="dt">title =</span> <span class="st">&quot;coeficient of Culture Rating (Good))&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;coefCultureRatingGood&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdBu&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_layout</span>(<span class="dt">frame=</span><span class="ot">FALSE</span>) +
+<span class="st">  </span><span class="kw">tm_legend</span>(<span class="dt">position=</span><span class="kw">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;bottom&quot;</span>), <span class="dt">outside=</span><span class="ot">TRUE</span>) +
+<span class="st">  </span><span class="kw">tm_credits</span>(<span class="st">&quot;Inner London&quot;</span>, <span class="dt">position =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.9</span>), <span class="dt">size=</span><span class="fl">0.7</span>)
+
+gwr_plotReviews =<span class="st"> </span><span class="kw">tmap_arrange</span>(gwr_plot5, gwr_plot6, gwr_plot7, gwr_plot8, <span class="dt">ncol=</span><span class="dv">2</span>)
+
+gwr_plotReviews</code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-67-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tmap_save</span>(gwr_plotReviews, <span class="dt">filename =</span> <span class="st">&quot;maps/regression/gwr_modelReviews_DEMAND.png&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelPrice_resids_SP_inner &lt;-<span class="st"> </span>modelPrice_resids_SP[modelPrice_resids_SP@data$<span class="st">`</span><span class="dt">InnerOuter</span><span class="st">`</span> ==<span class="st"> &quot;Inner London&quot;</span>, ]
+
+gwr_plot9 &lt;-<span class="st"> </span><span class="kw">tm_shape</span>(modelPrice_resids_SP) +
+<span class="st">  </span><span class="kw">tm_borders</span>(<span class="dt">col =</span> <span class="st">&#39;dimgray&#39;</span>, <span class="dt">lwd =</span> <span class="fl">0.1</span>, <span class="dt">lty =</span> <span class="st">&quot;solid&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_polygons</span>(<span class="dt">title =</span> <span class="st">&quot;coeficient of Culture Freq)&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;coefCultureFreq&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdBu&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_layout</span>(<span class="dt">frame=</span><span class="ot">FALSE</span>) +
+<span class="st">  </span><span class="kw">tm_legend</span>(<span class="dt">position=</span><span class="kw">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;bottom&quot;</span>), <span class="dt">outside=</span><span class="ot">TRUE</span>) +
+<span class="st">  </span><span class="kw">tm_credits</span>(<span class="st">&quot;Greater London&quot;</span>, <span class="dt">position =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.9</span>), <span class="dt">size=</span><span class="fl">0.7</span>)
+
+gwr_plot10 &lt;-<span class="st"> </span><span class="kw">tm_shape</span>(modelPrice_resids_SP_inner) +
+<span class="st">  </span><span class="kw">tm_borders</span>(<span class="dt">col =</span> <span class="st">&#39;dimgray&#39;</span>, <span class="dt">lwd =</span> <span class="fl">0.1</span>, <span class="dt">lty =</span> <span class="st">&quot;solid&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_polygons</span>(<span class="dt">title =</span> <span class="st">&quot;coeficient of Culture Freq&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;coefCultureFreq&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdBu&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_layout</span>(<span class="dt">frame=</span><span class="ot">FALSE</span>) +
+<span class="st">  </span><span class="kw">tm_legend</span>(<span class="dt">position=</span><span class="kw">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;bottom&quot;</span>), <span class="dt">outside=</span><span class="ot">TRUE</span>) +
+<span class="st">  </span><span class="kw">tm_credits</span>(<span class="st">&quot;Inner London&quot;</span>, <span class="dt">position =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.9</span>), <span class="dt">size=</span><span class="fl">0.7</span>)
+
+gwr_plot11 &lt;-<span class="st"> </span><span class="kw">tm_shape</span>(modelPrice_resids_SP) +
+<span class="st">  </span><span class="kw">tm_borders</span>(<span class="dt">col =</span> <span class="st">&#39;dimgray&#39;</span>, <span class="dt">lwd =</span> <span class="fl">0.1</span>, <span class="dt">lty =</span> <span class="st">&quot;solid&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_polygons</span>(<span class="dt">title =</span> <span class="st">&quot;coeficient of Culture Rating (Good)&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;coefCultureRatingGood&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdBu&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_layout</span>(<span class="dt">frame=</span><span class="ot">FALSE</span>) +
+<span class="st">  </span><span class="kw">tm_legend</span>(<span class="dt">position=</span><span class="kw">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;bottom&quot;</span>), <span class="dt">outside=</span><span class="ot">TRUE</span>) +
+<span class="st">  </span><span class="kw">tm_credits</span>(<span class="st">&quot;Greater London&quot;</span>, <span class="dt">position =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.9</span>), <span class="dt">size=</span><span class="fl">0.7</span>)
+
+gwr_plot12 &lt;-<span class="st"> </span><span class="kw">tm_shape</span>(modelPrice_resids_SP_inner) +
+<span class="st">  </span><span class="kw">tm_borders</span>(<span class="dt">col =</span> <span class="st">&#39;dimgray&#39;</span>, <span class="dt">lwd =</span> <span class="fl">0.1</span>, <span class="dt">lty =</span> <span class="st">&quot;solid&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_polygons</span>(<span class="dt">title =</span> <span class="st">&quot;coeficient of Culture Rating (Good)&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;coefCultureRatingGood&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;RdBu&quot;</span>) +
+<span class="st">  </span><span class="kw">tm_layout</span>(<span class="dt">frame=</span><span class="ot">FALSE</span>) +
+<span class="st">  </span><span class="kw">tm_legend</span>(<span class="dt">position=</span><span class="kw">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;bottom&quot;</span>), <span class="dt">outside=</span><span class="ot">TRUE</span>) +
+<span class="st">  </span><span class="kw">tm_credits</span>(<span class="st">&quot;Inner London&quot;</span>, <span class="dt">position =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.9</span>), <span class="dt">size=</span><span class="fl">0.7</span>)
+
+gwr_plotPrice =<span class="st"> </span><span class="kw">tmap_arrange</span>(gwr_plot9, gwr_plot10, gwr_plot11, gwr_plot12, <span class="dt">ncol=</span><span class="dv">2</span>)
+
+gwr_plotPrice</code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-68-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tmap_save</span>(gwr_plotPrice, <span class="dt">filename =</span> <span class="st">&quot;maps/regression/gwr_modelPrice_PRICE.png&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># #install.packages(&quot;stargazer&quot;)</span>
+<span class="co"># library(stargazer)</span>
+<span class="co"># </span>
+<span class="co"># </span>
+<span class="co"># stargazer(modelFreq, modelReviews, modelPrice, </span>
+<span class="co">#           title=&quot;Regression Results&quot;, </span>
+<span class="co">#           align=TRUE, dep.var.labels=c(&quot;Overall Rating&quot;,&quot;High Rating&quot;),</span>
+<span class="co">#           covariate.labels=c(&quot;Handling of Complaints&quot;,</span>
+<span class="co">#                              &quot;No Special Privileges&quot;,</span>
+<span class="co">#                              &quot;Opportunity to Learn&quot;,</span>
+<span class="co">#                              &quot;Performance-Based Raises&quot;,</span>
+<span class="co">#                              &quot;Too Critical&quot;,&quot;Advancement&quot;), </span>
+<span class="co">#           omit.stat=c(&quot;LL&quot;,&quot;ser&quot;,&quot;f&quot;), no.space=TRUE)</span></code></pre></div>
+
+</div>
 </div>
             </section>
 
