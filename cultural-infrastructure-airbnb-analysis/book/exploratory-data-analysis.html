@@ -24,7 +24,7 @@
 <meta name="author" content="Vishal Kumar" />
 
 
-<meta name="date" content="2020-01-12" />
+<meta name="date" content="2020-01-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -217,9 +217,9 @@ col_pal &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st"
 <div id="airbnb-eda" class="section level2">
 <h2><span class="header-section-number">4.1</span> Airbnb EDA</h2>
 <p>First we do EDA on the Airbnb data</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">londonLSOAProfiles_nogeom &lt;-<span class="st"> </span><span class="kw">st_set_geometry</span>(londonLSOAProfiles, <span class="ot">NULL</span>)
-
-<span class="co">#----use code from blog post to create a formattable table: https://www.littlemissdata.com/blog/prettytables</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">londonLSOAProfiles_nogeom &lt;-<span class="st"> </span><span class="kw">st_set_geometry</span>(londonLSOAProfiles, <span class="ot">NULL</span>)</code></pre></div>
+<pre><code>## Error in st_set_geometry(londonLSOAProfiles, NULL): could not find function &quot;st_set_geometry&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#----use code from blog post to create a formattable table: https://www.littlemissdata.com/blog/prettytables</span>
 a1 &lt;-<span class="st"> </span>londonLSOAProfiles_nogeom %&gt;%
 <span class="st">          </span><span class="kw">group_by</span>(LAD11NM) %&gt;%
 <span class="st">          </span><span class="kw">summarise</span>(
@@ -230,292 +230,12 @@ a1 &lt;-<span class="st"> </span>londonLSOAProfiles_nogeom %&gt;%
                 <span class="dt">culture_rating=</span><span class="kw">mean</span>(culture_rating, <span class="dt">na.rm=</span><span class="ot">TRUE</span>), 
                 <span class="dt">culture_av_reviews=</span><span class="kw">mean</span>(culture_av_reviews, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)
           ) %&gt;%
-<span class="st">          </span><span class="kw">arrange</span>(<span class="kw">desc</span>(airbnb_freq)) %&gt;%<span class="st"> </span><span class="kw">top_n</span>(<span class="dt">n =</span> <span class="dv">11</span>, <span class="dt">wt =</span> airbnb_freq)
-<span class="kw">options</span>(<span class="dt">digits =</span> <span class="dv">3</span>)
+<span class="st">          </span><span class="kw">arrange</span>(<span class="kw">desc</span>(airbnb_freq)) %&gt;%<span class="st"> </span><span class="kw">top_n</span>(<span class="dt">n =</span> <span class="dv">11</span>, <span class="dt">wt =</span> airbnb_freq)</code></pre></div>
+<pre><code>## Error in londonLSOAProfiles_nogeom %&gt;% group_by(LAD11NM) %&gt;% summarise(airbnb_freq = mean(airbnb_freq), : could not find function &quot;%&gt;%&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">digits =</span> <span class="dv">3</span>)
 
 <span class="kw">formattable</span>(a1)</code></pre></div>
-<table class="table table-condensed">
-<thead>
-<tr>
-<th style="text-align:right;">
-LAD11NM
-</th>
-<th style="text-align:right;">
-airbnb_freq
-</th>
-<th style="text-align:right;">
-airbnb_no_reviews
-</th>
-<th style="text-align:right;">
-airbnb_price
-</th>
-<th style="text-align:right;">
-culture_freq
-</th>
-<th style="text-align:right;">
-culture_rating
-</th>
-<th style="text-align:right;">
-culture_av_reviews
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:right;">
-Westminster
-</td>
-<td style="text-align:right;">
-680
-</td>
-<td style="text-align:right;">
-9157
-</td>
-<td style="text-align:right;">
-113.1
-</td>
-<td style="text-align:right;">
-45.6
-</td>
-<td style="text-align:right;">
-4.28
-</td>
-<td style="text-align:right;">
-1012
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-Kensington and Chelsea
-</td>
-<td style="text-align:right;">
-568
-</td>
-<td style="text-align:right;">
-7125
-</td>
-<td style="text-align:right;">
-122.6
-</td>
-<td style="text-align:right;">
-23.8
-</td>
-<td style="text-align:right;">
-4.22
-</td>
-<td style="text-align:right;">
-693
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-Tower Hamlets
-</td>
-<td style="text-align:right;">
-534
-</td>
-<td style="text-align:right;">
-6716
-</td>
-<td style="text-align:right;">
-73.2
-</td>
-<td style="text-align:right;">
-30.6
-</td>
-<td style="text-align:right;">
-4.29
-</td>
-<td style="text-align:right;">
-464
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-Camden
-</td>
-<td style="text-align:right;">
-385
-</td>
-<td style="text-align:right;">
-5573
-</td>
-<td style="text-align:right;">
-98.1
-</td>
-<td style="text-align:right;">
-45.1
-</td>
-<td style="text-align:right;">
-4.25
-</td>
-<td style="text-align:right;">
-504
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-Hammersmith and Fulham
-</td>
-<td style="text-align:right;">
-367
-</td>
-<td style="text-align:right;">
-4368
-</td>
-<td style="text-align:right;">
-88.9
-</td>
-<td style="text-align:right;">
-26.5
-</td>
-<td style="text-align:right;">
-4.28
-</td>
-<td style="text-align:right;">
-309
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-Hackney
-</td>
-<td style="text-align:right;">
-342
-</td>
-<td style="text-align:right;">
-3699
-</td>
-<td style="text-align:right;">
-73.1
-</td>
-<td style="text-align:right;">
-38.7
-</td>
-<td style="text-align:right;">
-4.27
-</td>
-<td style="text-align:right;">
-217
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-Islington
-</td>
-<td style="text-align:right;">
-341
-</td>
-<td style="text-align:right;">
-4572
-</td>
-<td style="text-align:right;">
-85.7
-</td>
-<td style="text-align:right;">
-35.1
-</td>
-<td style="text-align:right;">
-4.27
-</td>
-<td style="text-align:right;">
-280
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-City of London
-</td>
-<td style="text-align:right;">
-280
-</td>
-<td style="text-align:right;">
-3417
-</td>
-<td style="text-align:right;">
-128.9
-</td>
-<td style="text-align:right;">
-92.0
-</td>
-<td style="text-align:right;">
-4.39
-</td>
-<td style="text-align:right;">
-883
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-Southwark
-</td>
-<td style="text-align:right;">
-246
-</td>
-<td style="text-align:right;">
-3554
-</td>
-<td style="text-align:right;">
-77.9
-</td>
-<td style="text-align:right;">
-24.8
-</td>
-<td style="text-align:right;">
-4.27
-</td>
-<td style="text-align:right;">
-406
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-Lambeth
-</td>
-<td style="text-align:right;">
-211
-</td>
-<td style="text-align:right;">
-2990
-</td>
-<td style="text-align:right;">
-71.3
-</td>
-<td style="text-align:right;">
-24.4
-</td>
-<td style="text-align:right;">
-4.21
-</td>
-<td style="text-align:right;">
-280
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-Wandsworth
-</td>
-<td style="text-align:right;">
-141
-</td>
-<td style="text-align:right;">
-1354
-</td>
-<td style="text-align:right;">
-80.7
-</td>
-<td style="text-align:right;">
-17.0
-</td>
-<td style="text-align:right;">
-4.22
-</td>
-<td style="text-align:right;">
-346
-</td>
-</tr>
-</tbody>
-</table>
+<pre><code>## Error in formattable(a1): could not find function &quot;formattable&quot;</code></pre>
 <div id="airbnb-freqency-distributions" class="section level3">
 <h3><span class="header-section-number">4.1.1</span> Airbnb freqency distributions</h3>
 <p>When looking at the distribution of Airbnb listings we see that there are some outliters</p>
@@ -965,8 +685,7 @@ myvars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">
             <span class="st">&#39;house_mortg&#39;</span>,
             <span class="st">&#39;house_price&#39;</span>,
             <span class="st">&#39;transport&#39;</span>,
-            <span class="st">&quot;culture_freq&quot;</span>,
-            <span class="st">&quot;culture_rating&quot;</span>)
+            <span class="st">&quot;culture_freq&quot;</span>)
 
 <span class="co">#Extracting data.frame from simple features object in R - https://gis.stackexchange.com/questions/224915/extracting-data-frame-from-simple-features-object-in-r</span>
 x &lt;-<span class="st"> </span>londonLSOAProfiles[myvars]
