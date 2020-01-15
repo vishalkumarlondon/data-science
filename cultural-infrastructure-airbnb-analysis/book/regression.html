@@ -24,7 +24,7 @@
 <meta name="author" content="Vishal Kumar, Cultural Data Scientist" />
 
 
-<meta name="date" content="2020-01-13" />
+<meta name="date" content="2020-01-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -42,8 +42,6 @@
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
-
-
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-150184633-2"></script>
 <script>
@@ -51,8 +49,6 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'UA-150184633-2');
-</script>
 
 
 
@@ -1171,6 +1167,7 @@ resid_plots =<span class="st"> </span><span class="kw">tmap_arrange</span>(resid
 resid_plots</code></pre></div>
 <p><img src="bookdown-demo_files/figure-html/unnamed-chunk-53-1.png" width="672" /></p>
 <p>We can also use another calculation called Moran’s I to check for spatial autocorrelation. Use the residuals of the original model to run through to the calculation. If is it 0 then there is no spatial auto correlation.</p>
+<p>Source for code: MacLachlan and Dennett (2019: section 9) <a href="https://andrewmaclachlan.github.io/CASA0005repo/index.html" class="uri">https://andrewmaclachlan.github.io/CASA0005repo/index.html</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#---use Moran&#39;s I to test for spatial auto correlation</span>
 modelFreq_resids_noNA &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> </span><span class="kw">drop_na</span>(modelFreq_resids)
 modelReviews_resids_noNA &lt;-<span class="st"> </span>londonLSOAProfiles %&gt;%<span class="st"> </span><span class="kw">drop_na</span>(modelReviews_resids)
@@ -1181,6 +1178,7 @@ modelFreq_resids_SP &lt;-<span class="st"> </span><span class="kw">as</span>(mod
 modelReviews_resids_SP &lt;-<span class="st"> </span><span class="kw">as</span>(modelFreq_resids_noNA, <span class="st">&quot;Spatial&quot;</span>)
 modelPrice_resids_SP &lt;-<span class="st"> </span><span class="kw">as</span>(modelFreq_resids_noNA, <span class="st">&quot;Spatial&quot;</span>)</code></pre></div>
 <p>Now that we have spatial variables for each of the models, we need to do a few other steps. 1) Calulate centroids of the shapes with resdiuals. 2) Run those polygons through a spatial weights matrix. 3) Calculate the Moran’s I</p>
+<p>Source for code: MacLachlan and Dennett (2019: section 9) <a href="https://andrewmaclachlan.github.io/CASA0005repo/index.html" class="uri">https://andrewmaclachlan.github.io/CASA0005repo/index.html</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#---calculate centroids of all LSOAS in London</span>
 coordsFreq &lt;-<span class="st"> </span><span class="kw">coordinates</span>(modelFreq_resids_SP)
 coordsReviews &lt;-<span class="st"> </span><span class="kw">coordinates</span>(modelReviews_resids_SP)
@@ -1245,6 +1243,7 @@ Price.knn_4_weight &lt;-<span class="st"> </span><span class="kw">nb2listw</span
 <div id="spatial-lag-regression-model" class="section level2">
 <h2><span class="header-section-number">6.2</span> Spatial lag regression model</h2>
 <p>To deal with any spatial autocorrelation - if shown in the the Moran’s I statistic - we have to re-run the models through a spatial lag model</p>
+<p>Source for code: MacLachlan and Dennett (2019: section 9) <a href="https://andrewmaclachlan.github.io/CASA0005repo/index.html" class="uri">https://andrewmaclachlan.github.io/CASA0005repo/index.html</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#---Dealing with Spatially Autocorrelated Residuals - Spatial Lag model</span>
 
 <span class="kw">library</span>(spatialreg)
@@ -1437,6 +1436,7 @@ slag_modelPrice &lt;-<span class="st"> </span><span class="kw">lagsarlm</span>(<
 ## LM test for residual autocorrelation
 ## test value: 98.4, p-value: &lt; 0.000000000000000222</code></pre>
 <p>Take the residuals from the spatial lag model and run again to Moran’s I calculation to see if there is any spatial autocorrelation.</p>
+<p>Source for code: MacLachlan and Dennett (2019: section 9) <a href="https://andrewmaclachlan.github.io/CASA0005repo/index.html" class="uri">https://andrewmaclachlan.github.io/CASA0005repo/index.html</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#---add the residuals to shape file</span>
 modelFreq_resids_SP@data$slag_modelFreq_resids &lt;-<span class="st"> </span>slag_modelFreq$residuals
 modelReviews_resids_SP@data$slag_modelReviews_resids &lt;-<span class="st"> </span>slag_modelReviews$residuals
@@ -1482,33 +1482,33 @@ modelPrice_resids_SP@data$slag_modelPrice_resids &lt;-<span class="st"> </span>s
 <p>You can use the impact() function to interpret the coefficients of the spatial lag model similar to the global model according to this rPub: <a href="http://rstudio-pubs-static.s3.amazonaws.com/5027_52298866e7924b18b54e5c9a0a21b450.html" class="uri">http://rstudio-pubs-static.s3.amazonaws.com/5027_52298866e7924b18b54e5c9a0a21b450.html</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">impacts</span>(slag_modelFreq, <span class="dt">listw =</span> Freq.knn_4_weight)</code></pre></div>
 <pre><code>## Impact measures (lag, exact):
-##                           Direct  Indirect     Total
-## bame_p                 -7.05e-03 -6.27e-03 -1.33e-02
-## log(young_p)            7.03e-01  6.25e-01  1.33e+00
-## nonUK                   7.62e-03  6.78e-03  1.44e-02
-## education               1.01e-02  9.02e-03  1.92e-02
-## house_mortg            -1.11e-02 -9.87e-03 -2.10e-02
-## house_price            -7.13e-08 -6.35e-08 -1.35e-07
-## log(culture_freq)       1.50e-01  1.34e-01  2.84e-01
-## culture_rating_good     7.17e-02  6.39e-02  1.36e-01
-## InnerOuterOuter London -2.95e-01 -2.62e-01 -5.57e-01</code></pre>
+##                               Direct      Indirect        Total
+## bame_p                 -0.0070453656 -0.0062707091 -0.013316075
+## log(young_p)            0.7026120285  0.6253579847  1.327970013
+## nonUK                   0.0076208145  0.0067828858  0.014403700
+## education               0.0101363135  0.0090217991  0.019158113
+## house_mortg            -0.0110877663 -0.0098686372 -0.020956403
+## house_price            -0.0000000713 -0.0000000635 -0.000000135
+## log(culture_freq)       0.1503120337  0.1337848296  0.284096863
+## culture_rating_good     0.0717418623  0.0638536556  0.135595518
+## InnerOuterOuter London -0.2945986617 -0.2622067626 -0.556805424</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">impacts</span>(slag_modelReviews, <span class="dt">listw =</span> Reviews.knn_4_weight)</code></pre></div>
 <pre><code>## Impact measures (lag, exact):
-##                           Direct  Indirect     Total
-## bame_p                 -1.15e-02 -1.01e-02 -2.16e-02
-## log(young_p)            7.31e-01  6.41e-01  1.37e+00
-## nonUK                   1.61e-02  1.41e-02  3.01e-02
-## employees               1.97e-02  1.73e-02  3.70e-02
-## house_mortg            -1.94e-02 -1.70e-02 -3.64e-02
-## house_price            -9.41e-09 -8.24e-09 -1.77e-08
-## log(culture_freq)       1.87e-01  1.64e-01  3.51e-01
-## culture_rating_good     9.74e-02  8.53e-02  1.83e-01
-## InnerOuterOuter London -5.01e-01 -4.39e-01 -9.40e-01</code></pre>
+##                                Direct       Indirect         Total
+## bame_p                 -0.01150738826 -0.01007963841 -0.0215870267
+## log(young_p)            0.73132705052  0.64058951192  1.3719165624
+## nonUK                   0.01606975719  0.01407594305  0.0301457002
+## employees               0.01970748928  0.01726233281  0.0369698221
+## house_mortg            -0.01940178751 -0.01699456021 -0.0363963477
+## house_price            -0.00000000941 -0.00000000824 -0.0000000177
+## log(culture_freq)       0.18701690126  0.16381325621  0.3508301575
+## culture_rating_good     0.09738284803  0.08530031953  0.1826831676
+## InnerOuterOuter London -0.50101424325 -0.43885217882 -0.9398664221</code></pre>
 </div>
 <div id="geographically-weighted-regression-models-gwr" class="section level2">
 <h2><span class="header-section-number">6.3</span> Geographically Weighted Regression Models (GWR)</h2>
 <p>Finally, using code from MacLachlan &amp; Dennett (2019: Chapter 9.5) we can use a GWR model to show how the coefficients of out model vary over space</p>
-<p><a href="https://andrewmaclachlan.github.io/CASA0005repo/gwr-and-spatially-lagged-regression.html#task-3---spatial-non-stationarity-and-geographically-weighted-regression-models-gwr" class="uri">https://andrewmaclachlan.github.io/CASA0005repo/gwr-and-spatially-lagged-regression.html#task-3---spatial-non-stationarity-and-geographically-weighted-regression-models-gwr</a></p>
+<p>Source for code: MacLachlan and Dennett (2019: section 9) <a href="https://andrewmaclachlan.github.io/CASA0005repo/gwr-and-spatially-lagged-regression.html#task-3---spatial-non-stationarity-and-geographically-weighted-regression-models-gwr" class="uri">https://andrewmaclachlan.github.io/CASA0005repo/gwr-and-spatially-lagged-regression.html#task-3---spatial-non-stationarity-and-geographically-weighted-regression-models-gwr</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(spgwr)
 
 <span class="co">#---calculate kernel bandwidth SUPPLY MODEL</span>
